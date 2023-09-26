@@ -2,15 +2,27 @@ import { writable } from "svelte/store";
 import type { Card, Attributes, PlayerData } from "./types";
 
 export const info: PlayerData = writable({
-	corp: {
+	Corporation: {
+		faction: "Jinteki",
+		id: "419: Amoral Scammer",
 		clicks: 3,
 		credits: 5,
 		cards: [],
+		highlight: {
+			code: "21063",
+			active: false,
+		},
 	},
-	runner: {
+	Runner: {
+		faction: "Anarch",
+		id: "Asa Group: Security Through Vigilance",
 		clicks: 4,
 		credits: 5,
 		cards: [],
+		highlight: {
+			code: "21063",
+			active: false,
+		},
 	},
 });
 

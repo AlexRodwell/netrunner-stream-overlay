@@ -2,75 +2,52 @@
 	import { onMount } from "svelte";
 	import cards from "$lib/data/cards.json";
 	import { info } from "$lib/store";
-
-	import * as Card from "$lib/components/ui/card";
-	import { Button } from "$lib/components/ui/button";
-	import type { PlayerData } from "$lib/types";
+	import type { PlayerData, Side as TSide, Attributes } from "$lib/types";
 	import Side from "$lib/components/dashboard/Side.svelte";
 
-	let selected: string[] = [];
+	// import { wsSend } from "$lib/utils";
 
-	let data: Object<{ [key: "corp" | "runner"]: PlayerData }> = {
-		corp: {
-			clicks: 3,
-			credits: 5,
-			cards: selected,
-		},
-		runner: {
-			clicks: 4,
-			credits: 5,
-			cards: [],
-		},
+	let socket: WebSocket;
+	let data: PlayerData = $info;
+
+	onMount(() => {
+		socket = new WebSocket("ws://localhost:8080"); // Connect to your WebSocket server
+	});
+
+	const update = (side: TSide, newData: Attributes) => {
+		data[side] = {
+			...data[side],
+			...newData,
+		};
+
+		socket.send(JSON.stringify(data));
 	};
-
-	// let socket: WebSocket;
-	// onMount(() => {
-	// 	socket = new WebSocket("ws://localhost:8080"); // Connect to your WebSocket server
-	// });
 </script>
 
-<main>
-	<div class=" grid grid-cols-2 gap-8">
-		<Card.Root class="col-span-full">
-			<Card.Header>
-				<Card.Title>Command Center</Card.Title>
-			</Card.Header>
-			<Card.Content>
-				<Button>Deploy</Button>
-				<Button variant="outline">Undo changes</Button>
-				<Button variant="outline">Reset counters</Button>
-			</Card.Content>
-		</Card.Root>
-		<Side title="Corporation" bind:data={data.corp} />
-		<Side title="Runner" bind:data={data.runner} />
-	</div>
+<div>
+	<h1>Command Center</h1>
+	<button>deploy all</button>
+	<button>undo changes</button>
+	<button>reset counters (new game)</button>
+</div>
 
-	{JSON.stringify(selected)}
+<div style="padding: 1rem; border: 1px solid red;">
+	<Side
+		side="Corporation"
+		on:playerdata={(event) => {
+			update("Corporation", event.detail);
+		}}
+	/>
+</div>
 
-	<!-- <div class="cards">
-		{#each cards.data.slice(0, 15) as { title, code }, i}
-			<img
-				src={`https://static.nrdbassets.com/v1/large/{code}.jpg`.replace(
-					"{code}",
-					code
-				)}
-				alt={title}
-				on:click={(e) => {
-					if (!data.corp.cards.includes(code)) {
-						e.target.classList.add("active");
-						data.corp.cards = [...data.corp.cards, code];
-					} else {
-						e.target.classList.remove("active");
-						data.corp.cards = [...data.corp.cards, code];
-						data.corp.cards = data.corp.cards.filter(
-							(e) => e !== code
-						);
-					}
-				}}
-			/>
-		{/each}
-	</div> -->
-</main>
+<div style="padding: 1rem; border: 1px solid red;">
+	<Side
+		side="Runner"
+		on:playerdata={(event) => {
+			update("Runner", event.detail);
+		}}
+	/>
+</div>
 
 <style>
 	main {
@@ -78,6 +55,7 @@
 		min-height: 100vh;
 		padding: 5vw;
 		gap: 1.5rem;
+		background: #030303;
 	}
 
 	.cards {

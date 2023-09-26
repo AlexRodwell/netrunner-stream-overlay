@@ -3,27 +3,49 @@ import { WebSocketServer } from "ws";
 const wss = new WebSocketServer({ port: 8080 });
 
 let data = {
-	title: "hello",
+	Corporation: {
+		faction: "Jinteki",
+		id: "419: Amoral Scammer",
+		clicks: 3,
+		credits: 5,
+		cards: [],
+		highlight: {
+			code: "21063",
+			active: false,
+		},
+	},
+	Runner: {
+		faction: "Anarch",
+		id: "Asa Group: Security Through Vigilance",
+		clicks: 4,
+		credits: 5,
+		cards: [],
+		highlight: {
+			code: "21063",
+			active: false,
+		},
+	},
 };
 
-let update = false;
-
 wss.on("connection", (ws) => {
-	setInterval(() => {
-		if (update) {
-			ws.send(JSON.stringify(data));
-		}
-	}, 50);
+	ws.send(JSON.stringify(data));
 
 	ws.addEventListener("message", (event) => {
-		update = false;
+		console.clear();
+		const newData = JSON.parse(event.data);
 
-		if (event.data !== JSON.stringify(data)) {
+		// Check if the received data is different from the current data
+		if (JSON.stringify(newData) !== JSON.stringify(data)) {
+			data = newData;
+
+			// Send updated data to all connected clients
+			wss.clients.forEach((client) => {
+				client.send(JSON.stringify(data));
+			});
+
 			console.log(data);
-			update = true;
-			data = JSON.parse(event.data);
 		} else {
-			console.log("data is the same, skipping");
+			console.log("Data is the same, skipping");
 		}
 	});
 });

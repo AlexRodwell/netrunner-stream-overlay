@@ -21,16 +21,30 @@ export type Card = {
 };
 
 export type Attributes = {
-	name: Faction;
+	faction: string;
+	// | "Haas-Bioroid"
+	// | "Jinteki"
+	// | "NBN"
+	// | "Weyland Consortium."
+	// | "Anarch"
+	// | "Criminal"
+	// | "Shaper"
+	// | string;
+	id: string;
 	clicks: number;
 	credits: number;
-	cards?: string[]; // Card[];
+	cards?: string[];
+	highlight?: {
+		code: string;
+		active: boolean;
+	};
 };
 
 export type PlayerData = {
-	corp: Attributes;
-	runner: Attributes;
+	[key in Side]: Attributes;
 };
+
+export type Side = "Corporation" | "Runner";
 
 type Factions = typeof import("./data/factions.json");
 
