@@ -9,9 +9,14 @@
 
 	let socket: WebSocket;
 	let data: PlayerData = $info;
+	let connection: number = false;
 
 	onMount(() => {
 		socket = new WebSocket("ws://localhost:8080"); // Connect to your WebSocket server
+
+		setInterval(() => {
+			connection = socket.readyState;
+		}, 500);
 	});
 
 	const update = (side: TSide, newData: Attributes) => {
@@ -23,6 +28,8 @@
 		socket.send(JSON.stringify(data));
 	};
 </script>
+
+Connection to Websocket server: {connection}
 
 <div>
 	<h1>Command Center</h1>
