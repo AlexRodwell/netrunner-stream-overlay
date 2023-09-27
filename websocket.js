@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import defualt from "./src/lib/data/default.json";
+import defualt from "./src/lib/data/default.json" assert { type: "json" };
 
 const wss = new WebSocketServer({ port: 8080 });
 

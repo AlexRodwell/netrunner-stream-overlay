@@ -6,6 +6,7 @@
 	import Loading from "$lib/components/Loading.svelte";
 
 	let socket: WebSocket;
+	let connection: boolean = false;
 
 	onMount(() => {
 		socket = new WebSocket("ws://localhost:8080");
@@ -19,6 +20,12 @@
 
 			$info = data;
 		});
+
+		setInterval(() => {
+			connection = socket.readyState === 1;
+
+			if (!connection) window.location.reload();
+		}, 2000);
 	});
 </script>
 
