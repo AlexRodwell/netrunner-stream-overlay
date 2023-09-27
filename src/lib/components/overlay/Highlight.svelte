@@ -3,7 +3,7 @@
 	import type { Side } from "$lib/types";
 
 	export let align: "left" | "right";
-	export let code: string = "21063";
+	export let code: string;
 	export let active: boolean;
 	export let side: Side;
 
@@ -62,6 +62,10 @@
 					transform: translateX(0%);
 				}
 			}
+		}
+
+		:global(.card) {
+			width: 300px;
 		}
 	}
 </style>

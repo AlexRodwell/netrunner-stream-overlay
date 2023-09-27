@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { fly } from "svelte/transition";
 	import type { Side } from "$lib/types";
+	type ExtendedSide = Side | false;
+
 	import { slugify } from "$lib/utils";
 
 	import BackCorporation from "$lib/assets/cards/nsg-corp.png";
@@ -8,7 +10,7 @@
 
 	// export let title: string;
 	export let code: string;
-	export let side: Side;
+	export let side: ExtendedSide = false;
 
 	let back = side === "Corporation" ? BackCorporation : BackRunner;
 
@@ -20,17 +22,20 @@
 
 <div class="card card--{slugify(side)}">
 	<div class="card__front">
-		<img data-id={code} src={url} alt={code} />
+		<!-- svelte-ignore a11y-missing-attribute -->
+		<img src={url} />
 	</div>
-	<div class="card__back">
-		<img src={back} />
-	</div>
+	{#if side}
+		<div class="card__back">
+			<!-- svelte-ignore a11y-missing-attribute -->
+			<img src={back} />
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">
 	.card {
 		aspect-ratio: 64/89;
-		width: 300px;
 		transform-style: preserve-3d;
 		display: flex;
 		transition: 600ms ease;

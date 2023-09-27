@@ -9,13 +9,13 @@
 
 	let socket: WebSocket;
 	let data: PlayerData = $info;
-	let connection: number = false;
+	let connection: boolean = false;
 
 	onMount(() => {
 		socket = new WebSocket("ws://localhost:8080"); // Connect to your WebSocket server
 
 		setInterval(() => {
-			connection = socket.readyState;
+			connection = socket.readyState === 1;
 		}, 500);
 	});
 
@@ -31,55 +31,44 @@
 
 Connection to Websocket server: {connection}
 
-<div>
-	<h1>Command Center</h1>
-	<button>deploy all</button>
-	<button>undo changes</button>
-	<button>reset counters (new game)</button>
-</div>
+<main class="dashboard">
+	<section class="dashboard__command">
+		<h1>Command Center</h1>
+		<button>deploy all</button>
+		<button>undo changes</button>
+		<button>reset counters (new game)</button>
+	</section>
 
-<div style="padding: 1rem; border: 1px solid red;">
 	<Side
 		side="Corporation"
 		on:playerdata={(event) => {
 			update("Corporation", event.detail);
 		}}
 	/>
-</div>
 
-<div style="padding: 1rem; border: 1px solid red;">
 	<Side
 		side="Runner"
 		on:playerdata={(event) => {
 			update("Runner", event.detail);
 		}}
 	/>
-</div>
+</main>
 
-<style>
-	main {
-		width: 100vw;
-		min-height: 100vh;
-		padding: 5vw;
-		gap: 1.5rem;
+<style lang="scss">
+	:global(body) {
 		background: #030303;
 	}
 
-	.cards {
+	.dashboard {
+		width: 100vw;
+		padding: 5vw;
+		gap: 1.5rem;
 		display: grid;
-		grid-template-columns: repeat(6, 1fr);
-		align-items: flex-start;
-		align-content: flex-start;
-	}
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-rows: auto 1fr;
 
-	p {
-		grid-column: 1/-1;
-		text-align: center;
-	}
-
-	:global(img.active) {
-		transform: scale(1.05);
-		border: 2px solid red;
-		opacity: 1;
+		&__command {
+			grid-column: 1/-1;
+		}
 	}
 </style>

@@ -5,8 +5,14 @@ export const info: PlayerData = writable({
 	Corporation: {
 		faction: "Jinteki",
 		id: "419: Amoral Scammer",
-		clicks: 3,
-		credits: 5,
+		clicks: {
+			active: true,
+			amount: 3,
+		},
+		credits: {
+			active: true,
+			amount: 5,
+		},
 		cards: [],
 		highlight: {
 			code: "21063",
@@ -16,8 +22,14 @@ export const info: PlayerData = writable({
 	Runner: {
 		faction: "Anarch",
 		id: "Asa Group: Security Through Vigilance",
-		clicks: 4,
-		credits: 5,
+		clicks: {
+			active: true,
+			amount: 4,
+		},
+		credits: {
+			active: true,
+			amount: 5,
+		},
 		cards: [],
 		highlight: {
 			code: "21063",

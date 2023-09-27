@@ -31,8 +31,14 @@ export type Attributes = {
 	// | "Shaper"
 	// | string;
 	id: string;
-	clicks: number;
-	credits: number;
+	clicks: {
+		active: boolean;
+		amount: number;
+	};
+	credits: {
+		active: boolean;
+		amount: number;
+	};
 	cards?: string[];
 	highlight?: {
 		code: string;

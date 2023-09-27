@@ -7,9 +7,13 @@
 
 	export let id: string;
 	export let faction: Faction;
-	export let clicks: number;
-	export let credits: number;
 	export let align: "left" | "right";
+
+	export let clicks: number;
+	export let displayClicks: boolean = true;
+
+	export let credits: number;
+	export let displayCredits: boolean = true;
 
 	$: logo = FactionData.find((obj) => obj.name === faction).logo;
 </script>
@@ -20,14 +24,19 @@
 			<img class="side__faction__logo" src={logo} />
 		</div>
 
-		<div class="side__item" {align}>
-			<img class="side__icon" src={IconClick} />
-			{clicks}
-		</div>
-		<div class="side__item" {align}>
-			<img class="side__icon" src={IconCredit} />
-			{credits}
-		</div>
+		{#if displayClicks}
+			<div class="side__item" {align}>
+				<img class="side__icon" src={IconClick} />
+				{clicks}
+			</div>
+		{/if}
+
+		{#if displayCredits}
+			<div class="side__item" {align}>
+				<img class="side__icon" src={IconCredit} />
+				{credits}
+			</div>
+		{/if}
 	</div>
 
 	<p class="side__id side__id--{align}">

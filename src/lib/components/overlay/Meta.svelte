@@ -15,8 +15,10 @@
 		id={$info["Corporation"].id}
 		faction={$info["Corporation"].faction}
 		align="left"
-		clicks={$info["Corporation"].clicks}
-		credits={$info["Corporation"].credits}
+		clicks={$info["Corporation"].clicks.amount}
+		credits={$info["Corporation"].credits.amount}
+		displayClicks={$info["Corporation"].clicks.active}
+		displayCredits={$info["Corporation"].credits.active}
 	/>
 
 	<div class="meta__brand">
@@ -31,8 +33,10 @@
 		id={$info["Runner"].id}
 		faction={$info["Runner"].faction}
 		align="right"
-		clicks={$info["Runner"].clicks}
-		credits={$info["Runner"].credits}
+		clicks={$info["Runner"].clicks.amount}
+		credits={$info["Runner"].credits.amount}
+		displayClicks={$info["Runner"].clicks.active}
+		displayCredits={$info["Runner"].credits.active}
 	/>
 </section>
 
