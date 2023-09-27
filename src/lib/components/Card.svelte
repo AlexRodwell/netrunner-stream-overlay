@@ -14,7 +14,7 @@
 
 	let back = side === "Corporation" ? BackCorporation : BackRunner;
 
-	$: url = `https://static.nrdbassets.com/v1/large/{code}.jpg`.replace(
+	$: url = `https://card-images.netrunnerdb.com/v1/large/{code}.jpg`.replace(
 		"{code}",
 		code
 	);
