@@ -45,19 +45,6 @@
 	</main>
 {/if}
 
-<video
-	style="width: 100vw; height: 100vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); object-fit: cover; z-index: -1"
-	autoplay
-	muted
-	loop
->
-	<source src="https://static.rodwell.dev/netrunner.mp4" type="video/mp4" />
-</video>
-
-<!-- <main class="flex flex-col justify-center items-center gap-4 p-20">
-	<Cards />
-</main> -->
-
 <style lang="scss">
 	.wrapper {
 		display: grid;
