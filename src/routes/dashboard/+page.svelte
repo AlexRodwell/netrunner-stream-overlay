@@ -4,6 +4,8 @@
 	import { info } from "$lib/store";
 	import type { PlayerData, Side as TSide, Attributes } from "$lib/types";
 	import Side from "$lib/components/dashboard/Side.svelte";
+	import Loading from "$lib/components/Loading.svelte";
+	import Container from "$lib/components/dashboard/Container.svelte";
 
 	let socket: WebSocket;
 	let data: PlayerData = $info;
@@ -29,15 +31,24 @@
 	};
 </script>
 
-Connection to Websocket server: {connection}
-
 <main class="dashboard">
-	<section class="dashboard__command">
-		<h1>Command Center</h1>
-		<button>deploy all</button>
-		<button>undo changes</button>
-		<button>reset counters (new game)</button>
-	</section>
+	<p class="connection connection--{connection ? 'active' : 'inactive'}">
+		{#if connection}
+			✔️ Connected to websocket
+		{:else}
+			<Loading />
+			Connection lost, attempting to reconnect
+		{/if}
+	</p>
+
+	<div class="dashboard__command">
+		<Container>
+			<h1>Command Center</h1>
+			<button>deploy all</button>
+			<button>undo changes</button>
+			<button>reset counters (new game)</button>
+		</Container>
+	</div>
 
 	<Side
 		side="Corporation"
@@ -69,6 +80,46 @@ Connection to Websocket server: {connection}
 
 		&__command {
 			grid-column: 1/-1;
+		}
+	}
+
+	.connection {
+		padding: 1rem;
+		border: 1px solid #262626;
+		background: #202020;
+		color: #fff;
+		border-radius: 8px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		grid-column: 1/-1;
+
+		&--active {
+			border-color: #2a6c21;
+			background: rgb(30, 34, 27);
+			background: linear-gradient(
+				0deg,
+				rgba(30, 34, 27, 1) 0%,
+				rgba(46, 70, 43, 1) 100%
+			);
+		}
+
+		&--inactive {
+			border-color: #6c2121;
+			background: rgb(34, 27, 27);
+			background: linear-gradient(
+				0deg,
+				rgba(34, 27, 27, 1) 0%,
+				rgba(112, 41, 41, 1) 100%
+			);
+		}
+
+		:global(.loading) {
+			width: 1rem;
+			height: 1rem;
+			border-width: 0.125rem;
 		}
 	}
 </style>

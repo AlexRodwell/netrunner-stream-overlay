@@ -9,6 +9,7 @@
 	let connection: boolean = false;
 
 	onMount(() => {
+		// Connect to websocket server
 		socket = new WebSocket("ws://localhost:8080");
 
 		// Recieve and parse data from websocket
