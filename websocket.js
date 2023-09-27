@@ -1,43 +1,9 @@
 import { WebSocketServer } from "ws";
+import defualt from "./src/lib/data/default.json";
 
 const wss = new WebSocketServer({ port: 8080 });
 
-let data = {
-	Corporation: {
-		faction: "Jinteki",
-		id: "419: Amoral Scammer",
-		clicks: {
-			active: true,
-			amount: 3,
-		},
-		credits: {
-			active: true,
-			amount: 5,
-		},
-		cards: [],
-		highlight: {
-			code: "21063",
-			active: false,
-		},
-	},
-	Runner: {
-		faction: "Anarch",
-		id: "Asa Group: Security Through Vigilance",
-		clicks: {
-			active: true,
-			amount: 4,
-		},
-		credits: {
-			active: true,
-			amount: 5,
-		},
-		cards: [],
-		highlight: {
-			code: "21063",
-			active: false,
-		},
-	},
-};
+let data = defualt;
 
 wss.on("connection", (ws) => {
 	ws.send(JSON.stringify(data));

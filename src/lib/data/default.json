@@ -1,0 +1,36 @@
+{
+	"Corporation": {
+		"faction": "Jinteki",
+		"id": "419: Amoral Scammer",
+		"clicks": {
+			"active": true,
+			"amount": 3
+		},
+		"credits": {
+			"active": true,
+			"amount": 5
+		},
+		"cards": [],
+		"highlight": {
+			"code": "21063",
+			"active": false
+		}
+	},
+	"Runner": {
+		"faction": "Anarch",
+		"id": "Asa Group: Security Through Vigilance",
+		"clicks": {
+			"active": true,
+			"amount": 4
+		},
+		"credits": {
+			"active": true,
+			"amount": 5
+		},
+		"cards": [],
+		"highlight": {
+			"code": "21063",
+			"active": false
+		}
+	}
+}

@@ -50,10 +50,15 @@
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		grid-template-rows: 1fr auto;
-		width: 100vw;
-		height: 100vh;
+		width: 1920px; // 100vw;
+		height: 1080px; // 100vh;
 		padding: 2rem;
 		overflow: hidden;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		position: absolute;
+		outline: 1px solid red;
 
 		&--loading {
 			display: flex;

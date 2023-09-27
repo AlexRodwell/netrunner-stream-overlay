@@ -11,14 +11,16 @@
 	export let clicks: Counters;
 	export let credits: Counters;
 
-	$: logo = FactionData.find((obj) => obj.code === faction).logo;
+	$: logo = FactionData.find((obj) => obj.code === faction)?.logo;
 </script>
 
 <section class="side" {align}>
 	<div class="side__data" {align}>
-		<div class="side__faction">
-			<img class="side__faction__logo" src={logo} />
-		</div>
+		{#if logo}
+			<div class="side__faction">
+				<img class="side__faction__logo" src={logo} />
+			</div>
+		{/if}
 
 		{#if clicks.active}
 			<div class="side__item" {align}>

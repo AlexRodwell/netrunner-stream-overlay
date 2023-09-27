@@ -13,11 +13,7 @@
 	/>
 
 	<div class="meta__brand">
-		<h1
-			style="font-size: 1rem; line-height: 1.1; font-family: 'Comic Sans MS'; text-align: center; color: blue;"
-		>
-			East Anglia Champs
-		</h1>
+		<!-- Branding to go here, or in stream overlay -->
 	</div>
 
 	<Side
