@@ -5,6 +5,7 @@
 	import IconCredit from "$lib/assets/icons/credit.svg";
 	import FactionData from "$lib/data/factions.json";
 
+	export let player: string;
 	export let id: string;
 	export let faction: Faction;
 	export let align: "left" | "right";
@@ -42,6 +43,12 @@
 	<p class="side__id side__id--{align}">
 		{id}
 	</p>
+
+	{#if player}
+		<p class="side__id side__id--{align}">
+			{player}
+		</p>
+	{/if}
 </section>
 
 <style lang="scss">

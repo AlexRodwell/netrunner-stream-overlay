@@ -27,10 +27,35 @@
 			return obj.type_code === "identity" && matchingFaction;
 		});
 	}
+
+	function sortAlphabetically(array: Array<{}>, key_value: string) {
+		console.log(array);
+
+		const sorted = array.sort((a: string, b: string) => {
+			const nameA = a[key_value].toLowerCase();
+			const nameB = b[key_value].toLowerCase();
+
+			if (nameA < nameB) {
+				return -1;
+			}
+			if (nameA > nameB) {
+				return 1;
+			}
+
+			return 0; // Names are equal
+		});
+
+		return sorted;
+	}
 </script>
 
 <section>
 	<h2>{side}</h2>
+
+	<label>
+		<span>Player name</span>
+		<input type="text" bind:value={data.player.name} />
+	</label>
 
 	<label>
 		<span>Faction</span>
@@ -48,7 +73,7 @@
 	<label>
 		<span>ID</span>
 		<select bind:value={data.id}>
-			{#each filterIdentitiesByFaction() as identity}
+			{#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity}
 				<option value={identity.stripped_title}
 					>{identity.stripped_title}</option
 				>

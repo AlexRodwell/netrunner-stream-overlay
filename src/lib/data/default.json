@@ -1,5 +1,8 @@
 {
 	"Corporation": {
+		"player": {
+			"name": "Corporation"
+		},
 		"faction": "Jinteki",
 		"id": "419: Amoral Scammer",
 		"clicks": {
@@ -17,6 +20,9 @@
 		}
 	},
 	"Runner": {
+		"player": {
+			"name": "Runner"
+		},
 		"faction": "Anarch",
 		"id": "Asa Group: Security Through Vigilance",
 		"clicks": {

@@ -43,7 +43,7 @@
 
 	<div class="dashboard__command">
 		<Container>
-			<h1>Command Center</h1>
+			<h1>Command Center (WIP, none of these work)</h1>
 			<button>deploy all</button>
 			<button>undo changes</button>
 			<button>reset counters (new game)</button>
@@ -68,6 +68,7 @@
 <style lang="scss">
 	:global(body) {
 		background: #030303;
+		overflow-x: hidden;
 	}
 
 	.dashboard {

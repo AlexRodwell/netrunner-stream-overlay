@@ -30,6 +30,9 @@ export type Counters = {
 };
 
 export type Attributes = {
+	player: {
+		name: string;
+	};
 	faction: string;
 	// | "Haas-Bioroid"
 	// | "Jinteki"

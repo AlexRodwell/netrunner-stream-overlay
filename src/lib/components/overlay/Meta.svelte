@@ -5,6 +5,7 @@
 
 <section class="meta">
 	<Side
+		player={$info["Corporation"].player.name}
 		id={$info["Corporation"].id}
 		faction={$info["Corporation"].faction}
 		align="left"
@@ -17,6 +18,7 @@
 	</div>
 
 	<Side
+		player={$info["Runner"].player.name}
 		id={$info["Runner"].id}
 		faction={$info["Runner"].faction}
 		align="right"
