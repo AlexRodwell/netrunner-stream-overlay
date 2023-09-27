@@ -20,6 +20,15 @@ export type Card = {
 	uniqueness: boolean;
 };
 
+export type Counter = "clicks" | "credits";
+
+export type Counters = {
+	[key in Counter]: {
+		active: boolean;
+		amount: number;
+	};
+};
+
 export type Attributes = {
 	faction: string;
 	// | "Haas-Bioroid"
@@ -31,14 +40,8 @@ export type Attributes = {
 	// | "Shaper"
 	// | string;
 	id: string;
-	clicks: {
-		active: boolean;
-		amount: number;
-	};
-	credits: {
-		active: boolean;
-		amount: number;
-	};
+	clicks: Counters;
+	credits: Counters;
 	cards?: string[];
 	highlight?: {
 		code: string;

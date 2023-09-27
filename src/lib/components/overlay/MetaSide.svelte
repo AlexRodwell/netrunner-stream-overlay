@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { info } from "$lib/store";
-	import type { Faction } from "$lib/utils";
+	import type { Faction, Counters } from "$lib/types";
 	import IconClick from "$lib/assets/icons/click.svg";
 	import IconCredit from "$lib/assets/icons/credit.svg";
 	import FactionData from "$lib/data/factions.json";
@@ -8,14 +8,10 @@
 	export let id: string;
 	export let faction: Faction;
 	export let align: "left" | "right";
+	export let clicks: Counters;
+	export let credits: Counters;
 
-	export let clicks: number;
-	export let displayClicks: boolean = true;
-
-	export let credits: number;
-	export let displayCredits: boolean = true;
-
-	$: logo = FactionData.find((obj) => obj.name === faction).logo;
+	$: logo = FactionData.find((obj) => obj.code === faction).logo;
 </script>
 
 <section class="side" {align}>
@@ -24,17 +20,19 @@
 			<img class="side__faction__logo" src={logo} />
 		</div>
 
-		{#if displayClicks}
+		{#if clicks.active}
 			<div class="side__item" {align}>
+				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={IconClick} />
-				{clicks}
+				{clicks.amount}
 			</div>
 		{/if}
 
-		{#if displayCredits}
+		{#if credits.active}
 			<div class="side__item" {align}>
+				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={IconCredit} />
-				{credits}
+				{credits.amount}
 			</div>
 		{/if}
 	</div>

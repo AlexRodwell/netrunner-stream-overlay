@@ -37,7 +37,7 @@
 		<select bind:value={data.faction}>
 			{#each FactionsData.filter((obj) => obj.side === side) as faction}
 				<option
-					value={faction.slug}
+					value={faction.code}
 					selected={faction.name === data.faction}
 					>{faction.name}</option
 				>
@@ -49,7 +49,9 @@
 		<span>ID</span>
 		<select bind:value={data.id}>
 			{#each filterIdentitiesByFaction() as identity}
-				<option value={identity.code}>{identity.stripped_title}</option>
+				<option value={identity.stripped_title}
+					>{identity.stripped_title}</option
+				>
 			{/each}
 		</select>
 	</label>
@@ -60,9 +62,10 @@
 			<input type="number" bind:value={data.clicks.amount} />
 		</label>
 
-		<label>
+		<label class="checkbox">
 			<span>Display</span>
 			<input type="checkbox" bind:checked={data.clicks.active} />
+			<span class="checkbox__mark" />
 		</label>
 	</Container>
 
@@ -72,16 +75,17 @@
 			<input type="number" bind:value={data.credits.amount} />
 		</label>
 
-		<label>
+		<label class="checkbox">
 			<span>Display</span>
 			<input type="checkbox" bind:checked={data.credits.active} />
+			<span class="checkbox__mark" />
 		</label>
 	</Container>
 
 	<Container title="Display card" level={3}>
-		<label style="padding: 0.5rem; border: 1px solid green">
-			{data.highlight.active}
+		<label class="checkbox">
 			<input type="checkbox" bind:checked={data.highlight.active} />
+			<span class="checkbox__mark" />
 		</label>
 
 		<Search
@@ -109,7 +113,7 @@
 		align-content: flex-start;
 	}
 
-	label,
+	label:not(.checkbox),
 	section > div {
 		display: grid;
 		gap: 0.5rem;
