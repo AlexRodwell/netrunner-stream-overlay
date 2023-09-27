@@ -5,15 +5,15 @@
 	import type { PlayerData, Side as TSide, Attributes } from "$lib/types";
 	import Side from "$lib/components/dashboard/Side.svelte";
 
-	// import { wsSend } from "$lib/utils";
-
 	let socket: WebSocket;
 	let data: PlayerData = $info;
 	let connection: boolean = false;
 
 	onMount(() => {
-		socket = new WebSocket("ws://localhost:8080"); // Connect to your WebSocket server
+		// Connect to websocket server
+		socket = new WebSocket("ws://localhost:8080");
 
+		// Check if connection to websocket server is alive
 		setInterval(() => {
 			connection = socket.readyState === 1;
 		}, 500);

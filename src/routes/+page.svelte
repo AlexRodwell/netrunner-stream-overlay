@@ -11,20 +11,19 @@
 	onMount(() => {
 		socket = new WebSocket("ws://localhost:8080");
 
+		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {
-			// console.log("recieved websocket connection...");
-
-			// console.clear();
 			let data = JSON.parse(event.data);
-			console.log(data);
-
 			$info = data;
 		});
 
 		setInterval(() => {
 			connection = socket.readyState === 1;
 
-			if (!connection) window.location.reload();
+			// Refresh page if websocket connection is lost
+			if (!connection) {
+				window.location.reload();
+			}
 		}, 2000);
 	});
 </script>
