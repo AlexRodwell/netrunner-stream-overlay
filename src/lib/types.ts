@@ -29,19 +29,25 @@ export type Counters = {
 	};
 };
 
-export type Attributes = {
+export type Side = "Corporation" | "Runner";
+
+export type GlobalData = {
+	direction: "ltr" | "rtl";
+};
+
+export type TimerData = {
+	count: number;
+	action: "set" | "reset" | "clear";
+	prev: Date;
+};
+
+export type PlayerAttributes = {
 	player: {
+		wins: "0" | "1" | "2";
 		name: string;
+		pronoun: string;
 	};
 	faction: string;
-	// | "Haas-Bioroid"
-	// | "Jinteki"
-	// | "NBN"
-	// | "Weyland Consortium."
-	// | "Anarch"
-	// | "Criminal"
-	// | "Shaper"
-	// | string;
 	id: string;
 	clicks: Counters;
 	credits: Counters;
@@ -53,10 +59,8 @@ export type Attributes = {
 };
 
 export type PlayerData = {
-	[key in Side]: Attributes;
+	[key in Side]: PlayerAttributes;
 };
-
-export type Side = "Corporation" | "Runner";
 
 type Factions = typeof import("./data/factions.json");
 

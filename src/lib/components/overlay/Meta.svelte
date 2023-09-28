@@ -1,40 +1,50 @@
 <script lang="ts">
-	import { info } from "$lib/store";
+	import { globalData, playerData } from "$lib/store";
 	import { default as Side } from "$lib/components/overlay/MetaSide.svelte";
+
+	$: align =
+		$globalData.direction === "ltr" ? ["left", "right"] : ["right", "left"];
 </script>
 
-<section class="meta">
+<section class="meta meta--{$globalData.direction}">
 	<Side
-		player={$info["Corporation"].player.name}
-		id={$info["Corporation"].id}
-		faction={$info["Corporation"].faction}
-		align="left"
-		clicks={$info["Corporation"].clicks}
-		credits={$info["Corporation"].credits}
+		player={$playerData["Corporation"].player}
+		id={$playerData["Corporation"].id}
+		faction={$playerData["Corporation"].faction}
+		align={align[0]}
+		clicks={$playerData["Corporation"].clicks}
+		credits={$playerData["Corporation"].credits}
 	/>
 
-	<div class="meta__brand">
-		<!-- Branding to go here, or in stream overlay -->
-	</div>
-
 	<Side
-		player={$info["Runner"].player.name}
-		id={$info["Runner"].id}
-		faction={$info["Runner"].faction}
-		align="right"
-		clicks={$info["Runner"].clicks}
-		credits={$info["Runner"].credits}
+		player={$playerData["Runner"].player}
+		id={$playerData["Runner"].id}
+		faction={$playerData["Runner"].faction}
+		align={align[1]}
+		clicks={$playerData["Runner"].clicks}
+		credits={$playerData["Runner"].credits}
 	/>
 </section>
 
 <style lang="scss">
 	.meta {
 		grid-column: 1/-1;
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		// display: grid;
+		// grid-template-columns: 1fr 3fr 1fr;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 		align-items: center;
 
 		&__brand {
+		}
+
+		&--ltr {
+			// Default
+		}
+
+		&--rtl {
+			flex-direction: row-reverse;
 		}
 	}
 </style>

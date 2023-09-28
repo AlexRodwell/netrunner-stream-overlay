@@ -1,9 +1,11 @@
 {
 	"Corporation": {
 		"player": {
-			"name": "Corporation"
+			"wins": "0",
+			"name": "Corporation",
+			"pronoun": ""
 		},
-		"faction": "Jinteki",
+		"faction": "jinteki",
 		"id": "419: Amoral Scammer",
 		"clicks": {
 			"active": true,
@@ -21,9 +23,11 @@
 	},
 	"Runner": {
 		"player": {
-			"name": "Runner"
+			"wins": "0",
+			"name": "Runner",
+			"pronoun": ""
 		},
-		"faction": "Anarch",
+		"faction": "anarch",
 		"id": "Asa Group: Security Through Vigilance",
 		"clicks": {
 			"active": true,

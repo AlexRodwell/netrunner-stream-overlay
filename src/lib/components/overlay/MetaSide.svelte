@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { info } from "$lib/store";
+	import { playerData } from "$lib/store";
 	import type { Faction, Counters } from "$lib/types";
 	import IconClick from "$lib/assets/icons/click.svg";
 	import IconCredit from "$lib/assets/icons/credit.svg";
@@ -44,9 +44,18 @@
 		{id}
 	</p>
 
-	{#if player}
+	{#if player?.name}
 		<p class="side__id side__id--{align}">
-			{player}
+			{player.name}
+			{#if player.pronoun}
+				({player.pronoun})
+			{/if}
+		</p>
+	{/if}
+
+	{#if player?.wins}
+		<p class="side__id side__id--{align}">
+			Wins: {player.wins}
 		</p>
 	{/if}
 </section>

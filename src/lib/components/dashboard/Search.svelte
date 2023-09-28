@@ -3,6 +3,7 @@
 	import { createEventDispatcher } from "svelte";
 	import CardsData from "$lib/data/cards.json";
 	import Card from "../Card.svelte";
+	import Loading from "../Loading.svelte";
 
 	export let limit: 1 | "uncapped" = 1; // Define how many cards can be selected
 
@@ -21,7 +22,10 @@
 	}
 
 	function cardSelected(code: string) {
-		console.log(limit);
+		// Remove card if selected is clicked again
+		if (selected.includes(code)) {
+			selected = [];
+		}
 
 		// Multiple ID's
 		if (limit === "uncapped") {
@@ -36,7 +40,13 @@
 	}
 </script>
 
-{JSON.stringify(selected)}
+{#if selected.length > 0}
+	<p>
+		Currently selected: {CardsData.data.find(
+			(card) => card.code === selected[0]
+		)?.stripped_title} ({selected[0]})
+	</p>
+{/if}
 
 <input
 	type="text"
@@ -60,7 +70,10 @@
 			{item.stripped_title}
 		</button>
 	{:else}
-		<p>No results found</p>
+		<div class="search__no">
+			<Loading />
+			<p>Waitng for input</p>
+		</div>
 	{/each}
 </div>
 
@@ -93,6 +106,22 @@
 
 		img {
 			width: 100%;
+		}
+
+		&__no {
+			grid-column: 1/-1;
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		:global(.loading) {
+			width: 1.5rem;
+			height: 1.5rem;
+			border-width: 0.125rem;
 		}
 	}
 </style>

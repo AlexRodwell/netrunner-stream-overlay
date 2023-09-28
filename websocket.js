@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import defualt from "./src/lib/data/default.json" assert { type: "json" };
+import defualt from "./src/lib/data/default/player.json" assert { type: "json" };
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -9,8 +9,11 @@ wss.on("connection", (ws) => {
 	ws.send(JSON.stringify(data));
 
 	ws.addEventListener("message", (event) => {
-		console.clear();
 		const newData = JSON.parse(event.data);
+
+		console.log("--------------------------");
+		console.log(`Recieved new data with type ${newData._type}:`);
+		console.log(newData);
 
 		// Check if the received data is different from the current data
 		if (JSON.stringify(newData) !== JSON.stringify(data)) {

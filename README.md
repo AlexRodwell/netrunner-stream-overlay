@@ -9,3 +9,13 @@ Run `npm run websocket` to start `websocket.js`, this will be accessible at loca
 ### Overlay & Dashboard
 
 Run `npm run dev`, this starts a local server using SvelteKit
+
+## Overlay
+
+### Player (score, wins, agena points, name etc)
+
+Accessible at `/overlay`
+
+### Timer
+
+Accessible at `/overlay/timer`

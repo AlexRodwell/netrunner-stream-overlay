@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import { onMount } from "svelte";
-	import type { Attributes, Side } from "$lib/types";
+	import type { PlayerAttributes, Side } from "$lib/types";
 	import CardsData from "$lib/data/cards.json";
 	import FactionsData from "$lib/data/factions.json";
-	import { info } from "$lib/store";
+	import { playerData } from "$lib/store";
 	import Container from "$lib/components/dashboard/Container.svelte";
 	import Search from "$lib/components/dashboard/Search.svelte";
 
@@ -12,7 +11,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	let data: Attributes = $info[side];
+	let data: PlayerAttributes = $playerData[side];
 
 	function filterIdentitiesByFaction() {
 		const filteredFactionData = FactionsData.filter(
@@ -29,8 +28,6 @@
 	}
 
 	function sortAlphabetically(array: Array<{}>, key_value: string) {
-		console.log(array);
-
 		const sorted = array.sort((a: string, b: string) => {
 			const nameA = a[key_value].toLowerCase();
 			const nameB = b[key_value].toLowerCase();
@@ -47,39 +44,83 @@
 
 		return sorted;
 	}
+
+	let displayName: string | boolean = false;
+
+	$: {
+		if (data?.player?.name && data?.faction) {
+			let _faction = FactionsData.find(
+				(faction) => faction.code === data?.faction
+			);
+
+			displayName = `${data?.player?.name} - ${_faction.name} (${_faction.side})`;
+		} else {
+			displayName = false;
+		}
+	}
 </script>
 
 <section>
-	<h2>{side}</h2>
+	<h2>
+		{displayName || side}
+	</h2>
 
-	<label>
-		<span>Player name</span>
-		<input type="text" bind:value={data.player.name} />
-	</label>
+	<Container title="Player" level={3}>
+		<label>
+			<span>Player name</span>
+			<input type="text" bind:value={data.player.name} />
+		</label>
 
-	<label>
-		<span>Faction</span>
-		<select bind:value={data.faction}>
-			{#each FactionsData.filter((obj) => obj.side === side) as faction}
-				<option
-					value={faction.code}
-					selected={faction.name === data.faction}
-					>{faction.name}</option
+		<label>
+			<span>Player pronouns (optional)</span>
+			<input type="text" bind:value={data.player.pronoun} />
+		</label>
+	</Container>
+
+	<Container title="Identity" level={3}>
+		<label>
+			<span>Faction</span>
+			<select bind:value={data.faction}>
+				{#each FactionsData.filter((obj) => obj.side === side) as faction}
+					<option
+						value={faction.code}
+						selected={faction.name === data.faction}
+						>{faction.name}</option
+					>
+				{/each}
+			</select>
+		</label>
+
+		<label>
+			<span>ID</span>
+			<select bind:value={data.id}>
+				{#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity}
+					<option value={identity.stripped_title}
+						>{identity.stripped_title}</option
+					>
+				{/each}
+			</select>
+		</label>
+	</Container>
+
+	<Container title="Win counter" level={3}>
+		<div>
+			<span>Wins</span>
+			{#each ["0", "1", "2"] as item}
+				<label
+					style="display: flex; flex-direction: row; gap: 0.5rem; padding; padding: 0.5rem; background: #121212; margin-bottom: 0.25rem;"
 				>
+					<input
+						type="radio"
+						name="options"
+						bind:group={data.player.wins}
+						value={item}
+					/>
+					{item}
+				</label>
 			{/each}
-		</select>
-	</label>
-
-	<label>
-		<span>ID</span>
-		<select bind:value={data.id}>
-			{#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity}
-				<option value={identity.stripped_title}
-					>{identity.stripped_title}</option
-				>
-			{/each}
-		</select>
-	</label>
+		</div>
+	</Container>
 
 	<Container title="Clicks" level={3}>
 		<label>

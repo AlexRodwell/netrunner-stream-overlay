@@ -1,14 +1,22 @@
 <script lang="ts">
 	import { onMount } from "svelte";
 	import cards from "$lib/data/cards.json";
-	import { info } from "$lib/store";
-	import type { PlayerData, Side as TSide, Attributes } from "$lib/types";
+	import { globalData, playerData, timerData } from "$lib/store";
+	import type {
+		GlobalData as TGlobalData,
+		PlayerData as TPlayerData,
+		TimerData as TTimerData,
+		Side as TSide,
+		PlayerAttributes,
+	} from "$lib/types";
 	import Side from "$lib/components/dashboard/Side.svelte";
 	import Loading from "$lib/components/Loading.svelte";
 	import Container from "$lib/components/dashboard/Container.svelte";
 
 	let socket: WebSocket;
-	let data: PlayerData = $info;
+	let player: TPlayerData = $playerData;
+	let global: TGlobalData = $globalData;
+	let timer: TTimerData = $timerData;
 	let connection: boolean = false;
 
 	onMount(() => {
@@ -21,13 +29,38 @@
 		}, 500);
 	});
 
-	const update = (side: TSide, newData: Attributes) => {
-		data[side] = {
-			...data[side],
+	const updatePlayer = (side: TSide, newData: PlayerAttributes) => {
+		player[side] = {
+			...player[side],
 			...newData,
 		};
 
-		socket.send(JSON.stringify(data));
+		socket.send(
+			JSON.stringify({
+				_type: "player",
+				...player,
+			})
+		);
+	};
+
+	const updateGlobal = (newData: TGlobalData) => {
+		global = newData;
+		socket.send(
+			JSON.stringify({
+				_type: "global",
+				...global,
+			})
+		);
+	};
+
+	const updateTimer = (newData: TTimerData) => {
+		timer = newData;
+		socket.send(
+			JSON.stringify({
+				_type: "timer",
+				...timer,
+			})
+		);
 	};
 </script>
 
@@ -42,25 +75,65 @@
 	</p>
 
 	<div class="dashboard__command">
-		<Container>
-			<h1>Command Center (WIP, none of these work)</h1>
+		<Container title="Command Center (WIP, none of these work)" level={2}>
+			<h1 />
 			<button>deploy all</button>
 			<button>undo changes</button>
 			<button>reset counters (new game)</button>
 		</Container>
 	</div>
 
+	<div class="dashboard__command">
+		<Container title="Global settings" level={3}>
+			<label>
+				<span>Side (on overlay)</span>
+				<select
+					bind:value={global.direction}
+					on:change={(event) => updateGlobal(global)}
+				>
+					<option value="ltr" selected>Left to right</option>
+					<option value="rtl">Right to left (reverse)</option>
+				</select>
+			</label>
+
+			<div
+				style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
+			>
+				<label>
+					<span>Timer (seconds)</span>
+					<input type="number" bind:value={timer.count} />
+				</label>
+				<button
+					on:click={() => {
+						timer.action = "set";
+						timer.prev = new Date();
+						updateTimer(timer);
+					}}>Start timer</button
+				>
+				<button
+					on:click={() => {
+						timer.action = "clear";
+						timer.prev = new Date();
+						updateTimer(timer);
+					}}
+					style="background: #242424; border: #242424; color: #fff;"
+					>Clear timer</button
+				>
+			</div>
+		</Container>
+	</div>
+
 	<Side
 		side="Corporation"
 		on:playerdata={(event) => {
-			update("Corporation", event.detail);
+			updatePlayer("Corporation", event.detail);
 		}}
 	/>
 
 	<Side
 		side="Runner"
 		on:playerdata={(event) => {
-			update("Runner", event.detail);
+			updatePlayer("Runner", event.detail);
 		}}
 	/>
 </main>
