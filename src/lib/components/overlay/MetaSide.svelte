@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { playerData } from "$lib/store";
 	import type { Faction, Counters, Agendas } from "$lib/types";
-	import IconClick from "$lib/assets/icons/click.svg";
-	import IconCredit from "$lib/assets/icons/credit.svg";
+	import IconClick from "$lib/assets/icons/NSG_CLICK.svg";
+	import IconCredit from "$lib/assets/icons/NSG_CREDIT.svg";
 	import FactionData from "$lib/data/factions.json";
 
 	export let player: string;
