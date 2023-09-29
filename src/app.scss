@@ -1,3 +1,17 @@
+@font-face {
+	font-family: "Play Regular";
+	font-style: normal;
+	font-weight: normal;
+	src: url("/fonts/Play-Regular.woff") format("woff");
+}
+
+@font-face {
+	font-family: "Play Bold";
+	font-style: normal;
+	font-weight: normal;
+	src: url("/fonts/Play-Bold.woff") format("woff");
+}
+
 * {
 	box-sizing: border-box;
 	margin: unset;
@@ -9,9 +23,8 @@ html {
 }
 
 body {
-	font-family: "Martian Mono", monospace;
+	font-family: "Play Regular", monospace;
 	font-weight: bold;
-	// background: #121212;
 	color: #fff;
 }
 
@@ -45,10 +58,22 @@ select {
 
 	&__mark {
 		height: 25px;
-		width: 25px;
+		width: 50px;
 		background-color: #202020;
 		border: 1px solid #262626;
-		border-radius: 2px;
+		border-radius: 99rem;
+		padding: 2px;
+		cursor: pointer;
+
+		&:after {
+			content: "";
+			width: 20px;
+			height: 20px;
+			background: #404040;
+			border-radius: 100%;
+			display: flex;
+			transition: 120ms;
+		}
 	}
 
 	input[type="checkbox"] {
@@ -57,24 +82,33 @@ select {
 		height: 0px;
 
 		&:checked + .checkbox__mark {
-			background-color: #fff;
-			position: relative;
+			// background: #fff;
 
 			&:after {
-				content: "";
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%) rotate(45deg);
-				width: 5px;
-				height: 10px;
-				border: solid #030303;
-				border-top-width: medium;
-				border-right-width: medium;
-				border-bottom-width: medium;
-				border-left-width: medium;
-				border-width: 0 2px 2px 0;
+				margin-left: 24px;
+				background: #fff;
 			}
 		}
+
+		// &:checked + .checkbox__mark {
+		// 	background-color: #fff;
+		// 	position: relative;
+		//
+		// 	&:after {
+		// 		content: "";
+		// 		position: absolute;
+		// 		top: 50%;
+		// 		left: 50%;
+		// 		transform: translate(-50%, -50%) rotate(45deg);
+		// 		width: 5px;
+		// 		height: 10px;
+		// 		border: solid #030303;
+		// 		border-top-width: medium;
+		// 		border-right-width: medium;
+		// 		border-bottom-width: medium;
+		// 		border-left-width: medium;
+		// 		border-width: 0 2px 2px 0;
+		// 	}
+		// }
 	}
 }

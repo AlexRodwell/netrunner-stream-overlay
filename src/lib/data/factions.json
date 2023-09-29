@@ -3,42 +3,42 @@
 		"side": "Corporation",
 		"code": "haas-bioroid",
 		"name": "Haas-Bioroid",
-		"logo": "/factions/HB_Logo.webp"
+		"logo": "/factions/NSG_HB.svg"
 	},
 	{
 		"side": "Corporation",
 		"code": "jinteki",
 		"name": "Jinteki",
-		"logo": "/factions/Jinteki_Logo.webp"
+		"logo": "/factions/NSG_JINTEKI.svg"
 	},
 	{
 		"side": "Corporation",
 		"code": "nbn",
 		"name": "NBN",
-		"logo": "/factions/NBN_Logo.webp"
+		"logo": "/factions/NSG_NBN.svg"
 	},
 	{
 		"side": "Corporation",
 		"code": "weyland-consortium",
-		"name": "Weyland Consortium.",
-		"logo": "/factions/Weyland_Logo.webp"
+		"name": "Weyland Consortium",
+		"logo": "/factions/NSG_WEYLAND.svg"
 	},
 	{
 		"side": "Runner",
 		"code": "anarch",
 		"name": "Anarch",
-		"logo": "/factions/Anarch_Logo.webp"
+		"logo": "/factions/NSG_ANARCH.svg"
 	},
 	{
 		"side": "Runner",
 		"code": "criminal",
 		"name": "Criminal",
-		"logo": "/factions/Criminal_Logo.webp"
+		"logo": "/factions/NSG_CRIMINAL.svg"
 	},
 	{
 		"side": "Runner",
 		"code": "shaper",
 		"name": "Shaper",
-		"logo": "/factions/Shaper_Logo.webp"
+		"logo": "/factions/NSG_SHAPER.svg"
 	}
 ]

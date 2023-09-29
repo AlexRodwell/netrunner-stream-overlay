@@ -26,14 +26,25 @@
 		// Check if connection to websocket server is alive
 		setInterval(() => {
 			connection = socket.readyState === 1;
+
+			// Refresh page if websocket connection is lost
+			if (!connection) {
+				window.location.reload();
+			}
 		}, 500);
 	});
 
-	const updatePlayer = (side: TSide, newData: PlayerAttributes) => {
-		player[side] = {
-			...player[side],
-			...newData,
-		};
+	type TExtendedSide = Side | false;
+	const updatePlayer = (
+		newData: PlayerAttributes,
+		side: TExtendedSide = false
+	) => {
+		if (side) {
+			player[side] = {
+				...player[side],
+				...newData,
+			};
+		}
 
 		socket.send(
 			JSON.stringify({
@@ -65,77 +76,96 @@
 </script>
 
 <main class="dashboard">
-	<p class="connection connection--{connection ? 'active' : 'inactive'}">
-		{#if connection}
-			✔️ Connected to websocket
-		{:else}
-			<Loading />
-			Connection lost, attempting to reconnect
-		{/if}
-	</p>
+	<header class="dashboard__header">
+		<h1>Dashboard</h1>
 
-	<div class="dashboard__command">
-		<Container title="Command Center (WIP, none of these work)" level={2}>
-			<h1 />
+		<div class="dashboard__actions">
+			<p
+				class="connection connection--{connection
+					? 'active'
+					: 'inactive'}"
+			>
+				{#if connection}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="3"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class="lucide lucide-check"
+						><polyline points="20 6 9 17 4 12" /></svg
+					>
+					Connected to websocket
+				{:else}
+					<Loading />
+					Connection lost, attempting to reconnect
+				{/if}
+			</p>
 			<button>deploy all</button>
 			<button>undo changes</button>
 			<button>reset counters (new game)</button>
-		</Container>
-	</div>
+		</div>
+	</header>
 
-	<div class="dashboard__command">
-		<Container title="Global settings" level={3}>
-			<label>
-				<span>Side (on overlay)</span>
-				<select
-					bind:value={global.direction}
-					on:change={(event) => updateGlobal(global)}
-				>
-					<option value="ltr" selected>Left to right</option>
-					<option value="rtl">Right to left (reverse)</option>
-				</select>
-			</label>
-
-			<div
-				style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
-			>
+	<section class="dashboard__widgets">
+		<div class="dashboard__global">
+			<Container title="Global settings" level={3}>
 				<label>
-					<span>Timer (seconds)</span>
-					<input type="number" bind:value={timer.count} />
+					<span>Side (on overlay)</span>
+					<select
+						bind:value={global.direction}
+						on:change={(event) => updateGlobal(global)}
+					>
+						<option value="ltr" selected>Left to right</option>
+						<option value="rtl">Right to left (reverse)</option>
+					</select>
 				</label>
-				<button
-					on:click={() => {
-						timer.action = "set";
-						timer.prev = new Date();
-						updateTimer(timer);
-					}}>Start timer</button
-				>
-				<button
-					on:click={() => {
-						timer.action = "clear";
-						timer.prev = new Date();
-						updateTimer(timer);
-					}}
-					style="background: #242424; border: #242424; color: #fff;"
-					>Clear timer</button
-				>
-			</div>
-		</Container>
-	</div>
 
-	<Side
-		side="Corporation"
-		on:playerdata={(event) => {
-			updatePlayer("Corporation", event.detail);
-		}}
-	/>
+				<div
+					style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
+				>
+					<label>
+						<span>Timer (seconds)</span>
+						<input type="number" bind:value={timer.count} />
+					</label>
+					<button
+						on:click={() => {
+							timer.action = "set";
+							timer.prev = new Date();
+							updateTimer(timer);
+						}}>Start timer</button
+					>
+					<button
+						on:click={() => {
+							timer.action = "clear";
+							timer.prev = new Date();
+							updateTimer(timer);
+						}}
+						style="background: #242424; border: #242424; color: #fff;"
+						>Clear timer</button
+					>
+				</div>
+			</Container>
+		</div>
 
-	<Side
-		side="Runner"
-		on:playerdata={(event) => {
-			updatePlayer("Runner", event.detail);
-		}}
-	/>
+		<Side
+			side="Corporation"
+			on:playerdata={(event) => {
+				updatePlayer(event.detail, "Corporation");
+			}}
+		/>
+
+		<Side
+			side="Runner"
+			on:playerdata={(event) => {
+				updatePlayer(event.detail, "Runner");
+			}}
+		/>
+	</section>
 </main>
 
 <style lang="scss">
@@ -146,11 +176,40 @@
 
 	.dashboard {
 		width: 100vw;
-		padding: 5vw;
-		gap: 1.5rem;
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		grid-template-rows: auto 1fr;
+
+		&__header {
+			position: sticky;
+			top: 0;
+			padding: 1rem 2rem;
+			background-color: rgba(3, 3, 3, 0.85);
+			backdrop-filter: blur(5px);
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			grid-column: 1/-1;
+			border-bottom: 1px solid #202020;
+		}
+
+		&__actions {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		&__global {
+			grid-column: 1/-1;
+		}
+
+		&__widgets {
+			gap: 1.5rem;
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-template-rows: auto 1fr;
+			padding: 2rem;
+		}
 
 		&__command {
 			grid-column: 1/-1;

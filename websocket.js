@@ -13,18 +13,16 @@ wss.on("connection", (ws) => {
 
 		console.log("--------------------------");
 		console.log(`Recieved new data with type ${newData._type}:`);
-		console.log(newData);
 
 		// Check if the received data is different from the current data
 		if (JSON.stringify(newData) !== JSON.stringify(data)) {
 			data = newData;
+			console.log(data);
 
 			// Send updated data to all connected clients
 			wss.clients.forEach((client) => {
 				client.send(JSON.stringify(data));
 			});
-
-			console.log(data);
 		} else {
 			console.log("Data is the same, skipping");
 		}

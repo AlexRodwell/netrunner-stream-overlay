@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { playerData } from "$lib/store";
 	import type { Faction, Counters, Agendas } from "$lib/types";
-	import IconClick from "$lib/assets/icons/NSG_CLICK.svg";
-	import IconCredit from "$lib/assets/icons/NSG_CREDIT.svg";
+	import ICON_CLICK from "$lib/assets/icons/NSG_CLICK.svg";
+	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
+	import ICON_AGENDA from "$lib/assets/icons/NSG_AGENDA.svg";
 	import FactionData from "$lib/data/factions.json";
+	import Wins from "./Wins.svelte";
 
 	export let player: string;
 	export let id: string;
@@ -27,7 +29,7 @@
 		{#if clicks?.active && clicks?.amount}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
-				<img class="side__icon" src={IconClick} />
+				<img class="side__icon" src={ICON_CLICK} />
 				{clicks.amount}
 			</div>
 		{/if}
@@ -35,15 +37,15 @@
 		{#if credits?.active && credits?.amount}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
-				<img class="side__icon" src={IconCredit} />
+				<img class="side__icon" src={ICON_CREDIT} />
 				{credits.amount}
 			</div>
 		{/if}
 
-		{#if agendas?.active && agendas?.amount}
+		{#if agendas?.active}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
-				<img class="side__icon" src={IconCredit} />
+				<img class="side__icon" src={ICON_AGENDA} />
 				{agendas.amount}
 			</div>
 		{/if}
@@ -63,9 +65,9 @@
 	{/if}
 
 	{#if player?.wins}
-		<p class="side__id side__id--{align}">
-			Wins: {player.wins}
-		</p>
+		<div class="side__id side__id--{align}">
+			<Wins count={player.wins} />
+		</div>
 	{/if}
 </section>
 
@@ -98,8 +100,8 @@
 			aspect-ratio: 1/1;
 			display: flex;
 			place-items: center;
-			background: #141414;
-			border-radius: 4px;
+			// background: #141414;
+			// border-radius: 4px;
 
 			&__logo {
 				object-fit: contain;

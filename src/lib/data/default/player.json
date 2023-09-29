@@ -2,7 +2,7 @@
 	"Corporation": {
 		"player": {
 			"wins": "0",
-			"name": "Corporation",
+			"name": "Player One",
 			"pronoun": ""
 		},
 		"faction": "jinteki",
@@ -28,7 +28,7 @@
 	"Runner": {
 		"player": {
 			"wins": "0",
-			"name": "Runner",
+			"name": "Player Two",
 			"pronoun": ""
 		},
 		"faction": "anarch",
