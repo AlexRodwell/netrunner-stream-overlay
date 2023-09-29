@@ -148,6 +148,19 @@
 		</label>
 	</Container>
 
+	<Container title="Agendas" level={3}>
+		<label>
+			<span>Amount</span>
+			<input type="number" bind:value={data.agendas.amount} />
+		</label>
+
+		<label class="checkbox">
+			<span>Display</span>
+			<input type="checkbox" bind:checked={data.agendas.active} />
+			<span class="checkbox__mark" />
+		</label>
+	</Container>
+
 	<Container title="Display card" level={3}>
 		<label class="checkbox">
 			<input type="checkbox" bind:checked={data.highlight.active} />

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { playerData } from "$lib/store";
-	import type { Faction, Counters } from "$lib/types";
+	import type { Faction, Counters, Agendas } from "$lib/types";
 	import IconClick from "$lib/assets/icons/click.svg";
 	import IconCredit from "$lib/assets/icons/credit.svg";
 	import FactionData from "$lib/data/factions.json";
@@ -11,6 +11,7 @@
 	export let align: "left" | "right";
 	export let clicks: Counters;
 	export let credits: Counters;
+	export let agendas: Agendas;
 
 	$: logo = FactionData.find((obj) => obj.code === faction)?.logo;
 </script>
@@ -23,7 +24,7 @@
 			</div>
 		{/if}
 
-		{#if clicks.active}
+		{#if clicks?.active && clicks?.amount}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={IconClick} />
@@ -31,11 +32,19 @@
 			</div>
 		{/if}
 
-		{#if credits.active}
+		{#if credits?.active && credits?.amount}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={IconCredit} />
 				{credits.amount}
+			</div>
+		{/if}
+
+		{#if agendas?.active && agendas?.amount}
+			<div class="side__item" {align}>
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<img class="side__icon" src={IconCredit} />
+				{agendas.amount}
 			</div>
 		{/if}
 	</div>

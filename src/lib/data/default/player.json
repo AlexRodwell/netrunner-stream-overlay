@@ -16,6 +16,10 @@
 			"amount": 5
 		},
 		"cards": [],
+		"agendas": {
+			"active": true,
+			"amount": 0
+		},
 		"highlight": {
 			"code": "21063",
 			"active": false
@@ -38,6 +42,10 @@
 			"amount": 5
 		},
 		"cards": [],
+		"agendas": {
+			"active": true,
+			"amount": 0
+		},
 		"highlight": {
 			"code": "21063",
 			"active": false

@@ -14,6 +14,7 @@
 		align={align[0]}
 		clicks={$playerData["Corporation"].clicks}
 		credits={$playerData["Corporation"].credits}
+		agendas={$playerData["Corporation"].agendas}
 	/>
 
 	<Side
@@ -23,6 +24,7 @@
 		align={align[1]}
 		clicks={$playerData["Runner"].clicks}
 		credits={$playerData["Runner"].credits}
+		agendas={$playerData["Runner"].agendas}
 	/>
 </section>
 

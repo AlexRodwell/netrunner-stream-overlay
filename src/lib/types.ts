@@ -20,13 +20,17 @@ export type Card = {
 	uniqueness: boolean;
 };
 
-export type Counter = "clicks" | "credits";
+export type Counter = "clicks" | "credits" | "agendas";
 
 export type Counters = {
 	[key in Counter]: {
 		active: boolean;
 		amount: number;
 	};
+};
+
+export type Agendas = Counters & {
+	cards?: any[];
 };
 
 export type Side = "Corporation" | "Runner";
@@ -52,6 +56,7 @@ export type PlayerAttributes = {
 	clicks: Counters;
 	credits: Counters;
 	cards?: string[];
+	agendas: Agendas;
 	highlight?: {
 		code: string;
 		active: boolean;
