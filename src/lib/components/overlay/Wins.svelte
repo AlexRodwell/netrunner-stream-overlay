@@ -14,9 +14,12 @@
 
 <style lang="scss">
 	.wins {
-		display: flex;
+		// display: flex;
+		display: inline-flex;
 		flex-direction: row;
 		gap: 0.5rem;
+		margin-top: 10px;
+		width: fit-content;
 
 		&__pip {
 			width: 1rem;

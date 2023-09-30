@@ -66,7 +66,7 @@
 				cardSelected(item.code);
 			}}
 		>
-			<Card code={item.code} side="Runner" />
+			<Card code={item.code} />
 			{item.stripped_title}
 		</button>
 	{:else}

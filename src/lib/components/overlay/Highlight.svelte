@@ -53,12 +53,14 @@
 				transform: translateX(0);
 
 				&[align="left"] {
-					--transform: rotateY(20deg);
+					// --transform: rotateY(20deg);
+					--transform: rotateY(0deg);
 					transform: translateX(0%);
 				}
 
 				&[align="right"] {
-					--transform: rotateY(-20deg);
+					// --transform: rotateY(-20deg);
+					--transform: rotateY(0deg);
 					transform: translateX(0%);
 				}
 			}

@@ -20,7 +20,7 @@
 	);
 </script>
 
-<div class="card card--{slugify(side)}">
+<div class="card">
 	<div class="card__front">
 		<!-- svelte-ignore a11y-missing-attribute -->
 		<img src={url} />

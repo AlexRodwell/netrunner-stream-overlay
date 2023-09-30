@@ -37,6 +37,7 @@ export type Side = "Corporation" | "Runner";
 
 export type GlobalData = {
 	direction: "ltr" | "rtl";
+	overlay: boolean;
 };
 
 export type TimerData = {

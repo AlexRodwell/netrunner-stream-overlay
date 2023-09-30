@@ -51,12 +51,8 @@
 		{/if}
 	</div>
 
-	<p class="side__id side__id--{align}">
-		{id}
-	</p>
-
 	{#if player?.name}
-		<p class="side__id side__id--{align}">
+		<p class="side__name side__text side__text--{align}">
 			{player.name}
 			{#if player.pronoun}
 				({player.pronoun})
@@ -64,8 +60,12 @@
 		</p>
 	{/if}
 
+	<p class="side__text side__text--{align}">
+		{id}
+	</p>
+
 	{#if player?.wins}
-		<div class="side__id side__id--{align}">
+		<div class="side__text side__text--{align}">
 			<Wins count={player.wins} />
 		</div>
 	{/if}
@@ -73,13 +73,13 @@
 
 <style lang="scss">
 	.side {
-		background: black;
+		// background: black;
+		// padding: 1rem;
+		// border-radius: 8px;
 		display: grid;
 		align-items: center;
 		justify-content: flex-start;
-		gap: 1rem;
-		padding: 1rem;
-		border-radius: 8px;
+		gap: 5px;
 
 		&--left {
 			flex-direction: row;
@@ -93,6 +93,7 @@
 			display: flex;
 			align-items: center;
 			gap: 1rem;
+			margin-bottom: 10px;
 		}
 
 		&__faction {
@@ -110,12 +111,16 @@
 			}
 		}
 
-		&__id {
+		&__text {
 			grid-column: 1/-1;
 
 			&--right {
 				text-align: right;
 			}
+		}
+
+		&__name {
+			font-size: 24px;
 		}
 
 		&__item {

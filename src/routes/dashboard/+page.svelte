@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from "svelte";
-	import cards from "$lib/data/cards.json";
 	import { globalData, playerData, timerData } from "$lib/store";
 	import type {
 		GlobalData as TGlobalData,
@@ -105,9 +104,9 @@
 					Connection lost, attempting to reconnect
 				{/if}
 			</p>
-			<button>deploy all</button>
+			<!-- <button>deploy all</button>
 			<button>undo changes</button>
-			<button>reset counters (new game)</button>
+			<button>reset counters (new game)</button> -->
 		</div>
 	</header>
 
@@ -123,6 +122,20 @@
 						<option value="ltr" selected>Left to right</option>
 						<option value="rtl">Right to left (reverse)</option>
 					</select>
+				</label>
+
+				<label>
+					<span>Overlay graphics (hide if adding it in OBS)</span>
+					<label class="checkbox">
+						<input
+							type="checkbox"
+							bind:checked={global.overlay}
+							on:change={(event) => {
+								updateGlobal(global);
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
 				</label>
 
 				<div
@@ -206,9 +219,13 @@
 		&__widgets {
 			gap: 1.5rem;
 			display: grid;
-			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-template-columns: repeat(1, minmax(0, 1fr));
 			grid-template-rows: auto 1fr;
 			padding: 2rem;
+
+			@media (min-width: 1580px) {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
 		}
 
 		&__command {
@@ -217,11 +234,11 @@
 	}
 
 	.connection {
-		padding: 1rem;
+		padding: 0.5rem;
 		border: 1px solid #262626;
 		background: #202020;
 		color: #fff;
-		border-radius: 8px;
+		border-radius: 4px;
 		display: flex;
 		flex-direction: row;
 		align-items: center;

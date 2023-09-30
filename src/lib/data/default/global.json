@@ -1,3 +1,4 @@
 {
-	"direction": "ltr"
+	"direction": "ltr",
+	"overlay": false
 }
