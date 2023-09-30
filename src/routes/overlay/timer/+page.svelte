@@ -9,7 +9,7 @@
 	let display = false;
 
 	const startCountdown = (count: number) => {
-		current_count = count;
+		current_count = count * 60;
 
 		intervalId = setInterval(() => {
 			if (current_count === 0) {

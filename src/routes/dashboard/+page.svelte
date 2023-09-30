@@ -157,7 +157,7 @@
 					style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
 				>
 					<label>
-						<span>Timer (seconds)</span>
+						<span>Timer (minutes)</span>
 						<input type="number" bind:value={timer.count} />
 					</label>
 					<button
