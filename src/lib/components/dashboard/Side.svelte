@@ -9,6 +9,7 @@
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
+	import Counter from "./Counter.svelte";
 
 	export let side: Side;
 
@@ -49,6 +50,9 @@
 	}
 
 	let selected_faction: string | boolean = false;
+	let logo: string | false = false;
+
+	import FactionData from "$lib/data/factions.json";
 
 	$: {
 		if (data?.faction) {
@@ -57,26 +61,35 @@
 			);
 
 			selected_faction = `${_faction.name} (${_faction.side})`;
+
+			logo = FactionData.find((obj) => obj.code === _faction.code)?.logo;
 		} else {
 			selected_faction = false;
+			logo = false;
 		}
 	}
 </script>
 
 <section class="side">
 	<header class="side__header side__item side__item--span">
-		<h3>
-			{#if data?.player?.name}
-				{data.player.name}
-			{:else}
-				{side}
-			{/if}
-		</h3>
-		<p>
-			{#if selected_faction}
-				{selected_faction}
-			{/if}
-		</p>
+		<div>
+			<h3>
+				{#if data?.player?.name}
+					{data.player.name}
+				{:else}
+					{side}
+				{/if}
+			</h3>
+			<p>
+				{#if selected_faction}
+					{selected_faction}
+				{/if}
+			</p>
+		</div>
+
+		{#if logo}
+			<img class="side__faction" src={logo} />
+		{/if}
 	</header>
 
 	<section class="side__options">
@@ -138,42 +151,38 @@
 		</Container>
 
 		<Container title="Clicks" level={3} icon={ICON_CLICKS}>
-			<label>
-				<!-- <span>Amount</span> -->
-				<input type="number" bind:value={data.clicks.amount} />
-			</label>
-
 			<label class="checkbox" slot="toggle">
 				<!-- <span>Display</span> -->
 				<input type="checkbox" bind:checked={data.clicks.active} />
 				<span class="checkbox__mark" />
 			</label>
+
+			<Counter data={data.clicks} />
 		</Container>
 
-		<Container title="Credits" level={3} icon={ICON_CREDITS}>
-			<label>
-				<!-- <span>Amount</span> -->
-				<input type="number" bind:value={data.credits.amount} />
-			</label>
-
+		<Container
+			title={`Credits ${
+				data.credits.amount > 0 ? `(${data.credits.amount})` : ""
+			}`}
+			level={3}
+			icon={ICON_CREDITS}
+		>
 			<label class="checkbox" slot="toggle">
 				<!-- <span>Display</span> -->
 				<input type="checkbox" bind:checked={data.credits.active} />
 				<span class="checkbox__mark" />
 			</label>
+			<Counter data={data.credits} />
 		</Container>
 
 		<Container title="Agendas" level={3} icon={ICON_AGENDAS}>
-			<label>
-				<!-- <span>Amount</span> -->
-				<input type="number" bind:value={data.agendas.amount} />
-			</label>
-
 			<label class="checkbox" slot="toggle">
 				<!-- <span>Display</span> -->
 				<input type="checkbox" bind:checked={data.agendas.active} />
 				<span class="checkbox__mark" />
 			</label>
+
+			<Counter data={data.agendas} />
 		</Container>
 
 		<div class="side__item side__item--span">
@@ -217,7 +226,15 @@
 		}
 
 		&__header {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			align-items: center;
 			background-color: #202020;
+		}
+
+		&__faction {
+			aspect-ratio: 1/1;
+			width: 42px;
 		}
 
 		&__options {

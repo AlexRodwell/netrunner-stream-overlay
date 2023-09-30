@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { globalData } from "$lib/store";
 	import Card from "../Card.svelte";
 	import type { Side } from "$lib/types";
 
@@ -10,7 +11,16 @@
 	$: reactive = active;
 </script>
 
-<div class="highlight highlight--{align}">
+<div
+	class="highlight highlight--{$globalData.direction === 'ltr'
+		? align
+		: align === 'left'
+		? 'right'
+		: 'left'}"
+	style={$globalData.direction === "rtl" && align === "right"
+		? "order: -2"
+		: "order: -1"}
+>
 	<div
 		class="highlight__card {reactive ? 'highlight__card--active' : ''}"
 		{align}

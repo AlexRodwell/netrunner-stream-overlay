@@ -8,7 +8,7 @@
 		"faction": "jinteki",
 		"id": "419: Amoral Scammer",
 		"clicks": {
-			"active": true,
+			"active": false,
 			"amount": 3
 		},
 		"credits": {
@@ -34,7 +34,7 @@
 		"faction": "anarch",
 		"id": "Asa Group: Security Through Vigilance",
 		"clicks": {
-			"active": true,
+			"active": false,
 			"amount": 4
 		},
 		"credits": {

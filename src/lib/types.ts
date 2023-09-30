@@ -20,13 +20,15 @@ export type Card = {
 	uniqueness: boolean;
 };
 
-export type Counter = "clicks" | "credits" | "agendas";
+export type CounterKeys = "clicks" | "credits" | "agendas";
+
+export type Counter = {
+	active: boolean;
+	amount: number;
+};
 
 export type Counters = {
-	[key in Counter]: {
-		active: boolean;
-		amount: number;
-	};
+	[key in CounterKeys]: Counter;
 };
 
 export type Agendas = Counters & {

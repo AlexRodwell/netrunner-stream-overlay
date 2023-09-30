@@ -11,6 +11,8 @@
 	import Side from "$lib/components/dashboard/Side.svelte";
 	import Loading from "$lib/components/Loading.svelte";
 	import Container from "$lib/components/dashboard/Container.svelte";
+	import Column from "$lib/components/dashboard/ui/Column.svelte";
+	import Preview from "$lib/components/dashboard/Preview.svelte";
 
 	let socket: WebSocket;
 	let player: TPlayerData = $playerData;
@@ -107,12 +109,17 @@
 			<!-- <button>deploy all</button>
 			<button>undo changes</button>
 			<button>reset counters (new game)</button> -->
+			<button>Preview overlay</button>
 		</div>
 	</header>
 
 	<section class="dashboard__widgets">
-		<div class="dashboard__global">
-			<Container title="Global settings" level={3}>
+		<Column>
+			<Container title="GLOBAL" level={3}>
+				<header class="side__header side__item side__item--span">
+					heeader...
+				</header>
+
 				<label>
 					<span>Side (on overlay)</span>
 					<select
@@ -138,6 +145,14 @@
 					</label>
 				</label>
 
+				<Preview
+					title="Overlay"
+					url="/overlay"
+					button="Preview overlay"
+				/>
+			</Container>
+
+			<Container title="TIMER" level={3}>
 				<div
 					style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
 				>
@@ -163,21 +178,25 @@
 					>
 				</div>
 			</Container>
+		</Column>
+
+		<div style={global.direction === "rtl" ? `order: 3` : ""}>
+			<Side
+				side="Corporation"
+				on:playerdata={(event) => {
+					updatePlayer(event.detail, "Corporation");
+				}}
+			/>
 		</div>
 
-		<Side
-			side="Corporation"
-			on:playerdata={(event) => {
-				updatePlayer(event.detail, "Corporation");
-			}}
-		/>
-
-		<Side
-			side="Runner"
-			on:playerdata={(event) => {
-				updatePlayer(event.detail, "Runner");
-			}}
-		/>
+		<div style={global.direction === "rtl" ? `order: 2` : ""}>
+			<Side
+				side="Runner"
+				on:playerdata={(event) => {
+					updatePlayer(event.detail, "Runner");
+				}}
+			/>
+		</div>
 	</section>
 </main>
 
@@ -212,19 +231,30 @@
 			gap: 0.5rem;
 		}
 
-		&__global {
-			grid-column: 1/-1;
-		}
+		// &__global {
+		// 	grid-column: 1/-1;
+		// }
 
 		&__widgets {
 			gap: 1.5rem;
 			display: grid;
 			grid-template-columns: repeat(1, minmax(0, 1fr));
-			grid-template-rows: auto 1fr;
+			// grid-template-rows: auto 1fr;
 			padding: 2rem;
 
 			@media (min-width: 1580px) {
-				grid-template-columns: repeat(2, minmax(0, 1fr));
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+		}
+
+		&__preview {
+			width: 100%;
+			aspect-ratio: 16/9;
+			display: flex;
+
+			iframe {
+				width: 400px;
+				height: 1080px;
 			}
 		}
 
