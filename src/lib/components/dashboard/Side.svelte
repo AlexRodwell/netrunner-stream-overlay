@@ -157,7 +157,12 @@
 				<span class="checkbox__mark" />
 			</label>
 
-			<Counter data={data.clicks} />
+			<Counter
+				data={data.clicks}
+				on:count={(event) => {
+					data.clicks.amount = event.detail;
+				}}
+			/>
 		</Container>
 
 		<Container
@@ -172,7 +177,12 @@
 				<input type="checkbox" bind:checked={data.credits.active} />
 				<span class="checkbox__mark" />
 			</label>
-			<Counter data={data.credits} />
+			<Counter
+				data={data.credits}
+				on:count={(event) => {
+					data.credits.amount = event.detail;
+				}}
+			/>
 		</Container>
 
 		<Container title="Agendas" level={3} icon={ICON_AGENDAS}>
@@ -182,7 +192,12 @@
 				<span class="checkbox__mark" />
 			</label>
 
-			<Counter data={data.agendas} />
+			<Counter
+				data={data.agendas}
+				on:count={(event) => {
+					data.agendas.amount = event.detail;
+				}}
+			/>
 		</Container>
 
 		<div class="side__item side__item--span">
