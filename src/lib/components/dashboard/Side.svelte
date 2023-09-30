@@ -213,7 +213,14 @@
 		</Container>
 
 		<div class="side__item side__item--span">
-			<Container title="Display card" level={3}>
+			<Container
+				title={`Display card ${
+					data.highlight.active
+						? `<span style="color: red;">(VISIBLE)</span>`
+						: ""
+				}`}
+				level={3}
+			>
 				<label class="checkbox" slot="toggle">
 					<input
 						type="checkbox"

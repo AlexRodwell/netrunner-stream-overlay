@@ -11,11 +11,11 @@
 		{/if}
 
 		{#if level === 2}
-			<h2 class="side__item__title">{title}</h2>
+			<h2 class="side__item__title">{@html title}</h2>
 		{:else if level === 3}
-			<h3 class="side__item__title">{title}</h3>
+			<h3 class="side__item__title">{@html title}</h3>
 		{:else if level === 4}
-			<h4 class="side__item__title">{title}</h4>
+			<h4 class="side__item__title">{@html title}</h4>
 		{/if}
 
 		<slot name="toggle" />
