@@ -243,7 +243,7 @@
 			padding: 2rem;
 
 			@media (min-width: 1580px) {
-				grid-template-columns: repeat(3, minmax(0, 1fr));
+				grid-template-columns: 1fr 2fr 2fr;
 			}
 		}
 

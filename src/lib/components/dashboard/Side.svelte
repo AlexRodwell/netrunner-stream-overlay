@@ -150,7 +150,13 @@
 			</div>
 		</Container>
 
-		<Container title="Clicks" level={3} icon={ICON_CLICKS}>
+		<Container
+			title={`Clicks ${
+				data.clicks.amount > 0 ? `(${data.clicks.amount})` : ""
+			}`}
+			level={3}
+			icon={ICON_CLICKS}
+		>
 			<label class="checkbox" slot="toggle">
 				<!-- <span>Display</span> -->
 				<input type="checkbox" bind:checked={data.clicks.active} />
@@ -185,7 +191,13 @@
 			/>
 		</Container>
 
-		<Container title="Agendas" level={3} icon={ICON_AGENDAS}>
+		<Container
+			title={`Agendas ${
+				data.agendas.amount > 0 ? `(${data.agendas.amount})` : ""
+			}`}
+			level={3}
+			icon={ICON_AGENDAS}
+		>
 			<label class="checkbox" slot="toggle">
 				<!-- <span>Display</span> -->
 				<input type="checkbox" bind:checked={data.agendas.active} />
