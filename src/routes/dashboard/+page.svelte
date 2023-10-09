@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import { globalData, playerData, timerData } from "$lib/store";
 	import type {
@@ -15,23 +16,22 @@
 	import Preview from "$lib/components/dashboard/Preview.svelte";
 
 	let socket: WebSocket;
-	let player: TPlayerData = $playerData;
 	let global: TGlobalData = $globalData;
+	let player: TPlayerData = $playerData;
 	let timer: TTimerData = $timerData;
 	let connection: boolean = false;
 
 	onMount(() => {
-		// Connect to websocket server
-		socket = new WebSocket("ws://localhost:8080");
+		socket = new WebSocket(PUBLIC_WEBSOCKET);
 
 		// Check if connection to websocket server is alive
 		setInterval(() => {
 			connection = socket.readyState === 1;
 
 			// Refresh page if websocket connection is lost
-			if (!connection) {
-				window.location.reload();
-			}
+			// if (!connection) {
+			// 	window.location.reload();
+			// }
 		}, 500);
 	});
 
@@ -55,22 +55,21 @@
 		);
 	};
 
-	const updateGlobal = (newData: TGlobalData) => {
-		global = newData;
-		socket.send(
-			JSON.stringify({
-				_type: "global",
-				...global,
-			})
-		);
-	};
-
 	const updateTimer = (newData: TTimerData) => {
 		timer = newData;
 		socket.send(
 			JSON.stringify({
 				_type: "timer",
 				...timer,
+			})
+		);
+	};
+
+	const updateGlobal = () => {
+		socket.send(
+			JSON.stringify({
+				_type: "global",
+				...global,
 			})
 		);
 	};
@@ -120,29 +119,43 @@
 					heeader...
 				</header>
 
-				<label>
-					<span>Side (on overlay)</span>
-					<select
-						bind:value={global.direction}
-						on:change={(event) => updateGlobal(global)}
-					>
-						<option value="ltr" selected>Left to right</option>
-						<option value="rtl">Right to left (reverse)</option>
-					</select>
+				<label class="checkbox">
+					<span>Display clicks</span>
+					<input
+						type="checkbox"
+						bind:checked={global.clicks}
+						on:click={(e) => {
+							global.clicks = e.target.checked;
+							updateGlobal();
+						}}
+					/>
+					<span class="checkbox__mark" />
 				</label>
 
-				<label>
-					<span>Overlay graphics (hide if adding it in OBS)</span>
-					<label class="checkbox">
-						<input
-							type="checkbox"
-							bind:checked={global.overlay}
-							on:change={(event) => {
-								updateGlobal(global);
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
+				<label class="checkbox">
+					<span>Display credits</span>
+					<input
+						type="checkbox"
+						bind:checked={global.credits}
+						on:click={(e) => {
+							global.credits = e.target.checked;
+							updateGlobal();
+						}}
+					/>
+					<span class="checkbox__mark" />
+				</label>
+
+				<label class="checkbox">
+					<span>Display agendas</span>
+					<input
+						type="checkbox"
+						bind:checked={global.agendas}
+						on:click={(e) => {
+							global.agendas = e.target.checked;
+							updateGlobal();
+						}}
+					/>
+					<span class="checkbox__mark" />
 				</label>
 
 				<Preview
@@ -180,20 +193,20 @@
 			</Container>
 		</Column>
 
-		<div style={global.direction === "rtl" ? `order: 3` : ""}>
+		<div>
 			<Side
-				side="Corporation"
+				side="playerOne"
 				on:playerdata={(event) => {
-					updatePlayer(event.detail, "Corporation");
+					updatePlayer(event.detail, "playerOne");
 				}}
 			/>
 		</div>
 
-		<div style={global.direction === "rtl" ? `order: 2` : ""}>
+		<div>
 			<Side
-				side="Runner"
+				side="playerTwo"
 				on:playerdata={(event) => {
-					updatePlayer(event.detail, "Runner");
+					updatePlayer(event.detail, "playerTwo");
 				}}
 			/>
 		</div>
@@ -202,6 +215,7 @@
 
 <style lang="scss">
 	:global(body) {
+		color: #fff;
 		background: #030303;
 		overflow-x: hidden;
 	}
