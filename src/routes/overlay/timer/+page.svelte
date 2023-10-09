@@ -1,8 +1,6 @@
 <script lang="ts">
 	import { timerData } from "$lib/store";
-	import Socket from "$lib/components/Socket.svelte";
-	import { onMount, onDestroy } from "svelte";
-	import OVERLAY_TIMER from "$lib/assets/overlay-timer.png";
+	import { onDestroy } from "svelte";
 
 	let intervalId: number;
 	let current_count: number;
@@ -51,15 +49,14 @@
 	}
 </script>
 
-<Socket>
-	{#if display}
-		<section class="timer">
-			{formatTime(current_count)}
-			<!-- svelte-ignore a11y-missing-attribute -->
-			<img class="timer__background" src={OVERLAY_TIMER} />
-		</section>
-	{/if}
-</Socket>
+<!-- <Socket> -->
+{#if display}
+	<section class="timer">
+		{formatTime(current_count)}
+	</section>
+{/if}
+
+<!-- </Socket> -->
 
 <style lang="scss">
 	.timer {

@@ -18,15 +18,20 @@
 	let data: PlayerAttributes = $playerData[side];
 
 	function filterIdentitiesByFaction() {
-		const filteredFactionData = FactionsData.filter(
-			(faction) => faction.side === side
-		);
+		// const filteredFactionData = FactionsData.filter(
+		// 	(faction) => faction.side === side
+		// );
 
 		// Filter CardsData.data based on the filtered faction list
 		return CardsData.data.filter((obj) => {
-			const matchingFaction = filteredFactionData.find(
+			// const matchingFaction = filteredFactionData.find(
+			// 	(faction) => faction.code === obj.faction_code
+			// );
+
+			const matchingFaction = FactionsData.find(
 				(faction) => faction.code === obj.faction_code
 			);
+
 			return obj.type_code === "identity" && matchingFaction;
 		});
 	}
@@ -53,6 +58,10 @@
 	let logo: string | false = false;
 
 	import FactionData from "$lib/data/factions.json";
+
+	const deploy = () => {
+		dispatch("playerdata", data);
+	};
 
 	$: {
 		if (data?.faction) {
@@ -101,7 +110,7 @@
 
 			<!-- Pronouns -->
 			<label class="side__item side__item--span">
-				<span>Player pronouns (optional)</span>
+				<span>Player pronouns</span>
 				<input type="text" bind:value={data.player.pronoun} />
 			</label>
 		</Container>
@@ -110,7 +119,8 @@
 			<label>
 				<span>Faction</span>
 				<select bind:value={data.faction}>
-					{#each FactionsData.filter((obj) => obj.side === side) as faction}
+					<!-- {#each FactionsData.filter((obj) => obj.side === side) as faction} -->
+					{#each FactionsData as faction}
 						<option
 							value={faction.code}
 							selected={faction.name === data.faction}
@@ -124,6 +134,7 @@
 				<span>ID</span>
 				<select bind:value={data.id}>
 					{#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity}
+						FactionsData
 						<option value={identity.stripped_title}
 							>{identity.stripped_title}</option
 						>
@@ -225,6 +236,7 @@
 					<input
 						type="checkbox"
 						bind:checked={data.highlight.active}
+						on:click={deploy}
 					/>
 					<span class="checkbox__mark" />
 				</label>
@@ -238,12 +250,7 @@
 			</Container>
 		</div>
 
-		<button
-			class="side__deploy"
-			on:click={() => {
-				dispatch("playerdata", data);
-			}}>Deploy</button
-		>
+		<button class="side__deploy" on:click={deploy}>Deploy</button>
 	</section>
 </section>
 
