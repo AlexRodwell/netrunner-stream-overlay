@@ -1,47 +1,40 @@
 <script lang="ts">
-	import { globalData } from "$lib/store";
+	import { playerData } from "$lib/store";
 	import Card from "../Card.svelte";
 	import type { Side } from "$lib/types";
 
-	export let align: "left" | "right";
-	export let code: string;
-	export let active: boolean;
-	export let side: Side;
+	export let player: Side;
 
-	$: reactive = active;
+	$: data = $playerData[player];
+	$: align = data.align;
 </script>
 
-<div
-	class="highlight highlight--{$globalData.direction === 'ltr'
-		? align
-		: align === 'left'
-		? 'right'
-		: 'left'}"
-	style={$globalData.direction === "rtl" && align === "right"
-		? "order: -2"
-		: "order: -1"}
->
+<div class="highlight highlight--{align}">
 	<div
-		class="highlight__card {reactive ? 'highlight__card--active' : ''}"
+		class="highlight__card {data?.highlight.active
+			? 'highlight__card--active'
+			: ''}"
 		{align}
 	>
-		<Card {code} {side} />
+		<Card code={data?.highlight.code} />
 	</div>
 </div>
 
 <style lang="scss">
 	.highlight {
 		display: flex;
-		padding-bottom: 4rem;
+		padding-bottom: 210px;
 
 		&--left {
 			place-content: flex-start;
 			place-items: flex-end;
+			padding-left: 50px;
 		}
 
 		&--right {
 			place-content: flex-end;
 			place-items: flex-end;
+			padding-right: 50px;
 		}
 
 		&__card {
