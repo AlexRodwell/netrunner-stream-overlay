@@ -13,7 +13,7 @@ Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.
 | Highlight a card on either side of the overlay                             |     ✅ |
 | Higlight 2 related cards (i.e. corp ice and runner program) for discussion |     ⛔ |
 
-If you'd like to request a feature, please make an [issue](https://github.com/AlexRodwell/netrunner-east-anglia-stream-overlay/issues) outlining what you'd like to see (examples appreciated).
+If you'd like to request a feature, please make an [issue](https://github.com/AlexRodwell/netrunner-east-anglia-stream-overlay/issues/new) outlining what you'd like to see (examples appreciated).
 
 ## Getting started
 
