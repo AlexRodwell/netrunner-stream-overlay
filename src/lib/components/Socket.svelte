@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import { globalData, playerData, timerData } from "$lib/store";
 
@@ -6,8 +7,7 @@
 	let connection: boolean = false;
 
 	onMount(() => {
-		// Connect to websocket server
-		socket = new WebSocket("ws://localhost:8080");
+		socket = new WebSocket(PUBLIC_WEBSOCKET);
 
 		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {
@@ -17,26 +17,26 @@
 
 			if (type === "player") {
 				delete data["_type"];
-				console.log(data);
 				$playerData = data;
 			} else if (type === "timer") {
 				delete data["_type"];
-				console.log(data);
 				$timerData = data;
 			} else if (type === "global") {
 				delete data["_type"];
-				console.log(data);
 				$globalData = data;
 			}
+
+			console.log(type);
+			console.log(data);
 		});
 
 		setInterval(() => {
 			connection = socket.readyState === 1;
 
 			// Refresh page if websocket connection is lost
-			if (!connection) {
-				window.location.reload();
-			}
+			// if (!connection) {
+			// 	window.location.reload();
+			// }
 		}, 2000);
 	});
 </script>
