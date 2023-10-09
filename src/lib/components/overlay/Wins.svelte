@@ -1,8 +1,9 @@
 <script lang="ts">
 	export let count: number;
+	export let align: "left" | "right";
 </script>
 
-<div class="wins">
+<div class="wins wins--{align}">
 	{#each Array(2) as _, index}
 		<div
 			class="wins__pip {count > 0 && index < count
@@ -16,20 +17,27 @@
 	.wins {
 		// display: flex;
 		display: inline-flex;
-		flex-direction: row;
 		gap: 0.5rem;
-		margin-top: 10px;
 		width: fit-content;
+		filter: drop-shadow(2px 2px black);
 
 		&__pip {
-			width: 1rem;
-			height: 1rem;
-			border: 1px solid #fff;
+			width: 0.875rem;
+			height: 0.875rem;
+			border: 2px solid #fff;
 			border-radius: 100%;
 
 			&--active {
 				background: #fff;
 			}
+		}
+
+		&--left {
+			flex-direction: row;
+		}
+
+		&--right {
+			flex-direction: row-reverse;
 		}
 	}
 </style>
