@@ -1,12 +1,13 @@
-<a class="button" href="/dashboard">Dashboard</a>
-
-<a class="button" href="/overlay">Overlay</a>
-<a class="button" href="/overlay/timer">Timer</a>
-<a class="button" href="/overlay/player/one">Player One</a>
-<a class="button" href="/overlay/player/two">Player Two</a>
+<main>
+	<a class="button" href="/dashboard">Dashboard</a>
+	<a class="button" href="/overlay">Overlay</a>
+	<a class="button" href="/overlay/timer">Timer</a>
+	<a class="button" href="/overlay/player/one">Player One</a>
+	<a class="button" href="/overlay/player/two">Player Two</a>
+</main>
 
 <style lang="scss">
-	:global(body) {
+	main {
 		width: 100vw;
 		height: 100vh;
 		display: flex;
