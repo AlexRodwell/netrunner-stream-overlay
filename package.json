@@ -3,11 +3,11 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev --port 419",
-		"build": "vite build",
-		"preview": "vite preview",
-		"overlay": "vite dev --port 419",
-		"websocket": "node ./websocket.js"
+		"dev": "cd dashboard && vite dev --port 419",
+		"build": "cd dashboard && vite build",
+		"preview": "cd dashboard && vite preview",
+		"overlay": "cd dashboard && vite dev --port 419",
+		"websocket": "cd server && node ./websocket.js"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",

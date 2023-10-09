@@ -32,17 +32,8 @@ If you'd like to request a feature, please make an [issue](https://github.com/Al
 ### Deployment (production)
 
 -   **Static host (overlay and dashboard)**: To setup the overlay and dashboard part of the overlay, you will simply need to run `npm run build`, let SvelteKit generate the files, and then upload the contents of the `./build` directory to your host.
--   **Websocket server**: You will need a node.js host to run the websocket server. Upload/add the `websocket.js` file and have node run said file, although for production/live use, you will need to remove the `player.json` file import and update line 6 with the contents of `player.json`, so it looks like this:
+-   **Websocket server**: You will need a node.js host to run the websocket server. Upload/add the `websocket.js` file and have node run said file via `node ./websocket.js`.
 
-```
-let data = {
-	"playerOne": {
-        ...
-    },
-    "playerTwo": {
-        ...
-    }
-};
 ```
 
 ### Using the overlay
@@ -64,3 +55,4 @@ Inside OBS or a similar broadcast software, simply add a 'browser' source with t
 -   **Fonts:** Based on [fontsinuse.com's Android: Netrunner font list](https://fontsinuse.com/uses/15378/android-netrunner)
     -   [**Monkirta Pursuit NC by Jayvee Enaguas**](https://www.dafont.com/monkirta-pursuit-nc.font) (Free)
     -   [**Cinzel by Natanael Gama**](https://fonts.google.com/specimen/Cinzel), similar to Trajan used in the Fantasy Flight Games artwork (Open font license)
+```
