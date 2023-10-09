@@ -8,7 +8,7 @@
 	<link rel="preconnect" href="https://static.nrdbassets.com/" />
 	<style>
 		body {
-			overflow: hidden;
+			color: #fff;
 		}
 	</style>
 </svelte:head>

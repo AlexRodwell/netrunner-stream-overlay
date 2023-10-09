@@ -5,6 +5,8 @@
 	const dispatch = createEventDispatcher();
 
 	export let data: Counter;
+	export let min: number = 0;
+	export let max: number = 99;
 </script>
 
 <div class="counter">
@@ -15,19 +17,21 @@
 		on:change={() => {
 			dispatch("count", data.amount);
 		}}
+		{min}
+		{max}
 	/>
 
 	<button
 		class="counter__button"
 		on:click={() => {
-			data.amount - 1 >= 0 ? data.amount-- : null;
+			data.amount - 1 >= min ? data.amount-- : null;
 			dispatch("count", data.amount);
 		}}>-</button
 	>
 	<button
 		class="counter__button"
 		on:click={() => {
-			data.amount++;
+			data.amount + 1 <= max ? data.amount++ : null;
 			dispatch("count", data.amount);
 		}}>+</button
 	>

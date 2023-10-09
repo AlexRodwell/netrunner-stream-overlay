@@ -17,9 +17,7 @@
 	<div class="dialog__content" on:click|stopPropagation>
 		<header class="dialog__header">
 			<slot name="header" />
-			<button autofocus on:click={() => dialog.close()}
-				>close modal</button
-			>
+			<button autofocus on:click={() => dialog.close()}>Close</button>
 		</header>
 
 		<slot />

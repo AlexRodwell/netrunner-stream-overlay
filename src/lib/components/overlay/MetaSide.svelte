@@ -1,114 +1,182 @@
 <script lang="ts">
-	import { playerData } from "$lib/store";
-	import type { Faction, Counters, Agendas } from "$lib/types";
+	import { globalData, playerData } from "$lib/store";
+	import type { Side, Faction, Counters, Agendas } from "$lib/types";
 	import ICON_CLICK from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDA from "$lib/assets/icons/NSG_AGENDA.svg";
 	import FactionData from "$lib/data/factions.json";
 	import Wins from "./Wins.svelte";
+	import Counter from "./Counter.svelte";
+	import { find_faction_by_id } from "$lib/utils";
 
-	export let player: string;
-	export let id: string;
-	export let faction: Faction;
-	export let align: "left" | "right";
-	export let clicks: Counters;
-	export let credits: Counters;
-	export let agendas: Agendas;
+	export let player: Side;
 
-	$: logo = FactionData.find((obj) => obj.code === faction)?.logo;
+	$: global = $globalData;
+	$: data = $playerData[player];
+	$: align = data.align;
+	$: faction = find_faction_by_id(data.id);
 </script>
 
-<section class="side" {align}>
-	<div class="side__data" {align}>
-		{#if logo}
-			<div class="side__faction">
-				<img class="side__faction__logo" src={logo} />
-			</div>
-		{/if}
+<section class="side side--{align}">
+	{#if faction.logo}
+		<div class="side__faction">
+			<img class="side__faction__logo" src={faction.logo} />
+		</div>
+	{/if}
 
-		{#if clicks?.active && clicks?.amount}
+	<div class="side__player">
+		<div class="side__upper" {align}>
+			{#if data.player?.name}
+				<p class="side__name side__text side__text--{align}">
+					{data.player.name}
+				</p>
+			{/if}
+
+			{#if data.player?.wins}
+				<div class="side__text side__text--{align}">
+					<Wins count={data.player.wins} {align} />
+				</div>
+			{/if}
+		</div>
+
+		<p class="side__text side__text--{align}">
+			{#if data.player.pronoun}
+				{data.player.pronoun} &mdash;
+			{/if}
+			{faction?.name}
+		</p>
+	</div>
+
+	<div class="side__stats" {align}>
+		{#if global?.clicks}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={ICON_CLICK} />
-				{clicks.amount}
+				<Counter count={data.clicks.amount} />
 			</div>
 		{/if}
 
-		{#if credits?.active && credits?.amount}
+		{#if global?.credits}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={ICON_CREDIT} />
-				{credits.amount}
+				<Counter count={data.credits.amount} />
 			</div>
 		{/if}
 
-		{#if agendas?.active}
+		{#if global?.agendas}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={ICON_AGENDA} />
-				{agendas.amount}
+				<Counter count={data.agendas.amount} />
 			</div>
 		{/if}
 	</div>
-
-	{#if player?.name}
-		<p class="side__name side__text side__text--{align}">
-			{player.name}
-			{#if player.pronoun}
-				({player.pronoun})
-			{/if}
-		</p>
-	{/if}
-
-	<p class="side__text side__text--{align}">
-		{id}
-	</p>
-
-	{#if player?.wins}
-		<div class="side__text side__text--{align}">
-			<Wins count={player.wins} />
-		</div>
-	{/if}
 </section>
 
 <style lang="scss">
+	$height: 100px;
+	$faction: 30px;
+
 	.side {
-		// background: black;
-		// padding: 1rem;
-		// border-radius: 8px;
 		display: grid;
 		align-items: center;
 		justify-content: flex-start;
-		gap: 5px;
+		background: rgba(255, 255, 255, 0.5);
+		min-width: 700px;
+		height: $height;
+		margin-bottom: calc(2 * $faction); // calc($faction / 2)
+		outline-offset: 5px;
+		color: #fff;
+		text-shadow: 2px 2px black;
+		bottom: 0;
+		position: absolute;
 
 		&--left {
-			flex-direction: row;
+			left: 0;
+			grid-template-columns: auto 1fr auto;
+			padding: 0px calc(2 * $faction);
+			background: linear-gradient(
+				90deg,
+				rgba(0, 0, 0, 0.8) 0%,
+				rgba(0, 0, 0, 0) 100%
+			);
+
+			.side__faction__logo {
+				right: 0;
+				filter: drop-shadow(-5px 5px black);
+			}
+
+			.side__player {
+				margin: {
+					right: $faction;
+					left: calc($faction / 2);
+				}
+			}
 		}
 
 		&--right {
-			flex-direction: row-reverse;
+			right: 0;
+			grid-template-columns: auto 1fr auto;
+			padding: 0px calc(2 * $faction);
+			background: linear-gradient(
+				90deg,
+				rgba(0, 0, 0, 0) 0%,
+				rgba(0, 0, 0, 0.8) 100%
+			);
+
+			.side__faction__logo {
+				left: 0;
+				filter: drop-shadow(5px 5px black);
+			}
+
+			.side__player {
+				margin: {
+					left: $faction;
+					right: calc($faction / 2);
+				}
+			}
+
+			.side__faction {
+				order: 3;
+			}
+
+			.side__player {
+				order: 2;
+			}
 		}
 
-		&__data {
+		&__stats {
 			display: flex;
 			align-items: center;
-			gap: 1rem;
-			margin-bottom: 10px;
+			gap: $faction / 2;
 		}
 
 		&__faction {
-			width: 75px;
 			aspect-ratio: 1/1;
-			display: flex;
-			place-items: center;
-			// background: #141414;
-			// border-radius: 4px;
+			width: 100px;
+			height: 100px;
+			position: relative;
 
 			&__logo {
-				object-fit: contain;
+				width: calc(100% + $faction);
+				height: calc(100% + $faction);
+				position: absolute;
 				object-position: center;
-				width: 100%;
+				top: 50%;
+				transform: translateY(-50%);
 			}
+		}
+
+		&__upper {
+			display: flex;
+			flex-direction: row;
+			gap: 10px;
+			align-items: center;
+		}
+
+		&__player {
+			// padding: 0.75rem;
 		}
 
 		&__text {
@@ -120,31 +188,24 @@
 		}
 
 		&__name {
-			font-size: 24px;
+			font-size: 32px;
 		}
 
 		&__item {
 			display: flex;
-			gap: 0.5rem;
-			font-size: 1.5rem;
+			gap: 5px;
+			font-size: 42px;
 			flex-direction: row;
 			justify-content: flex-row;
 			align-items: center;
-			padding: 0.25rem;
-			border: 1px solid white;
 			border-radius: 4px;
 			padding: 8px;
-
-			&--clicks {
-			}
-
-			&--credits {
-			}
 		}
 
 		&__icon {
-			width: 32px;
-			height: 32px;
+			width: 36px;
+			height: 36px;
+			filter: drop-shadow(2px 2px #000);
 		}
 	}
 

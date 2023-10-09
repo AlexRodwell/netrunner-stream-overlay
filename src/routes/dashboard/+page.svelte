@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import { globalData, playerData, timerData } from "$lib/store";
 	import type {
@@ -14,24 +15,29 @@
 	import Column from "$lib/components/dashboard/ui/Column.svelte";
 	import Preview from "$lib/components/dashboard/Preview.svelte";
 
+	// Icons
+	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
+	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
+	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
+	import Timer from "$lib/components/dashboard/Timer.svelte";
+
 	let socket: WebSocket;
-	let player: TPlayerData = $playerData;
 	let global: TGlobalData = $globalData;
+	let player: TPlayerData = $playerData;
 	let timer: TTimerData = $timerData;
 	let connection: boolean = false;
 
 	onMount(() => {
-		// Connect to websocket server
-		socket = new WebSocket("ws://localhost:8080");
+		socket = new WebSocket(PUBLIC_WEBSOCKET);
 
 		// Check if connection to websocket server is alive
 		setInterval(() => {
 			connection = socket.readyState === 1;
 
 			// Refresh page if websocket connection is lost
-			if (!connection) {
-				window.location.reload();
-			}
+			// if (!connection) {
+			// 	window.location.reload();
+			// }
 		}, 500);
 	});
 
@@ -55,22 +61,21 @@
 		);
 	};
 
-	const updateGlobal = (newData: TGlobalData) => {
-		global = newData;
-		socket.send(
-			JSON.stringify({
-				_type: "global",
-				...global,
-			})
-		);
-	};
-
 	const updateTimer = (newData: TTimerData) => {
 		timer = newData;
 		socket.send(
 			JSON.stringify({
 				_type: "timer",
 				...timer,
+			})
+		);
+	};
+
+	const updateGlobal = () => {
+		socket.send(
+			JSON.stringify({
+				_type: "global",
+				...global,
 			})
 		);
 	};
@@ -116,34 +121,50 @@
 	<section class="dashboard__widgets">
 		<Column>
 			<Container title="GLOBAL" level={3}>
-				<header class="side__header side__item side__item--span">
-					heeader...
-				</header>
-
-				<label>
-					<span>Side (on overlay)</span>
-					<select
-						bind:value={global.direction}
-						on:change={(event) => updateGlobal(global)}
-					>
-						<option value="ltr" selected>Left to right</option>
-						<option value="rtl">Right to left (reverse)</option>
-					</select>
-				</label>
-
-				<label>
-					<span>Overlay graphics (hide if adding it in OBS)</span>
+				<Container title="Clicks" level={4} icon={ICON_CLICKS}>
 					<label class="checkbox">
+						<span>{global.clicks ? "On" : "Off"}</span>
 						<input
 							type="checkbox"
-							bind:checked={global.overlay}
-							on:change={(event) => {
-								updateGlobal(global);
+							bind:checked={global.clicks}
+							on:click={(e) => {
+								global.clicks = e.target.checked;
+								updateGlobal();
 							}}
 						/>
 						<span class="checkbox__mark" />
 					</label>
-				</label>
+				</Container>
+
+				<Container title="Credits" level={4} icon={ICON_CREDITS}>
+					<label class="checkbox">
+						<span>{global.credits ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.credits}
+							on:click={(e) => {
+								global.credits = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
+
+				<Container title="Agendas" level={4} icon={ICON_AGENDAS}>
+					<label class="checkbox">
+						<span>{global.agendas ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.agendas}
+							on:click={(e) => {
+								global.agendas = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
 
 				<Preview
 					title="Overlay"
@@ -153,47 +174,28 @@
 			</Container>
 
 			<Container title="TIMER" level={3}>
-				<div
-					style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
-				>
-					<label>
-						<span>Timer (minutes)</span>
-						<input type="number" bind:value={timer.count} />
-					</label>
-					<button
-						on:click={() => {
-							timer.action = "set";
-							timer.prev = new Date();
-							updateTimer(timer);
-						}}>Start timer</button
-					>
-					<button
-						on:click={() => {
-							timer.action = "clear";
-							timer.prev = new Date();
-							updateTimer(timer);
-						}}
-						style="background: #242424; border: #242424; color: #fff;"
-						>Clear timer</button
-					>
-				</div>
+				<Timer
+					on:timer={(event) => {
+						updateTimer(event.detail);
+					}}
+				/>
 			</Container>
 		</Column>
 
-		<div style={global.direction === "rtl" ? `order: 3` : ""}>
+		<div>
 			<Side
-				side="Corporation"
+				side="playerOne"
 				on:playerdata={(event) => {
-					updatePlayer(event.detail, "Corporation");
+					updatePlayer(event.detail, "playerOne");
 				}}
 			/>
 		</div>
 
-		<div style={global.direction === "rtl" ? `order: 2` : ""}>
+		<div>
 			<Side
-				side="Runner"
+				side="playerTwo"
 				on:playerdata={(event) => {
-					updatePlayer(event.detail, "Runner");
+					updatePlayer(event.detail, "playerTwo");
 				}}
 			/>
 		</div>
@@ -202,6 +204,7 @@
 
 <style lang="scss">
 	:global(body) {
+		color: #fff;
 		background: #030303;
 		overflow-x: hidden;
 	}

@@ -12,7 +12,7 @@
 	export let code: string;
 	export let side: ExtendedSide = false;
 
-	let back = side === "Corporation" ? BackCorporation : BackRunner;
+	let back = false; // = side === "playerOne" ? BackCorporation : BackRunner;
 
 	$: url = `https://card-images.netrunnerdb.com/v1/large/{code}.jpg`.replace(
 		"{code}",

@@ -10,6 +10,7 @@
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Counter from "./Counter.svelte";
+	import { find_faction_by_id } from "$lib/utils";
 
 	export let side: Side;
 
@@ -18,15 +19,20 @@
 	let data: PlayerAttributes = $playerData[side];
 
 	function filterIdentitiesByFaction() {
-		const filteredFactionData = FactionsData.filter(
-			(faction) => faction.side === side
-		);
+		// const filteredFactionData = FactionsData.filter(
+		// 	(faction) => faction.side === side
+		// );
 
 		// Filter CardsData.data based on the filtered faction list
 		return CardsData.data.filter((obj) => {
-			const matchingFaction = filteredFactionData.find(
+			// const matchingFaction = filteredFactionData.find(
+			// 	(faction) => faction.code === obj.faction_code
+			// );
+
+			const matchingFaction = FactionsData.find(
 				(faction) => faction.code === obj.faction_code
 			);
+
 			return obj.type_code === "identity" && matchingFaction;
 		});
 	}
@@ -49,25 +55,11 @@
 		return sorted;
 	}
 
-	let selected_faction: string | boolean = false;
-	let logo: string | false = false;
+	const deploy = () => {
+		dispatch("playerdata", data);
+	};
 
-	import FactionData from "$lib/data/factions.json";
-
-	$: {
-		if (data?.faction) {
-			let _faction = FactionsData.find(
-				(faction) => faction.code === data?.faction
-			);
-
-			selected_faction = `${_faction.name} (${_faction.side})`;
-
-			logo = FactionData.find((obj) => obj.code === _faction.code)?.logo;
-		} else {
-			selected_faction = false;
-			logo = false;
-		}
-	}
+	$: faction = find_faction_by_id(data.id);
 </script>
 
 <section class="side">
@@ -80,15 +72,15 @@
 					{side}
 				{/if}
 			</h3>
-			<p>
-				{#if selected_faction}
-					{selected_faction}
-				{/if}
-			</p>
+			{#if faction?.name && faction?.side}
+				<p>
+					{faction.name} ({faction.side})
+				</p>
+			{/if}
 		</div>
 
-		{#if logo}
-			<img class="side__faction" src={logo} />
+		{#if faction?.logo}
+			<img class="side__faction" src={faction.logo} />
 		{/if}
 	</header>
 
@@ -101,29 +93,17 @@
 
 			<!-- Pronouns -->
 			<label class="side__item side__item--span">
-				<span>Player pronouns (optional)</span>
+				<span>Player pronouns</span>
 				<input type="text" bind:value={data.player.pronoun} />
 			</label>
 		</Container>
 
 		<Container title="Identity" level={3}>
 			<label>
-				<span>Faction</span>
-				<select bind:value={data.faction}>
-					{#each FactionsData.filter((obj) => obj.side === side) as faction}
-						<option
-							value={faction.code}
-							selected={faction.name === data.faction}
-							>{faction.name}</option
-						>
-					{/each}
-				</select>
-			</label>
-
-			<label>
 				<span>ID</span>
 				<select bind:value={data.id}>
 					{#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity}
+						FactionsData
 						<option value={identity.stripped_title}
 							>{identity.stripped_title}</option
 						>
@@ -225,6 +205,7 @@
 					<input
 						type="checkbox"
 						bind:checked={data.highlight.active}
+						on:click={deploy}
 					/>
 					<span class="checkbox__mark" />
 				</label>
@@ -238,12 +219,7 @@
 			</Container>
 		</div>
 
-		<button
-			class="side__deploy"
-			on:click={() => {
-				dispatch("playerdata", data);
-			}}>Deploy</button
-		>
+		<button class="side__deploy" on:click={deploy}>Deploy</button>
 	</section>
 </section>
 

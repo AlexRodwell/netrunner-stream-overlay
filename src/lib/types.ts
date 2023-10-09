@@ -35,11 +35,12 @@ export type Agendas = Counters & {
 	cards?: any[];
 };
 
-export type Side = "Corporation" | "Runner";
+export type Side = "playerOne" | "playerTwo";
 
 export type GlobalData = {
-	direction: "ltr" | "rtl";
-	overlay: boolean;
+	clicks: boolean;
+	credits: boolean;
+	agendas: boolean;
 };
 
 export type TimerData = {
@@ -76,4 +77,4 @@ type Factions = typeof import("./data/factions.json");
 // 	name: Factions[number]["name"];
 // };
 
-export type Faction = Factions[number]["name"];
+export type Faction = Factions[number]["code"];

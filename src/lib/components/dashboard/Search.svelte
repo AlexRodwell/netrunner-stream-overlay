@@ -56,7 +56,7 @@
 />
 
 <div class="search">
-	{#each results as item (item.code)}
+	{#each results.slice(0, 10) as item (item.code)}
 		<!-- Use a unique identifier as the key -->
 		<button
 			class="search__item {selected.includes(item.code)

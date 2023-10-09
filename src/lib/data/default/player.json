@@ -1,5 +1,6 @@
 {
-	"Corporation": {
+	"playerOne": {
+		"align": "left",
 		"player": {
 			"wins": "0",
 			"name": "Player One",
@@ -25,7 +26,8 @@
 			"active": false
 		}
 	},
-	"Runner": {
+	"playerTwo": {
+		"align": "right",
 		"player": {
 			"wins": "0",
 			"name": "Player Two",
