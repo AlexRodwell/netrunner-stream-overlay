@@ -6,12 +6,12 @@ Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.
 
 ## Features
 
-| Feature                                                                    | Status |
-| -------------------------------------------------------------------------- | -----: |
-| Set player values (clicks, credits, agendas)                               |     ✅ |
-| Set player name, faction and ID                                            |     ✅ |
-| Highlight a card on either side of the overlay                             |     ✅ |
-| Higlight 2 related cards (i.e. corp ice and runner program) for discussion |     ⛔ |
+| Feature                                                                     | Status |
+| --------------------------------------------------------------------------- | -----: |
+| Set player values (clicks, credits, agendas)                                |     ✅ |
+| Set player name, faction and ID                                             |     ✅ |
+| Highlight a card on either side of the overlay                              |     ✅ |
+| Highlight 2 related cards (i.e. corp ice and runner program) for discussion |     ⛔ |
 
 If you'd like to request a feature, please make an [issue](https://github.com/AlexRodwell/netrunner-east-anglia-stream-overlay/issues/new) outlining what you'd like to see (examples appreciated).
 
