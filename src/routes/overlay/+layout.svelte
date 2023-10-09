@@ -1,4 +1,5 @@
 <script>
+	import Socket from "$lib/components/Socket.svelte";
 	import "../../app.scss";
 </script>
 
@@ -12,4 +13,6 @@
 	</style>
 </svelte:head>
 
-<slot />
+<Socket>
+	<slot />
+</Socket>
