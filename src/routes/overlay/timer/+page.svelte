@@ -49,14 +49,11 @@
 	}
 </script>
 
-<!-- <Socket> -->
 {#if display}
 	<section class="timer">
 		{formatTime(current_count)}
 	</section>
 {/if}
-
-<!-- </Socket> -->
 
 <style lang="scss">
 	.timer {
