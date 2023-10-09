@@ -1,4 +1,5 @@
 {
-	"direction": "ltr",
-	"overlay": true
+	"clicks": false,
+	"credits": false,
+	"agendas": true
 }
