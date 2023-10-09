@@ -10,6 +10,7 @@
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Counter from "./Counter.svelte";
+	import { find_faction_by_id } from "$lib/utils";
 
 	export let side: Side;
 
@@ -54,29 +55,11 @@
 		return sorted;
 	}
 
-	let selected_faction: string | boolean = false;
-	let logo: string | false = false;
-
-	import FactionData from "$lib/data/factions.json";
-
 	const deploy = () => {
 		dispatch("playerdata", data);
 	};
 
-	$: {
-		if (data?.faction) {
-			let _faction = FactionsData.find(
-				(faction) => faction.code === data?.faction
-			);
-
-			selected_faction = `${_faction.name} (${_faction.side})`;
-
-			logo = FactionData.find((obj) => obj.code === _faction.code)?.logo;
-		} else {
-			selected_faction = false;
-			logo = false;
-		}
-	}
+	$: faction = find_faction_by_id(data.id);
 </script>
 
 <section class="side">
@@ -89,15 +72,15 @@
 					{side}
 				{/if}
 			</h3>
-			<p>
-				{#if selected_faction}
-					{selected_faction}
-				{/if}
-			</p>
+			{#if faction?.name && faction?.side}
+				<p>
+					{faction.name} ({faction.side})
+				</p>
+			{/if}
 		</div>
 
-		{#if logo}
-			<img class="side__faction" src={logo} />
+		{#if faction?.logo}
+			<img class="side__faction" src={faction.logo} />
 		{/if}
 	</header>
 
@@ -116,20 +99,6 @@
 		</Container>
 
 		<Container title="Identity" level={3}>
-			<label>
-				<span>Faction</span>
-				<select bind:value={data.faction}>
-					<!-- {#each FactionsData.filter((obj) => obj.side === side) as faction} -->
-					{#each FactionsData as faction}
-						<option
-							value={faction.code}
-							selected={faction.name === data.faction}
-							>{faction.name}</option
-						>
-					{/each}
-				</select>
-			</label>
-
 			<label>
 				<span>ID</span>
 				<select bind:value={data.id}>

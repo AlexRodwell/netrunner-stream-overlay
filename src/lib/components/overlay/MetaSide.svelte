@@ -7,19 +7,20 @@
 	import FactionData from "$lib/data/factions.json";
 	import Wins from "./Wins.svelte";
 	import Counter from "./Counter.svelte";
+	import { find_faction_by_id } from "$lib/utils";
 
 	export let player: Side;
 
 	$: global = $globalData;
 	$: data = $playerData[player];
 	$: align = data.align;
-	$: logo = FactionData.find((obj) => obj.code === data.faction)?.logo;
+	$: faction = find_faction_by_id(data.id);
 </script>
 
 <section class="side side--{align}">
-	{#if logo}
+	{#if faction.logo}
 		<div class="side__faction">
-			<img class="side__faction__logo" src={logo} />
+			<img class="side__faction__logo" src={faction.logo} />
 		</div>
 	{/if}
 
@@ -42,7 +43,7 @@
 			{#if data.player.pronoun}
 				{data.player.pronoun} &mdash;
 			{/if}
-			{data.id.split(":")[0]}
+			{faction?.name}
 		</p>
 	</div>
 

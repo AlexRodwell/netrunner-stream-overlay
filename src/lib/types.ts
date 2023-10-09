@@ -77,4 +77,4 @@ type Factions = typeof import("./data/factions.json");
 // 	name: Factions[number]["name"];
 // };
 
-export type Faction = Factions[number]["name"];
+export type Faction = Factions[number]["code"];
