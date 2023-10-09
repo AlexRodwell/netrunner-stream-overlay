@@ -15,6 +15,12 @@
 	import Column from "$lib/components/dashboard/ui/Column.svelte";
 	import Preview from "$lib/components/dashboard/Preview.svelte";
 
+	// Icons
+	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
+	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
+	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
+	import Timer from "$lib/components/dashboard/Timer.svelte";
+
 	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
 	let player: TPlayerData = $playerData;
@@ -115,48 +121,50 @@
 	<section class="dashboard__widgets">
 		<Column>
 			<Container title="GLOBAL" level={3}>
-				<header class="side__header side__item side__item--span">
-					heeader...
-				</header>
+				<Container title="Clicks" level={4} icon={ICON_CLICKS}>
+					<label class="checkbox">
+						<span>{global.clicks ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.clicks}
+							on:click={(e) => {
+								global.clicks = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
 
-				<label class="checkbox">
-					<span>Display clicks</span>
-					<input
-						type="checkbox"
-						bind:checked={global.clicks}
-						on:click={(e) => {
-							global.clicks = e.target.checked;
-							updateGlobal();
-						}}
-					/>
-					<span class="checkbox__mark" />
-				</label>
+				<Container title="Credits" level={4} icon={ICON_CREDITS}>
+					<label class="checkbox">
+						<span>{global.credits ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.credits}
+							on:click={(e) => {
+								global.credits = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
 
-				<label class="checkbox">
-					<span>Display credits</span>
-					<input
-						type="checkbox"
-						bind:checked={global.credits}
-						on:click={(e) => {
-							global.credits = e.target.checked;
-							updateGlobal();
-						}}
-					/>
-					<span class="checkbox__mark" />
-				</label>
-
-				<label class="checkbox">
-					<span>Display agendas</span>
-					<input
-						type="checkbox"
-						bind:checked={global.agendas}
-						on:click={(e) => {
-							global.agendas = e.target.checked;
-							updateGlobal();
-						}}
-					/>
-					<span class="checkbox__mark" />
-				</label>
+				<Container title="Agendas" level={4} icon={ICON_AGENDAS}>
+					<label class="checkbox">
+						<span>{global.agendas ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.agendas}
+							on:click={(e) => {
+								global.agendas = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
 
 				<Preview
 					title="Overlay"
@@ -166,30 +174,11 @@
 			</Container>
 
 			<Container title="TIMER" level={3}>
-				<div
-					style="display: flex; flex-direction: row; align-items: center; gap: 1rem;"
-				>
-					<label>
-						<span>Timer (minutes)</span>
-						<input type="number" bind:value={timer.count} />
-					</label>
-					<button
-						on:click={() => {
-							timer.action = "set";
-							timer.prev = new Date();
-							updateTimer(timer);
-						}}>Start timer</button
-					>
-					<button
-						on:click={() => {
-							timer.action = "clear";
-							timer.prev = new Date();
-							updateTimer(timer);
-						}}
-						style="background: #242424; border: #242424; color: #fff;"
-						>Clear timer</button
-					>
-				</div>
+				<Timer
+					on:timer={(event) => {
+						updateTimer(event.detail);
+					}}
+				/>
 			</Container>
 		</Column>
 
