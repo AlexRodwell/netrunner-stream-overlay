@@ -38,6 +38,9 @@ export type Agendas = Counters & {
 export type Side = "playerOne" | "playerTwo";
 
 export type GlobalData = {
+	name: boolean;
+	faction: boolean;
+	id: boolean;
 	clicks: boolean;
 	credits: boolean;
 	agendas: boolean;

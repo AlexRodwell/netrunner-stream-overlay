@@ -1,4 +1,7 @@
 {
+	"name": true,
+	"faction": true,
+	"id": true,
 	"clicks": false,
 	"credits": false,
 	"agendas": true

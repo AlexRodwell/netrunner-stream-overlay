@@ -18,7 +18,7 @@
 </script>
 
 <section class="side side--{align}">
-	{#if faction.logo}
+	{#if global.faction && faction.logo}
 		<div class="side__faction">
 			<img class="side__faction__logo" src={faction.logo} />
 		</div>
@@ -26,7 +26,7 @@
 
 	<div class="side__player">
 		<div class="side__upper" {align}>
-			{#if data.player?.name}
+			{#if global.name && data.player?.name}
 				<p class="side__name side__text side__text--{align}">
 					{data.player.name}
 				</p>
@@ -39,12 +39,14 @@
 			{/if}
 		</div>
 
-		<p class="side__text side__text--{align}">
-			{#if data.player.pronoun}
-				{data.player.pronoun} &mdash;
-			{/if}
-			{faction?.name}
-		</p>
+		{#if (global.id && faction?.name) || data.player.pronoun}
+			<p class="side__text side__text--{align}">
+				{#if data.player.pronoun}
+					{data.player.pronoun} &mdash;
+				{/if}
+				{faction?.name}
+			</p>
+		{/if}
 	</div>
 
 	<div class="side__stats" {align}>

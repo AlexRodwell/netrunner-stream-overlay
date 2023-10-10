@@ -121,6 +121,51 @@
 	<section class="dashboard__widgets">
 		<Column>
 			<Container title="GLOBAL" level={3}>
+				<Container title="Name" level={4}>
+					<label class="checkbox">
+						<span>{global.name ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.name}
+							on:click={(e) => {
+								global.name = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
+
+				<Container title="Faction" level={4}>
+					<label class="checkbox">
+						<span>{global.faction ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.faction}
+							on:click={(e) => {
+								global.faction = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
+
+				<Container title="Id" level={4}>
+					<label class="checkbox">
+						<span>{global.id ? "On" : "Off"}</span>
+						<input
+							type="checkbox"
+							bind:checked={global.id}
+							on:click={(e) => {
+								global.id = e.target.checked;
+								updateGlobal();
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+				</Container>
+
 				<Container title="Clicks" level={4} icon={ICON_CLICKS}>
 					<label class="checkbox">
 						<span>{global.clicks ? "On" : "Off"}</span>
