@@ -4,14 +4,19 @@
 
 Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.net/tournaments/3848/-east-anglian-champs-) community tournament, the Netrunner Stream Overlay tool was built to service as a simple overlay that can be used locally or remotely.
 
-## Features
+## Features/improvements
 
-| Feature                                                                     | Status |
-| --------------------------------------------------------------------------- | -----: |
-| Set player values (clicks, credits, agendas)                                |     ✅ |
-| Set player name, faction and ID                                             |     ✅ |
-| Highlight a card on either side of the overlay                              |     ✅ |
-| Highlight 2 related cards (i.e. corp ice and runner program) for discussion |     ⛔ |
+| Feature/improvements                                                                                                | Status |
+| :------------------------------------------------------------------------------------------------------------------ | -----: |
+| Set player values (clicks, credits, agendas)                                                                        |     ✅ |
+| Set player name, faction and ID                                                                                     |     ✅ |
+| Highlight a card on either side of the overlay                                                                      |     ✅ |
+| Highlight 2 related cards (i.e. corp ice and runner program) for discussion                                         |     ⛔ |
+| Refactor cards.json to use the actual NetrunnerDB API (with caching), to ensure we have the latest cards            |     ⛔ |
+| Improve visual clarity of active/inactive states in dashboard                                                       |     ⛔ |
+| Refactor CSS to stylesheets to better allow for theming/customisation of code                                       |     ⛔ |
+| Write tests (cypress, playwright or similar) to ensure builds function and pass as expected before version releases |     ⛔ |
+| Improve scaling of overlay to support other sizes, currently hardcoded to 1920x1080                                 |     ⛔ |
 
 If you'd like to request a feature, please make an [issue](https://github.com/AlexRodwell/netrunner-east-anglia-stream-overlay/issues/new) outlining what you'd like to see (examples appreciated).
 
