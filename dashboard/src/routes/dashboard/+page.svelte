@@ -120,7 +120,7 @@
 
 	<section class="dashboard__widgets">
 		<Column>
-			<Container title="GLOBAL" level={3}>
+			<Container title="GLOBAL" level={3} columns={2}>
 				<Container title="Name" level={4}>
 					<label class="checkbox">
 						<span>{global.name ? "On" : "Off"}</span>

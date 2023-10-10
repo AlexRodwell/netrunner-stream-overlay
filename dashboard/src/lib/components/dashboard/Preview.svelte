@@ -18,6 +18,10 @@
 </Modal>
 
 <style lang="scss">
+	button {
+		grid-column: 1/-1;
+	}
+
 	.iframe {
 		width: 1920px;
 		height: 1080px;

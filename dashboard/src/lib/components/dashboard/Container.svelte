@@ -2,9 +2,14 @@
 	export let title: string;
 	export let level: 2 | 3 | 4 | 5 | 6;
 	export let icon: string = "";
+	export let columns: 1 | 2 = 1;
 </script>
 
-<section class="side__item side__item--group">
+<section
+	class="side__item side__item--group {columns > 1
+		? `side__item--columns-${columns}`
+		: ''}"
+>
 	<div class="side__item__title">
 		{#if icon}
 			<img class="side__item__icon" src={icon} />
@@ -32,6 +37,10 @@
 		border-radius: 8px;
 		align-content: flex-start;
 
+		&--columns-2 {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
 		&__title {
 			display: flex;
 			flex-direction: row;
@@ -39,6 +48,7 @@
 			align-items: center;
 			gap: 0.25rem;
 			flex-grow: 1;
+			grid-column: 1/-1;
 		}
 
 		&__icon {

@@ -81,7 +81,9 @@
 	$faction: 30px;
 
 	.side {
-		display: grid;
+		// display: grid;
+		display: flex;
+		flex-direction: row;
 		align-items: center;
 		justify-content: flex-start;
 		background: rgba(255, 255, 255, 0.5);
@@ -118,6 +120,7 @@
 		}
 
 		&--right {
+			flex-direction: row-reverse;
 			right: 0;
 			grid-template-columns: auto 1fr auto;
 			padding: 0px calc(2 * $faction);
@@ -137,14 +140,6 @@
 					left: $faction;
 					right: calc($faction / 2);
 				}
-			}
-
-			.side__faction {
-				order: 3;
-			}
-
-			.side__player {
-				order: 2;
 			}
 		}
 

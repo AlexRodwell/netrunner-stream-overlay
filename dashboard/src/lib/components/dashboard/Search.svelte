@@ -1,16 +1,18 @@
 <!-- src/routes/Search.svelte -->
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
+	import type { Card as TCard } from "$lib/types";
 	import CardsData from "$lib/data/cards.json";
 	import Card from "../Card.svelte";
-	import Loading from "../Loading.svelte";
+	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
+	import ICON_MEMORY from "$lib/assets/icons/NSG_Mu.svg";
 
 	export let limit: 1 | "uncapped" = 1; // Define how many cards can be selected
 
 	const dispatch = createEventDispatcher();
 
 	let searchText = "";
-	let results = [];
+	let results: Array<TCard> = [];
 	let selected: string[] | string = []; // Handle either an array of strings (codes) or a singular code (string)
 
 	function filterItems() {
@@ -56,7 +58,14 @@
 />
 
 <div class="search">
-	{#each results.slice(0, 10) as item (item.code)}
+	<div>
+		active card here...
+		{#each selected as code}
+			<Card {code} />
+		{/each}
+	</div>
+
+	{#each results.slice(0, 6) as item (item.code)}
 		<!-- Use a unique identifier as the key -->
 		<button
 			class="search__item {selected.includes(item.code)
@@ -67,13 +76,28 @@
 			}}
 		>
 			<Card code={item.code} />
-			{item.stripped_title}
+			<div>
+				<strong>{item.stripped_title}</strong>
+				<p>
+					<!-- <img src={} /> -->
+					Side: {item.side_code}
+				</p>
+				<p>
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<img class="icon" src={ICON_CREDIT} />
+					cost: {item.cost}
+				</p>
+				<p>
+					<!-- svelte-ignore a11y-missing-attribute -->
+					<img class="icon" src={ICON_MEMORY} />
+					memory_cost: {item.memory_cost}
+				</p>
+				<p>
+					<!-- <img src={} /> -->
+					Deck limit: {item.deck_limit}
+				</p>
+			</div>
 		</button>
-	{:else}
-		<div class="search__no">
-			<Loading />
-			<p>Waitng for input</p>
-		</div>
 	{/each}
 </div>
 
@@ -106,6 +130,11 @@
 
 		img {
 			width: 100%;
+		}
+
+		.icon {
+			width: 1rem;
+			height: 1rem;
 		}
 
 		&__no {

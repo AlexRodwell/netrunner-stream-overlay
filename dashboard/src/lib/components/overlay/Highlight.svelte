@@ -2,11 +2,13 @@
 	import { playerData } from "$lib/store";
 	import Card from "../Card.svelte";
 	import type { Side } from "$lib/types";
+	import { find_faction_by_id } from "$lib/utils";
 
 	export let player: Side;
 
 	$: data = $playerData[player];
 	$: align = data.align;
+	$: side = find_faction_by_id(data.id).side;
 </script>
 
 <div class="highlight highlight--{align}">
@@ -16,7 +18,7 @@
 			: ''}"
 		{align}
 	>
-		<Card code={data?.highlight.code} />
+		<Card code={data?.highlight.code} {side} />
 	</div>
 </div>
 
