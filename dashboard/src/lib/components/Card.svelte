@@ -9,7 +9,7 @@
 
 	// export let title: string;
 	export let code: string;
-	export let side: GameSide;
+	export let side: GameSide | string;
 
 	let back = side === "Corporation" ? BACK_CORPORATION : BACK_RUNNER;
 
@@ -40,7 +40,6 @@
 		transition: 600ms ease;
 		transition-delay: 300ms;
 		transform: var(--transform);
-		filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.3));
 
 		&__front,
 		&__back {
@@ -52,6 +51,10 @@
 			overflow: hidden;
 			border-radius: 4%;
 			overflow: hidden;
+		}
+
+		&__front {
+			filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.3));
 		}
 
 		&__back {

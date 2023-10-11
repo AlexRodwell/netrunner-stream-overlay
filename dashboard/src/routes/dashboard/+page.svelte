@@ -41,17 +41,8 @@
 		}, 500);
 	});
 
-	type TExtendedSide = Side | false;
-	const updatePlayer = (
-		newData: PlayerAttributes,
-		side: TExtendedSide = false
-	) => {
-		if (side) {
-			player[side] = {
-				...player[side],
-				...newData,
-			};
-		}
+	const updatePlayer = (newData: PlayerAttributes, player_side: TSide) => {
+		player[player_side] = newData;
 
 		socket.send(
 			JSON.stringify({

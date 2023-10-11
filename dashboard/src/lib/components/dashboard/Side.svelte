@@ -56,6 +56,7 @@
 	}
 
 	const deploy = () => {
+		console.log(data);
 		dispatch("playerdata", data);
 	};
 
@@ -205,7 +206,10 @@
 					<input
 						type="checkbox"
 						bind:checked={data.highlight.active}
-						on:click={deploy}
+						on:click={(event) => {
+							data.highlight.active = event.target.checked;
+							deploy();
+						}}
 					/>
 					<span class="checkbox__mark" />
 				</label>
