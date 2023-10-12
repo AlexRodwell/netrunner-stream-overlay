@@ -202,9 +202,13 @@
 					</label>
 				</Container>
 
-				<Container title="Overlay opacity" level={4}>
+				<Container title="Overlay opacity" level={4} span={true}>
 					<label>
-						<span>Opacity ({global.overlay.opacity * 100}%)</span>
+						<span
+							>Opacity ({(global.overlay.opacity * 100).toFixed(
+								0
+							)}%)</span
+						>
 						<input
 							type="range"
 							min="0"

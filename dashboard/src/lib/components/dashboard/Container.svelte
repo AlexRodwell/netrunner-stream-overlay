@@ -3,12 +3,13 @@
 	export let level: 2 | 3 | 4 | 5 | 6;
 	export let icon: string = "";
 	export let columns: 1 | 2 = 1;
+	export let span: boolean = false;
 </script>
 
 <section
 	class="side__item side__item--group {columns > 1
 		? `side__item--columns-${columns}`
-		: ''}"
+		: ''} {span ? 'side__item--span' : ''}"
 >
 	<div class="side__item__title">
 		{#if icon}
@@ -39,6 +40,10 @@
 
 		&--columns-2 {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		&--span {
+			grid-column: 1/-1;
 		}
 
 		&__title {
