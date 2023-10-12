@@ -202,6 +202,23 @@
 					</label>
 				</Container>
 
+				<Container title="Overlay opacity" level={4}>
+					<label>
+						<span>Opacity ({global.overlay.opacity * 100}%)</span>
+						<input
+							type="range"
+							min="0"
+							max="1"
+							value={global.overlay.opacity}
+							step="0.01"
+							on:change={(e) => {
+								global.overlay.opacity = e.target.value;
+								updateGlobal();
+							}}
+						/>
+					</label>
+				</Container>
+
 				<Preview
 					title="Overlay"
 					url="/overlay"

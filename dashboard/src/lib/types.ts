@@ -45,6 +45,9 @@ export type GameSide = "Corporation" | "Runner";
 export type Side = "playerOne" | "playerTwo";
 
 export type GlobalData = {
+	overlay: {
+		opacity: number;
+	};
 	name: boolean;
 	faction: boolean;
 	id: boolean;

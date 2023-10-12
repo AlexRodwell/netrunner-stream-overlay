@@ -1,4 +1,7 @@
 {
+	"overlay": {
+		"opacity": 0.8
+	},
 	"name": true,
 	"faction": true,
 	"id": true,
