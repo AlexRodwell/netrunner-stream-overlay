@@ -39,12 +39,12 @@
 			{/if}
 		</div>
 
-		{#if (global.id && faction?.name) || data.player.pronoun}
+		{#if data.id || data.player.pronoun}
 			<p class="side__text side__text--{align}">
 				{#if data.player.pronoun}
 					{data.player.pronoun} &mdash;
 				{/if}
-				{faction?.name}
+				{data.id.includes(":") ? data.id.replace(/:.*/, "") : data.id}
 			</p>
 		{/if}
 	</div>
