@@ -102,10 +102,6 @@
 					Connection lost, attempting to reconnect
 				{/if}
 			</p>
-			<!-- <button>deploy all</button>
-			<button>undo changes</button>
-			<button>reset counters (new game)</button> -->
-			<button>Preview overlay</button>
 		</div>
 	</header>
 
