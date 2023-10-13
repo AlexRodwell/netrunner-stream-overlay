@@ -164,12 +164,6 @@
 			level={3}
 			icon={ICON_CLICKS}
 		>
-			<label class="checkbox" slot="toggle">
-				<!-- <span>Display</span> -->
-				<input type="checkbox" bind:checked={data.clicks.active} />
-				<span class="checkbox__mark" />
-			</label>
-
 			<Counter
 				data={data.clicks}
 				on:count={(event) => {
@@ -185,11 +179,6 @@
 			level={3}
 			icon={ICON_CREDITS}
 		>
-			<label class="checkbox" slot="toggle">
-				<!-- <span>Display</span> -->
-				<input type="checkbox" bind:checked={data.credits.active} />
-				<span class="checkbox__mark" />
-			</label>
 			<Counter
 				data={data.credits}
 				on:count={(event) => {
@@ -205,12 +194,6 @@
 			level={3}
 			icon={ICON_AGENDAS}
 		>
-			<label class="checkbox" slot="toggle">
-				<!-- <span>Display</span> -->
-				<input type="checkbox" bind:checked={data.agendas.active} />
-				<span class="checkbox__mark" />
-			</label>
-
 			<Counter
 				data={data.agendas}
 				on:count={(event) => {
