@@ -13,7 +13,7 @@ export const find_faction_by_id = (id: string) => {
 	const identities = CardsData.data.filter(
 		(obj) => obj.type_code === "identity"
 	);
-	const identity = identities.find((obj) => obj.title === id);
+	const identity = identities.find((obj) => obj.stripped_title === id);
 
 	return FactionsData.find((obj) => obj.code === identity.faction_code);
 };

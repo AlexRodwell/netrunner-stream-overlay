@@ -18,29 +18,22 @@
 
 	let data: PlayerAttributes = $playerData[side];
 
-	function filterIdentitiesByFaction() {
-		// const filteredFactionData = FactionsData.filter(
-		// 	(faction) => faction.side === side
-		// );
-
-		// Filter CardsData.data based on the filtered faction list
-		return CardsData.data.filter((obj) => {
-			// const matchingFaction = filteredFactionData.find(
-			// 	(faction) => faction.code === obj.faction_code
-			// );
-
-			const matchingFaction = FactionsData.find(
-				(faction) => faction.code === obj.faction_code
+	function newData() {
+		const filteredArray = CardsData.data.filter((item, index, self) => {
+			// Filter items with type_code equal to 'identity'
+			return (
+				item.type_code === "identity" &&
+				self.findIndex(
+					(i) => i.stripped_title === item.stripped_title
+				) === index
 			);
-
-			return obj.type_code === "identity" && matchingFaction;
 		});
-	}
 
-	function sortAlphabetically(array: Array<{}>, key_value: string) {
-		const sorted = array.sort((a: string, b: string) => {
-			const nameA = a[key_value].toLowerCase();
-			const nameB = b[key_value].toLowerCase();
+		// return filteredArray;
+
+		const sorted = filteredArray.sort((a: string, b: string) => {
+			const nameA = a["stripped_title"].toLowerCase();
+			const nameB = b["stripped_title"].toLowerCase();
 
 			if (nameA < nameB) {
 				return -1;
@@ -53,7 +46,39 @@
 		});
 
 		return sorted;
+
+		console.log(filteredArray);
 	}
+
+	// function filterIdentitiesByFaction() {
+	// 	// Filter CardsData.data based on the filtered faction list
+	// 	return CardsData.data.filter((obj) => {
+	// 		const matchingFaction = FactionsData.find(
+	// 			(faction) => faction.code === obj.faction_code
+	// 		);
+	//
+	// 		console.log(obj.type_code === "identity" && matchingFaction);
+	// 		return obj.type_code === "identity" && matchingFaction;
+	// 	});
+	// }
+	//
+	// function sortAlphabetically(array: Array<{}>, key_value: string) {
+	// 	const sorted = array.sort((a: string, b: string) => {
+	// 		const nameA = a[key_value].toLowerCase();
+	// 		const nameB = b[key_value].toLowerCase();
+	//
+	// 		if (nameA < nameB) {
+	// 			return -1;
+	// 		}
+	// 		if (nameA > nameB) {
+	// 			return 1;
+	// 		}
+	//
+	// 		return 0; // Names are equal
+	// 	});
+	//
+	// 	return sorted;
+	// }
 
 	const deploy = () => {
 		console.log(data);
@@ -103,7 +128,8 @@
 			<label>
 				<span>ID</span>
 				<select bind:value={data.id}>
-					{#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity}
+					<!-- {#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity} -->
+					{#each newData() as identity}
 						FactionsData
 						<option value={identity.stripped_title}
 							>{identity.stripped_title}</option
