@@ -6,17 +6,23 @@ Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.
 
 ## Features/improvements
 
-| Feature/improvements                                                                                                | Status |
-| :------------------------------------------------------------------------------------------------------------------ | -----: |
-| Set player values (clicks, credits, agendas)                                                                        |     ✅ |
-| Set player name, faction and ID                                                                                     |     ✅ |
-| Highlight a card on either side of the overlay                                                                      |     ✅ |
-| Highlight 2 related cards (i.e. corp ice and runner program) for discussion                                         |     ⛔ |
-| Refactor cards.json to use the actual NetrunnerDB API (with caching), to ensure we have the latest cards            |     ⛔ |
-| Improve visual clarity of active/inactive states in dashboard                                                       |     ⛔ |
-| Refactor CSS to stylesheets to better allow for theming/customisation of code                                       |     ⛔ |
-| Write tests (cypress, playwright or similar) to ensure builds function and pass as expected before version releases |     ⛔ |
-| Improve scaling of overlay to support other sizes, currently hardcoded to 1920x1080                                 |     ⛔ |
+| Feature/improvements                                                                                                 | Status |
+| :------------------------------------------------------------------------------------------------------------------- | -----: |
+| Set player values (clicks, credits, agendas)                                                                         |     ✅ |
+| Set player name, faction and ID                                                                                      |     ✅ |
+| Highlight a card on either side of the overlay                                                                       |     ✅ |
+| Ability to pre-define players ID's, so they can be changed when they swap side                                       |     ✅ |
+| Reset game state (default clicks, credits, agendas relative to active corporation/runner side)                       |     ✅ |
+| Highlight 2 related cards (i.e. corp ice and runner program) for discussion                                          |     ⛔ |
+| Refactor cards.json to use the actual NetrunnerDB API (with caching), to ensure we have the latest cards             |     ⛔ |
+| Improve visual clarity of active/inactive states in dashboard                                                        |     ⛔ |
+| Refactor CSS to stylesheets to better allow for theming/customisation of code                                        |     ⛔ |
+| Write tests (cypress, playwright or similar) to ensure builds function and pass as expected before version releases  |     ⛔ |
+| Improve scaling of overlay to support other sizes, currently hardcoded to 1920x1080                                  |     ⛔ |
+| Threat level tracker (relative to highest agenda points)                                                             |     ⛔ |
+| Better search functionality (fuzzy search) to allow for better partial matches                                       |     ⛔ |
+| Save current state to localStorage (previously implimented, but disabled due to issues)                              |     ⛔ |
+| If new active card is selected, animate that in and animate out previous (instead of having to hide and re-activate) |     ⛔ |
 
 If you'd like to request a feature, please make an [issue](https://github.com/AlexRodwell/netrunner-east-anglia-stream-overlay/issues/new) outlining what you'd like to see (examples appreciated).
 
