@@ -15,5 +15,5 @@ export const find_faction_by_id = (id: string) => {
 	);
 	const identity = identities.find((obj) => obj.stripped_title === id);
 
-	return FactionsData.find((obj) => obj.code === identity.faction_code);
+	return FactionsData.find((obj) => obj.code === identity?.faction_code);
 };

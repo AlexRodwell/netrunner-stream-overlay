@@ -14,7 +14,15 @@
 		class="counter__input"
 		type="number"
 		bind:value={data.amount}
-		on:change={() => {
+		on:change={(event) => {
+			if (Number(event.target.value) > max) {
+				data.amount = max;
+			}
+
+			if (Number(event.target.value) < min) {
+				data.amount = min;
+			}
+
 			dispatch("count", data.amount);
 		}}
 		{min}
@@ -54,6 +62,9 @@
 			justify-content: center;
 			align-items: center;
 			height: 100%;
+			background-color: #202020;
+			color: #ffffff;
+			border-color: #323232;
 		}
 	}
 </style>

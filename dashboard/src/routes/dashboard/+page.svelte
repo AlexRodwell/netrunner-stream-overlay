@@ -20,6 +20,7 @@
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Timer from "$lib/components/dashboard/Timer.svelte";
+	import JSON_PLAYER from "$lib/data/default/player.json";
 
 	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
@@ -33,11 +34,6 @@
 		// Check if connection to websocket server is alive
 		setInterval(() => {
 			connection = socket.readyState === 1;
-
-			// Refresh page if websocket connection is lost
-			// if (!connection) {
-			// 	window.location.reload();
-			// }
 		}, 500);
 	});
 
@@ -70,13 +66,135 @@
 			})
 		);
 	};
+
+	const updateAll = () => {
+		socket.send(
+			JSON.stringify({
+				_type: "player",
+				...player,
+			})
+		);
+
+		socket.send(
+			JSON.stringify({
+				_type: "timer",
+				...timer,
+			})
+		);
+
+		socket.send(
+			JSON.stringify({
+				_type: "global",
+				...global,
+			})
+		);
+	};
+
+	const resetGameState = () => {
+		const corporationDefault = {
+			clicks: {
+				amount: 3,
+			},
+			credits: {
+				amount: 5,
+			},
+			agendas: {
+				amount: 0,
+			},
+		};
+
+		const runnerDefault = {
+			clicks: {
+				amount: 4,
+			},
+			credits: {
+				amount: 5,
+			},
+			agendas: {
+				amount: 0,
+			},
+		};
+
+		const sides: TSide[] = ["playerOne", "playerTwo"];
+
+		sides.forEach((playerKey) => {
+			const deck = {
+				player: {
+					...player[playerKey].player,
+					wins: 0,
+				},
+				...(player[playerKey].decks.corporation.active
+					? corporationDefault
+					: runnerDefault),
+			};
+
+			player[playerKey] = {
+				...player[playerKey],
+				...deck,
+			};
+		});
+
+		socket.send(
+			JSON.stringify({
+				_type: "player",
+				...player,
+			})
+		);
+	};
+
+	const swapDeck = () => {
+		if (player.playerOne.decks.corporation.active === true) {
+			player.playerOne.decks.corporation.active = false;
+			player.playerOne.decks.runner.active = true;
+			player.playerTwo.decks.corporation.active = true;
+			player.playerTwo.decks.runner.active = false;
+		} else {
+			player.playerOne.decks.corporation.active = true;
+			player.playerOne.decks.runner.active = false;
+			player.playerTwo.decks.corporation.active = false;
+			player.playerTwo.decks.runner.active = true;
+		}
+
+		socket.send(
+			JSON.stringify({
+				_type: "player",
+				...player,
+			})
+		);
+	};
 </script>
 
 <main class="dashboard">
 	<header class="dashboard__header">
 		<h1>Dashboard</h1>
 
-		<div class="dashboard__actions">
+		<!-- <button
+			on:click={() => {
+				console.log("here");
+				if (player.playerOne.decks.corporation.active) {
+					player.playerOne.decks.corporation.active = false;
+					player.playerOne.decks.runner.active = true;
+					player.playerTwo.decks.corporation.active = true;
+					player.playerTwo.decks.runner.active = false;
+				} else {
+					player.playerOne.decks.corporation.active = true;
+					player.playerOne.decks.runner.active = false;
+					player.playerTwo.decks.corporation.active = false;
+					player.playerTwo.decks.runner.active = true;
+				}
+
+				updatePlayer(player.playerOne, "playerOne");
+				updatePlayer(player.playerTwo, "playerTwo");
+
+				console.log({ player });
+			}}>Swap ID's</button
+		> -->
+
+		<button class="side__deploy" on:click={updateAll}>Deploy all</button>
+	</header>
+
+	<section class="dashboard__widgets">
+		<Column>
 			<p
 				class="connection connection--{connection
 					? 'active'
@@ -102,11 +220,21 @@
 					Connection lost, attempting to reconnect
 				{/if}
 			</p>
-		</div>
-	</header>
 
-	<section class="dashboard__widgets">
-		<Column>
+			<Container
+				title="DANGER ZONE"
+				level={3}
+				className="side__item--danger"
+			>
+				<label>
+					<button on:click={resetGameState}>Reset game state</button>
+					<p>
+						Reset clicks, credits, agendas, and wins to default
+						state (relative to active side)
+					</p>
+				</label>
+			</Container>
+
 			<Container title="GLOBAL" level={3} columns={2}>
 				<Container title="Name" level={4}>
 					<label class="checkbox">
@@ -239,8 +367,10 @@
 			<Side
 				side="playerOne"
 				on:playerdata={(event) => {
+					console.log("recieved playerdata dispatch event");
 					updatePlayer(event.detail, "playerOne");
 				}}
+				on:deckSwap={swapDeck}
 			/>
 		</div>
 
@@ -248,8 +378,10 @@
 			<Side
 				side="playerTwo"
 				on:playerdata={(event) => {
+					console.log("recieved playerdata dispatch event");
 					updatePlayer(event.detail, "playerTwo");
 				}}
+				on:deckSwap={swapDeck}
 			/>
 		</div>
 	</section>

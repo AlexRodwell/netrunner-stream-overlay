@@ -58,12 +58,13 @@
 />
 
 <div class="search">
-	<div>
-		active card here...
-		{#each selected as code}
-			<Card {code} />
-		{/each}
-	</div>
+	<!-- {#if selected.length > 0}
+		<div class="search__active">
+			{#each selected as code}
+				<Card {code} />
+			{/each}
+		</div>
+	{/if} -->
 
 	{#each results.slice(0, 6) as item (item.code)}
 		<!-- Use a unique identifier as the key -->
@@ -78,24 +79,36 @@
 			<Card code={item.code} />
 			<div>
 				<strong>{item.stripped_title}</strong>
-				<p>
-					<!-- <img src={} /> -->
-					Side: {item.side_code}
-				</p>
-				<p>
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<img class="icon" src={ICON_CREDIT} />
-					cost: {item.cost}
-				</p>
-				<p>
-					<!-- svelte-ignore a11y-missing-attribute -->
-					<img class="icon" src={ICON_MEMORY} />
-					memory_cost: {item.memory_cost}
-				</p>
-				<p>
-					<!-- <img src={} /> -->
-					Deck limit: {item.deck_limit}
-				</p>
+
+				{#if item.side_code}
+					<p>
+						<!-- <img src={} /> -->
+						Side: {item.side_code}
+					</p>
+				{/if}
+
+				{#if item.cost}
+					<p>
+						<!-- svelte-ignore a11y-missing-attribute -->
+						<img class="icon" src={ICON_CREDIT} />
+						cost: {item.cost}
+					</p>
+				{/if}
+
+				{#if item.memory_cost}
+					<p>
+						<!-- svelte-ignore a11y-missing-attribute -->
+						<img class="icon" src={ICON_MEMORY} />
+						memory_cost: {item.memory_cost}
+					</p>
+				{/if}
+
+				{#if item.deck_limit}
+					<p>
+						<!-- <img src={} /> -->
+						Deck limit: {item.deck_limit}
+					</p>
+				{/if}
 			</div>
 		</button>
 	{/each}
@@ -126,6 +139,10 @@
 			&:not(&--active):hover {
 				background-color: #282828;
 			}
+		}
+
+		&__active img {
+			width: 140px;
 		}
 
 		img {

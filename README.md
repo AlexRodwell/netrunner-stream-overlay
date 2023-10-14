@@ -57,4 +57,4 @@ Inside OBS or a similar broadcast software, simply add a 'browser' source with t
 -   **Null Signal Games:** Faction and icon graphics, provided as part of their [visual assets pack](https://nullsignal.games/about/nsg-visual-assets/).
 -   **Fonts:** Based on [fontsinuse.com's Android: Netrunner font list](https://fontsinuse.com/uses/15378/android-netrunner)
     -   [**Monkirta Pursuit NC by Jayvee Enaguas**](https://www.dafont.com/monkirta-pursuit-nc.font) (Free)
-    -   [**Cinzel by Natanael Gama**](https://fonts.google.com/specimen/Cinzel), similar to Trajan used in the Fantasy Flight Games artwork (Open font license)
+    -   [**Cinzel by Natanael Gama**](https://fonts.google.com/specimen/Cinzel) (Open font license), similar to Trajan (Adobe) used in the Fantasy Flight Games' artwork

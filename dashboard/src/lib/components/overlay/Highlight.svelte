@@ -8,7 +8,11 @@
 
 	$: data = $playerData[player];
 	$: align = data.align;
-	$: side = find_faction_by_id(data.id)?.side;
+	$: side = find_faction_by_id(
+		data.decks.corporation.active
+			? data.decks.corporation.id
+			: data.decks.runner.id
+	)?.side;
 </script>
 
 <div class="highlight highlight--{align}">

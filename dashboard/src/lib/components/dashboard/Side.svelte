@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import type { PlayerAttributes, Side } from "$lib/types";
+	import type { PlayerAttributes, Side, GameSide } from "$lib/types";
 	import CardsData from "$lib/data/cards.json";
 	import FactionsData from "$lib/data/factions.json";
 	import { playerData } from "$lib/store";
@@ -16,9 +16,11 @@
 
 	const dispatch = createEventDispatcher();
 
-	let data: PlayerAttributes = $playerData[side];
+	// let data: PlayerAttributes = $playerData[side];
 
-	function newData() {
+	$: data = $playerData[side];
+
+	function filterIdentitiesByFaction() {
 		const filteredArray = CardsData.data.filter((item, index, self) => {
 			// Filter items with type_code equal to 'identity'
 			return (
@@ -46,46 +48,28 @@
 		});
 
 		return sorted;
-
-		console.log(filteredArray);
 	}
-
-	// function filterIdentitiesByFaction() {
-	// 	// Filter CardsData.data based on the filtered faction list
-	// 	return CardsData.data.filter((obj) => {
-	// 		const matchingFaction = FactionsData.find(
-	// 			(faction) => faction.code === obj.faction_code
-	// 		);
-	//
-	// 		console.log(obj.type_code === "identity" && matchingFaction);
-	// 		return obj.type_code === "identity" && matchingFaction;
-	// 	});
-	// }
-	//
-	// function sortAlphabetically(array: Array<{}>, key_value: string) {
-	// 	const sorted = array.sort((a: string, b: string) => {
-	// 		const nameA = a[key_value].toLowerCase();
-	// 		const nameB = b[key_value].toLowerCase();
-	//
-	// 		if (nameA < nameB) {
-	// 			return -1;
-	// 		}
-	// 		if (nameA > nameB) {
-	// 			return 1;
-	// 		}
-	//
-	// 		return 0; // Names are equal
-	// 	});
-	//
-	// 	return sorted;
-	// }
 
 	const deploy = () => {
 		console.log(data);
 		dispatch("playerdata", data);
 	};
 
-	$: faction = find_faction_by_id(data.id);
+	const togglePlayerID = (side: GameSide, checked: boolean) => {
+		let opposite: GameSide =
+			side === "corporation" ? "runner" : "corporation";
+
+		data.decks[side].active = checked;
+		data.decks[opposite].active = !checked;
+
+		dispatch("deckSwap");
+	};
+
+	$: faction = find_faction_by_id(
+		data.decks.corporation.active
+			? data.decks.corporation.id
+			: data.decks.runner.id
+	);
 </script>
 
 <section class="side">
@@ -126,16 +110,61 @@
 
 		<Container title="Identity" level={3}>
 			<label>
-				<span>ID</span>
-				<select bind:value={data.id}>
-					<!-- {#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity} -->
-					{#each newData() as identity}
-						FactionsData
-						<option value={identity.stripped_title}
-							>{identity.stripped_title}</option
-						>
-					{/each}
-				</select>
+				<span>Corporation ID</span>
+				<div class="id-selection">
+					<label class="checkbox">
+						<input
+							type="checkbox"
+							bind:checked={data.decks.corporation.active}
+							on:click={(event) => {
+								togglePlayerID(
+									"corporation",
+									event.target.checked
+								);
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+					<select
+						bind:value={data.decks.corporation.id}
+						on:change={deploy}
+					>
+						<!-- {#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity} -->
+						{#each filterIdentitiesByFaction() as identity}
+							FactionsData
+							<option value={identity.stripped_title}
+								>{identity.stripped_title}</option
+							>
+						{/each}
+					</select>
+				</div>
+			</label>
+			<label>
+				<span>Runner ID</span>
+				<div class="id-selection">
+					<label class="checkbox">
+						<input
+							type="checkbox"
+							bind:checked={data.decks.runner.active}
+							on:click={(event) => {
+								togglePlayerID("runner", event.target.checked);
+							}}
+						/>
+						<span class="checkbox__mark" />
+					</label>
+					<select
+						bind:value={data.decks.runner.id}
+						on:change={deploy}
+					>
+						<!-- {#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity} -->
+						{#each filterIdentitiesByFaction() as identity}
+							FactionsData
+							<option value={identity.stripped_title}
+								>{identity.stripped_title}</option
+							>
+						{/each}
+					</select>
+				</div>
 			</label>
 		</Container>
 
@@ -328,5 +357,10 @@
 	section > div {
 		display: grid;
 		gap: 0.5rem;
+	}
+
+	.id-selection {
+		display: flex;
+		flex-direction: row;
 	}
 </style>

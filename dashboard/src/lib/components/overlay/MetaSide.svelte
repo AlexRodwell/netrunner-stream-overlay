@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { globalData, playerData } from "$lib/store";
-	import type { Side, Faction, Counters, Agendas } from "$lib/types";
+	import type { Side } from "$lib/types";
 	import ICON_CLICK from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDA from "$lib/assets/icons/NSG_AGENDA.svg";
-	import FactionData from "$lib/data/factions.json";
 	import Wins from "./Wins.svelte";
 	import Counter from "./Counter.svelte";
 	import { find_faction_by_id } from "$lib/utils";
@@ -14,14 +13,17 @@
 	$: global = $globalData;
 	$: data = $playerData[player];
 	$: align = data.align;
-	$: faction = find_faction_by_id(data.id);
+	$: id = data.decks.corporation.active
+		? data.decks.corporation.id
+		: data.decks.runner.id;
+	$: faction = find_faction_by_id(id);
 </script>
 
 <section
 	class="side side--{align}"
 	style="--opacity: {global.overlay.opacity ?? '0.8'}"
 >
-	{#if global.faction && faction.logo}
+	{#if global.faction && faction?.logo}
 		<div class="side__faction">
 			<img class="side__faction__logo" src={faction.logo} />
 		</div>
@@ -42,12 +44,19 @@
 			{/if}
 		</div>
 
-		{#if data.id || data.player.pronoun}
-			<p class="side__text side__text--{align}">
+		{#if id || data.player.pronoun}
+			<p class="side__text side__text--{align}" {align}>
 				{#if data.player.pronoun}
-					{data.player.pronoun} &mdash;
+					<span>{data.player.pronoun}</span>
 				{/if}
-				{data.id.includes(":") ? data.id.replace(/:.*/, "") : data.id}
+				{#if data.player.pronoun}
+					<span> &nbsp; &mdash; &nbsp; </span>
+				{/if}
+				<span
+					>{id.includes(":")
+						? id.replace(/.*:/, "")
+						: id.split(":")[0]}</span
+				>
 			</p>
 		{/if}
 	</div>
@@ -92,7 +101,7 @@
 		background: rgba(255, 255, 255, 0.5);
 		min-width: 700px;
 		height: $height;
-		margin-bottom: calc(2 * $faction); // calc($faction / 2)
+		margin-bottom: calc(2 * $faction);
 		outline-offset: 5px;
 		color: #fff;
 		text-shadow: 2px 2px black;
@@ -149,7 +158,7 @@
 		&__stats {
 			display: flex;
 			align-items: center;
-			gap: $faction / 2;
+			gap: calc($faction / 2);
 		}
 
 		&__faction {
@@ -207,6 +216,11 @@
 			height: 36px;
 			filter: drop-shadow(2px 2px #000);
 		}
+	}
+
+	[align] {
+		display: flex;
+		align-items: center;
 	}
 
 	[align="left"] {

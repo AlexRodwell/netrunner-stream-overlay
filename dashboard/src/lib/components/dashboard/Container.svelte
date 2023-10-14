@@ -4,12 +4,13 @@
 	export let icon: string = "";
 	export let columns: 1 | 2 = 1;
 	export let span: boolean = false;
+	export let className: string;
 </script>
 
 <section
 	class="side__item side__item--group {columns > 1
 		? `side__item--columns-${columns}`
-		: ''} {span ? 'side__item--span' : ''}"
+		: ''} {span ? 'side__item--span' : ''} {className}"
 >
 	<div class="side__item__title">
 		{#if icon}
@@ -44,6 +45,16 @@
 
 		&--span {
 			grid-column: 1/-1;
+		}
+
+		&--danger {
+			border-color: #6c2121;
+			background: rgb(34, 27, 27);
+			background: linear-gradient(
+				0deg,
+				rgba(34, 27, 27, 1) 0%,
+				rgba(112, 41, 41, 1) 100%
+			);
 		}
 
 		&__title {
