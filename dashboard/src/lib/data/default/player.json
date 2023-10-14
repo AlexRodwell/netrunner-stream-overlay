@@ -3,11 +3,21 @@
 		"align": "left",
 		"player": {
 			"wins": "0",
-			"name": "Player One",
+			"name": "Player",
 			"pronoun": ""
 		},
-		"faction": "jinteki",
-		"id": "419: Amoral Scammer",
+		"decks": {
+			"corporation": {
+				"active": true,
+				"faction": "jinteki",
+				"id": "419: Amoral Scammer"
+			},
+			"runner": {
+				"active": false,
+				"faction": "anarch",
+				"id": "Asa Group: Security Through Vigilance"
+			}
+		},
 		"clicks": {
 			"active": false,
 			"amount": 3
@@ -30,11 +40,21 @@
 		"align": "right",
 		"player": {
 			"wins": "0",
-			"name": "Player Two",
+			"name": "Player",
 			"pronoun": ""
 		},
-		"faction": "anarch",
-		"id": "Asa Group: Security Through Vigilance",
+		"decks": {
+			"corporation": {
+				"active": false,
+				"faction": "jinteki",
+				"id": "419: Amoral Scammer"
+			},
+			"runner": {
+				"active": true,
+				"faction": "anarch",
+				"id": "Asa Group: Security Through Vigilance"
+			}
+		},
 		"clicks": {
 			"active": false,
 			"amount": 4

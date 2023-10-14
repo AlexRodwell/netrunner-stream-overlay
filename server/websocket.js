@@ -10,8 +10,18 @@ let data = {
 			name: "Player One",
 			pronoun: "",
 		},
-		faction: "jinteki",
-		id: "419: Amoral Scammer",
+		decks: {
+			corporation: {
+				active: true,
+				faction: "jinteki",
+				id: "419: Amoral Scammer",
+			},
+			runner: {
+				active: false,
+				faction: "anarch",
+				id: "Asa Group: Security Through Vigilance",
+			},
+		},
 		clicks: {
 			active: false,
 			amount: 3,
@@ -37,8 +47,18 @@ let data = {
 			name: "Player Two",
 			pronoun: "",
 		},
-		faction: "anarch",
-		id: "Asa Group: Security Through Vigilance",
+		decks: {
+			corporation: {
+				active: false,
+				faction: "jinteki",
+				id: "419: Amoral Scammer",
+			},
+			runner: {
+				active: true,
+				faction: "anarch",
+				id: "Asa Group: Security Through Vigilance",
+			},
+		},
 		clicks: {
 			active: false,
 			amount: 4,
@@ -58,6 +78,7 @@ let data = {
 		},
 	},
 };
+
 wss.on("connection", (ws) => {
 	ws.send(JSON.stringify(data));
 

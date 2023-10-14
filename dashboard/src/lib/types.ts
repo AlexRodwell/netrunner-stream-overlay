@@ -41,7 +41,7 @@ export type Agendas = Counters & {
 	cards?: any[];
 };
 
-export type GameSide = "Corporation" | "Runner";
+export type GameSide = "corporation" | "runner";
 export type Side = "playerOne" | "playerTwo";
 
 export type GlobalData = {
@@ -68,8 +68,13 @@ export type PlayerAttributes = {
 		name: string;
 		pronoun: string;
 	};
-	faction: string;
-	id: string;
+	decks: {
+		[key in GameSide]: {
+			active: boolean;
+			faction: string;
+			id: string;
+		};
+	};
 	clicks: Counters;
 	credits: Counters;
 	cards?: string[];
