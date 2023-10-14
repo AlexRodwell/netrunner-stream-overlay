@@ -58,13 +58,13 @@
 />
 
 <div class="search">
-	<!-- {#if selected.length > 0}
+	{#if selected.length > 0}
 		<div class="search__active">
 			{#each selected as code}
 				<Card {code} />
 			{/each}
 		</div>
-	{/if} -->
+	{/if}
 
 	{#each results.slice(0, 6) as item (item.code)}
 		<!-- Use a unique identifier as the key -->
@@ -141,8 +141,8 @@
 			}
 		}
 
-		&__active img {
-			width: 140px;
+		&__active {
+			width: 180px;
 		}
 
 		img {
