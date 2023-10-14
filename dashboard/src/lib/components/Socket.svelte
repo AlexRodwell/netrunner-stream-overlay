@@ -6,19 +6,19 @@
 	let socket: WebSocket;
 	let connection: boolean = false;
 
-	beforeUpdate(() => {
-		if (localStorage.getItem("global")) {
-			$globalData = JSON.parse(localStorage.getItem("global"));
-		}
-
-		if (localStorage.getItem("player")) {
-			$playerData = JSON.parse(localStorage.getItem("player"));
-		}
-
-		if (localStorage.getItem("timer")) {
-			$timerData = JSON.parse(localStorage.getItem("timer"));
-		}
-	});
+	// beforeUpdate(() => {
+	// 	if (localStorage.getItem("global")) {
+	// 		$globalData = JSON.parse(localStorage.getItem("global"));
+	// 	}
+	//
+	// 	if (localStorage.getItem("player")) {
+	// 		$playerData = JSON.parse(localStorage.getItem("player"));
+	// 	}
+	//
+	// 	if (localStorage.getItem("timer")) {
+	// 		$timerData = JSON.parse(localStorage.getItem("timer"));
+	// 	}
+	// });
 
 	onMount(() => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
@@ -30,15 +30,15 @@
 
 			if (type === "player") {
 				delete data["_type"];
-				localStorage.setItem("player", JSON.stringify(data));
+				// localStorage.setItem("player", JSON.stringify(data));
 				$playerData = data;
 			} else if (type === "timer") {
 				delete data["_type"];
-				localStorage.setItem("timer", JSON.stringify(data));
+				// localStorage.setItem("timer", JSON.stringify(data));
 				$timerData = data;
 			} else if (type === "global") {
 				delete data["_type"];
-				localStorage.setItem("global", JSON.stringify(data));
+				// localStorage.setItem("global", JSON.stringify(data));
 				$globalData = data;
 			}
 		});
