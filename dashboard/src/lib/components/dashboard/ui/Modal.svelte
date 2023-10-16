@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let display: boolean;
+	export let size: "small" | "medium" | "large" = "small";
 
 	let dialog: HTMLDialogElement;
 
@@ -12,12 +13,33 @@
 	bind:this={dialog}
 	on:close={() => (display = false)}
 	on:click|self={() => dialog.close()}
+	{size}
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div class="dialog__content" on:click|stopPropagation>
 		<header class="dialog__header">
-			<slot name="header" />
-			<button autofocus on:click={() => dialog.close()}>Close</button>
+			<div class="dialog__title">
+				<slot name="header" />
+			</div>
+			<button
+				class="dialog__close"
+				autofocus
+				on:click={() => dialog.close()}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="#FFF"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-x"
+					><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg
+				>
+			</button>
 		</header>
 
 		<slot />
@@ -26,16 +48,37 @@
 
 <style lang="scss">
 	.dialog {
+		&[size="small"] {
+			min-width: 30vw;
+		}
+
+		&[size="medium"] {
+			min-width: 50vw;
+		}
+
+		&[size="large"] {
+			min-width: 70vw;
+		}
+
 		&__header {
 			display: flex;
 			flex-direction: row;
-			justify-content: space-between;
+			justify-content: flex-end;
 			align-items: center;
+		}
+
+		&__title {
+			flex-grow: 1;
 		}
 
 		&__content {
 			display: grid;
-			gap: 1rem;
+			gap: 2rem;
+		}
+
+		&__close {
+			background: unset;
+			border: unset;
 		}
 	}
 

@@ -11,7 +11,7 @@
 	export let code: string;
 	export let side: GameSide | string;
 
-	let back = side === "Corporation" ? BACK_CORPORATION : BACK_RUNNER;
+	let back = side === "corp" ? BACK_CORPORATION : BACK_RUNNER;
 
 	$: url = `https://card-images.netrunnerdb.com/v1/large/{code}.jpg`.replace(
 		"{code}",

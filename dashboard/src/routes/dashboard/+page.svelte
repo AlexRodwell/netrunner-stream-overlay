@@ -1,6 +1,7 @@
 <script lang="ts">
+	import Socket from "$lib/components/Socket.svelte";
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
-	import { onMount } from "svelte";
+	import { onMount, setContext } from "svelte";
 	import { globalData, playerData, timerData } from "$lib/store";
 	import type {
 		GlobalData as TGlobalData,
@@ -14,31 +15,32 @@
 	import Container from "$lib/components/dashboard/Container.svelte";
 	import Column from "$lib/components/dashboard/ui/Column.svelte";
 	import Preview from "$lib/components/dashboard/Preview.svelte";
+	import ResetState from "$lib/components/dashboard/ResetState.svelte";
 
 	// Icons
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Timer from "$lib/components/dashboard/Timer.svelte";
-	import JSON_PLAYER from "$lib/data/default/player.json";
+	import GlobalSettings from "$lib/components/dashboard/GlobalSettings.svelte";
+	import Actions from "$lib/components/dashboard/ui/Actions.svelte";
+	import SaveConfig from "$lib/components/dashboard/SaveConfig.svelte";
 
 	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
 	let player: TPlayerData = $playerData;
 	let timer: TTimerData = $timerData;
-	let connection: boolean = false;
+
+	$: connection = $globalData.websocket.status;
 
 	onMount(() => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
-
-		// Check if connection to websocket server is alive
-		setInterval(() => {
-			connection = socket.readyState === 1;
-		}, 500);
 	});
 
 	const updatePlayer = (newData: PlayerAttributes, player_side: TSide) => {
+		console.log(newData);
 		player[player_side] = newData;
+		updateThreatLevel();
 
 		socket.send(
 			JSON.stringify({
@@ -68,30 +70,31 @@
 	};
 
 	const updateAll = () => {
-		socket.send(
-			JSON.stringify({
-				_type: "player",
-				...player,
-			})
-		);
+		let data = {
+			_type: "all",
+			player: player,
+			timer: timer,
+			global: global,
+		};
 
-		socket.send(
-			JSON.stringify({
-				_type: "timer",
-				...timer,
-			})
-		);
+		console.log("update all", data);
+		updateThreatLevel();
 
-		socket.send(
-			JSON.stringify({
-				_type: "global",
-				...global,
-			})
-		);
+		socket.send(JSON.stringify(data));
+	};
+
+	const updateThreatLevel = () => {
+		const playerOneAgendas = player.playerOne.agendas.amount;
+		const playerTwoAgendas = player.playerTwo.agendas.amount;
+
+		global.agendas_count =
+			playerOneAgendas > playerTwoAgendas
+				? playerOneAgendas
+				: playerTwoAgendas;
 	};
 
 	const resetGameState = () => {
-		const corporationDefault = {
+		const corpDefault = {
 			clicks: {
 				amount: 3,
 			},
@@ -123,8 +126,8 @@
 					...player[playerKey].player,
 					wins: 0,
 				},
-				...(player[playerKey].decks.corporation.active
-					? corporationDefault
+				...(player[playerKey].decks.corp.active
+					? corpDefault
 					: runnerDefault),
 			};
 
@@ -142,16 +145,36 @@
 		);
 	};
 
+	const saveConfig = () => {
+		const blob = new Blob([JSON.stringify(player, null, 2)], {
+			type: "application/json",
+		});
+
+		// Create a URL for the Blob
+		const url = URL.createObjectURL(blob);
+
+		// Create a link element for downloading
+		const downloadLink = document.createElement("a");
+		downloadLink.href = url;
+		downloadLink.download = "data.json"; // Set the filename
+
+		// Trigger a click event on the link to start the download
+		downloadLink.click();
+
+		// Clean up by revoking the URL (prevents memory leaks)
+		URL.revokeObjectURL(url);
+	};
+
 	const swapDeck = () => {
-		if (player.playerOne.decks.corporation.active === true) {
-			player.playerOne.decks.corporation.active = false;
+		if (player.playerOne.decks.corp.active === true) {
+			player.playerOne.decks.corp.active = false;
 			player.playerOne.decks.runner.active = true;
-			player.playerTwo.decks.corporation.active = true;
+			player.playerTwo.decks.corp.active = true;
 			player.playerTwo.decks.runner.active = false;
 		} else {
-			player.playerOne.decks.corporation.active = true;
+			player.playerOne.decks.corp.active = true;
 			player.playerOne.decks.runner.active = false;
-			player.playerTwo.decks.corporation.active = false;
+			player.playerTwo.decks.corp.active = false;
 			player.playerTwo.decks.runner.active = true;
 		}
 
@@ -166,208 +189,45 @@
 
 <main class="dashboard">
 	<header class="dashboard__header">
-		<h1>Dashboard</h1>
-
-		<!-- <button
-			on:click={() => {
-				console.log("here");
-				if (player.playerOne.decks.corporation.active) {
-					player.playerOne.decks.corporation.active = false;
-					player.playerOne.decks.runner.active = true;
-					player.playerTwo.decks.corporation.active = true;
-					player.playerTwo.decks.runner.active = false;
-				} else {
-					player.playerOne.decks.corporation.active = true;
-					player.playerOne.decks.runner.active = false;
-					player.playerTwo.decks.corporation.active = false;
-					player.playerTwo.decks.runner.active = true;
-				}
-
-				updatePlayer(player.playerOne, "playerOne");
-				updatePlayer(player.playerTwo, "playerTwo");
-
-				console.log({ player });
-			}}>Swap ID's</button
-		> -->
-
-		<button class="side__deploy" on:click={updateAll}>Deploy all</button>
+		<p class="connection connection--{connection ? 'active' : 'inactive'}">
+			{#if connection}
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="3"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-check"
+					><polyline points="20 6 9 17 4 12" /></svg
+				>
+				Connected to websocket
+			{:else}
+				<Loading />
+				Connection lost, attempting to reconnect
+			{/if}
+		</p>
+		<Actions>
+			<GlobalSettings on:global={updateGlobal} />
+			<Timer
+				on:timer={(event) => {
+					updateTimer(event.detail);
+				}}
+			/>
+			<Preview title="Overlay" url="/overlay" button="Preview overlay" />
+			<ResetState on:reset={resetGameState} />
+			<SaveConfig on:save={saveConfig} />
+		</Actions>
 	</header>
 
 	<section class="dashboard__widgets">
-		<Column>
-			<p
-				class="connection connection--{connection
-					? 'active'
-					: 'inactive'}"
-			>
-				{#if connection}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="3"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						class="lucide lucide-check"
-						><polyline points="20 6 9 17 4 12" /></svg
-					>
-					Connected to websocket
-				{:else}
-					<Loading />
-					Connection lost, attempting to reconnect
-				{/if}
-			</p>
-
-			<Container
-				title="DANGER ZONE"
-				level={3}
-				className="side__item--danger"
-			>
-				<label>
-					<button on:click={resetGameState}>Reset game state</button>
-					<p>
-						Reset clicks, credits, agendas, and wins to default
-						state (relative to active side)
-					</p>
-				</label>
-			</Container>
-
-			<Container title="GLOBAL" level={3} columns={2}>
-				<Container title="Name" level={4}>
-					<label class="checkbox">
-						<span>{global.name ? "On" : "Off"}</span>
-						<input
-							type="checkbox"
-							bind:checked={global.name}
-							on:click={(e) => {
-								global.name = e.target.checked;
-								updateGlobal();
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Container>
-
-				<Container title="Faction" level={4}>
-					<label class="checkbox">
-						<span>{global.faction ? "On" : "Off"}</span>
-						<input
-							type="checkbox"
-							bind:checked={global.faction}
-							on:click={(e) => {
-								global.faction = e.target.checked;
-								updateGlobal();
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Container>
-
-				<Container title="Id" level={4}>
-					<label class="checkbox">
-						<span>{global.id ? "On" : "Off"}</span>
-						<input
-							type="checkbox"
-							bind:checked={global.id}
-							on:click={(e) => {
-								global.id = e.target.checked;
-								updateGlobal();
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Container>
-
-				<Container title="Clicks" level={4} icon={ICON_CLICKS}>
-					<label class="checkbox">
-						<span>{global.clicks ? "On" : "Off"}</span>
-						<input
-							type="checkbox"
-							bind:checked={global.clicks}
-							on:click={(e) => {
-								global.clicks = e.target.checked;
-								updateGlobal();
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Container>
-
-				<Container title="Credits" level={4} icon={ICON_CREDITS}>
-					<label class="checkbox">
-						<span>{global.credits ? "On" : "Off"}</span>
-						<input
-							type="checkbox"
-							bind:checked={global.credits}
-							on:click={(e) => {
-								global.credits = e.target.checked;
-								updateGlobal();
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Container>
-
-				<Container title="Agendas" level={4} icon={ICON_AGENDAS}>
-					<label class="checkbox">
-						<span>{global.agendas ? "On" : "Off"}</span>
-						<input
-							type="checkbox"
-							bind:checked={global.agendas}
-							on:click={(e) => {
-								global.agendas = e.target.checked;
-								updateGlobal();
-							}}
-						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Container>
-
-				<Container title="Overlay opacity" level={4} span={true}>
-					<label>
-						<span
-							>Opacity ({(global.overlay.opacity * 100).toFixed(
-								0
-							)}%)</span
-						>
-						<input
-							type="range"
-							min="0"
-							max="1"
-							value={global.overlay.opacity}
-							step="0.01"
-							on:change={(e) => {
-								global.overlay.opacity = e.target.value;
-								updateGlobal();
-							}}
-						/>
-					</label>
-				</Container>
-
-				<Preview
-					title="Overlay"
-					url="/overlay"
-					button="Preview overlay"
-				/>
-			</Container>
-
-			<Container title="TIMER" level={3}>
-				<Timer
-					on:timer={(event) => {
-						updateTimer(event.detail);
-					}}
-				/>
-			</Container>
-		</Column>
-
 		<div>
 			<Side
 				side="playerOne"
 				on:playerdata={(event) => {
-					console.log("recieved playerdata dispatch event");
 					updatePlayer(event.detail, "playerOne");
 				}}
 				on:deckSwap={swapDeck}
@@ -378,7 +238,6 @@
 			<Side
 				side="playerTwo"
 				on:playerdata={(event) => {
-					console.log("recieved playerdata dispatch event");
 					updatePlayer(event.detail, "playerTwo");
 				}}
 				on:deckSwap={swapDeck}
@@ -396,6 +255,7 @@
 
 	.dashboard {
 		width: 100vw;
+		min-height: 100vh;
 
 		&__header {
 			position: sticky;
@@ -424,14 +284,23 @@
 		// }
 
 		&__widgets {
-			gap: 1.5rem;
 			display: grid;
 			grid-template-columns: repeat(1, minmax(0, 1fr));
 			// grid-template-rows: auto 1fr;
-			padding: 2rem;
 
 			@media (min-width: 1580px) {
-				grid-template-columns: 1fr 2fr 2fr;
+				grid-template-columns: repeat(
+					2,
+					minmax(0, 1fr)
+				); // 1fr 2fr 2fr;
+			}
+
+			> div {
+				padding: 2rem;
+
+				&:not(:last-of-type) {
+					border-right: 1px solid #202020;
+				}
 			}
 		}
 

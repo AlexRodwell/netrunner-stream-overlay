@@ -2,20 +2,21 @@
 	"playerOne": {
 		"align": "left",
 		"player": {
-			"wins": "0",
+			"wins": 0,
 			"name": "Player",
-			"pronoun": ""
+			"pronoun": "",
+			"country": null
 		},
 		"decks": {
-			"corporation": {
+			"corp": {
 				"active": true,
 				"faction": "jinteki",
-				"id": "419: Amoral Scammer"
+				"id": "A Teia: IP Recovery"
 			},
 			"runner": {
 				"active": false,
 				"faction": "anarch",
-				"id": "Asa Group: Security Through Vigilance"
+				"id": "419: Amoral Scammer"
 			}
 		},
 		"clicks": {
@@ -39,20 +40,21 @@
 	"playerTwo": {
 		"align": "right",
 		"player": {
-			"wins": "0",
+			"wins": 0,
 			"name": "Player",
-			"pronoun": ""
+			"pronoun": "",
+			"country": null
 		},
 		"decks": {
-			"corporation": {
+			"corp": {
 				"active": false,
 				"faction": "jinteki",
-				"id": "419: Amoral Scammer"
+				"id": "A Teia: IP Recovery"
 			},
 			"runner": {
 				"active": true,
 				"faction": "anarch",
-				"id": "Asa Group: Security Through Vigilance"
+				"id": "419: Amoral Scammer"
 			}
 		},
 		"clicks": {

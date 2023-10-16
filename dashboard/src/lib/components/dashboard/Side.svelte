@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import type { PlayerAttributes, Side, GameSide } from "$lib/types";
+	import type {
+		PlayerAttributes,
+		Card as TCard,
+		Side as TSide,
+		GameSide as TGameSide,
+	} from "$lib/types";
 	import CardsData from "$lib/data/cards.json";
 	import FactionsData from "$lib/data/factions.json";
 	import { playerData } from "$lib/store";
@@ -10,9 +15,11 @@
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Counter from "./Counter.svelte";
-	import { find_faction_by_id } from "$lib/utils";
+	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
+	import JSON_COUNTRIES from "world_countries_lists/data/countries/en/countries.json";
+	import Card from "../Card.svelte";
 
-	export let side: Side;
+	export let side: TSide;
 
 	const dispatch = createEventDispatcher();
 
@@ -20,34 +27,34 @@
 
 	$: data = $playerData[side];
 
-	function filterIdentitiesByFaction() {
-		const filteredArray = CardsData.data.filter((item, index, self) => {
-			// Filter items with type_code equal to 'identity'
+	function filterIdentitiesByFaction(_side: TGameSide) {
+		// Filter card data to return an array of unique ID's (findIndex), that has a type_code of "identity" and side_code of corp or runner
+		const identities = CardsData.data.filter((item, index, self) => {
 			return (
 				item.type_code === "identity" &&
+				item.side_code === _side &&
 				self.findIndex(
 					(i) => i.stripped_title === item.stripped_title
 				) === index
 			);
 		});
 
-		// return filteredArray;
+		// Sort alphabetically
+		const alphabetical = identities.sort((a: TCard, b: TCard) => {
+			const prev = a.stripped_title.toLowerCase();
+			const next = b.stripped_title.toLowerCase();
 
-		const sorted = filteredArray.sort((a: string, b: string) => {
-			const nameA = a["stripped_title"].toLowerCase();
-			const nameB = b["stripped_title"].toLowerCase();
-
-			if (nameA < nameB) {
+			if (prev < next) {
 				return -1;
 			}
-			if (nameA > nameB) {
+			if (prev > next) {
 				return 1;
 			}
 
 			return 0; // Names are equal
 		});
 
-		return sorted;
+		return alphabetical;
 	}
 
 	const deploy = () => {
@@ -56,8 +63,7 @@
 	};
 
 	const togglePlayerID = (side: GameSide, checked: boolean) => {
-		let opposite: GameSide =
-			side === "corporation" ? "runner" : "corporation";
+		let opposite: GameSide = side === "corp" ? "runner" : "corp";
 
 		data.decks[side].active = checked;
 		data.decks[opposite].active = !checked;
@@ -66,72 +72,93 @@
 	};
 
 	$: faction = find_faction_by_id(
-		data.decks.corporation.active
-			? data.decks.corporation.id
-			: data.decks.runner.id
+		data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id
 	);
 </script>
 
 <section class="side">
 	<header class="side__header side__item side__item--span">
+		{#if faction?.logo}
+			<img class="side__faction" src={faction.logo} />
+		{/if}
+
 		<div>
-			<h3>
+			<span
+				>{side === "playerOne"
+					? "Player One (left)"
+					: "Player Two (right)"}</span
+			>
+			<h2>
 				{#if data?.player?.name}
 					{data.player.name}
 				{:else}
 					{side}
 				{/if}
-			</h3>
-			{#if faction?.name && faction?.side}
-				<p>
-					{faction.name} ({faction.side})
-				</p>
-			{/if}
+				{#if faction?.name && faction?.side}
+					&mdash;
+					<span>
+						{faction.name} ({faction.side})
+					</span>
+				{/if}
+			</h2>
 		</div>
-
-		{#if faction?.logo}
-			<img class="side__faction" src={faction.logo} />
-		{/if}
 	</header>
 
 	<section class="side__options">
 		<Container title="Player" level={3}>
 			<label class="side__item side__item--span">
 				<span>Player name</span>
-				<input type="text" bind:value={data.player.name} />
+				<input
+					type="text"
+					bind:value={data.player.name}
+					on:input={deploy}
+				/>
 			</label>
 
 			<!-- Pronouns -->
 			<label class="side__item side__item--span">
 				<span>Player pronouns</span>
-				<input type="text" bind:value={data.player.pronoun} />
+				<input
+					type="text"
+					bind:value={data.player.pronoun}
+					on:input={deploy}
+				/>
+			</label>
+
+			<!-- Country -->
+			<label>
+				<span>Country</span>
+				<select bind:value={data.player.country} on:change={deploy}>
+					<option value="" />
+					<option value="not_representing">🏳️ Not representing</option
+					>
+					{#each JSON_COUNTRIES as country}
+						<option value={country.alpha2}>
+							<!-- Dark magic unicode conversion -->
+							{country.name}
+							{get_flag_by_iso_code(country.alpha2).icon}
+						</option>
+					{/each}
+				</select>
 			</label>
 		</Container>
 
-		<Container title="Identity" level={3}>
+		<Container title="Identity" level={3} icon={faction.logo}>
 			<label>
-				<span>Corporation ID</span>
+				<span> Corporation ID </span>
 				<div class="id-selection">
 					<label class="checkbox">
 						<input
 							type="checkbox"
-							bind:checked={data.decks.corporation.active}
+							bind:checked={data.decks.corp.active}
 							on:click={(event) => {
-								togglePlayerID(
-									"corporation",
-									event.target.checked
-								);
+								togglePlayerID("corp", event.target.checked);
 							}}
 						/>
 						<span class="checkbox__mark" />
 					</label>
-					<select
-						bind:value={data.decks.corporation.id}
-						on:change={deploy}
-					>
-						<!-- {#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity} -->
-						{#each filterIdentitiesByFaction() as identity}
-							FactionsData
+					<select bind:value={data.decks.corp.id} on:change={deploy}>
+						{#each filterIdentitiesByFaction("corp") as identity}
 							<option value={identity.stripped_title}
 								>{identity.stripped_title}</option
 							>
@@ -156,9 +183,7 @@
 						bind:value={data.decks.runner.id}
 						on:change={deploy}
 					>
-						<!-- {#each sortAlphabetically(filterIdentitiesByFaction(), "stripped_title") as identity} -->
-						{#each filterIdentitiesByFaction() as identity}
-							FactionsData
+						{#each filterIdentitiesByFaction("runner") as identity}
 							<option value={identity.stripped_title}
 								>{identity.stripped_title}</option
 							>
@@ -170,12 +195,13 @@
 
 		<Container title="Win counter" level={3}>
 			<div class="wins">
-				{#each ["0", "1", "2"] as item}
+				{#each [0, 1, 2] as item}
 					<label class="wins__item">
 						<input
 							type="radio"
 							name="wins_{side}"
 							bind:group={data.player.wins}
+							on:change={deploy}
 							value={item}
 						/>
 						<div class="wins__item__count">
@@ -197,6 +223,7 @@
 				data={data.clicks}
 				on:count={(event) => {
 					data.clicks.amount = event.detail;
+					deploy();
 				}}
 			/>
 		</Container>
@@ -212,6 +239,7 @@
 				data={data.credits}
 				on:count={(event) => {
 					data.credits.amount = event.detail;
+					deploy();
 				}}
 			/>
 		</Container>
@@ -227,6 +255,7 @@
 				data={data.agendas}
 				on:count={(event) => {
 					data.agendas.amount = event.detail;
+					deploy();
 				}}
 			/>
 		</Container>
@@ -256,37 +285,40 @@
 					limit={1}
 					on:card={(event) => {
 						data.highlight.code = event.detail[0];
+						deploy();
 					}}
 				/>
 			</Container>
 		</div>
-
-		<button class="side__deploy" on:click={deploy}>Deploy</button>
 	</section>
 </section>
 
 <style lang="scss">
 	.side {
-		border: 1px solid #202020;
-		border-radius: 8px;
+		// border: 1px solid #202020;
+		// border-radius: 8px;
 		align-content: flex-start;
 		overflow: hidden;
+		display: grid;
+		gap: 1rem;
 
 		&__header,
 		&__options {
-			padding: 1rem;
+			//padding: 1rem;
 		}
 
 		&__header {
 			display: grid;
-			grid-template-columns: 1fr auto;
+			grid-template-columns: auto 1fr;
+			gap: 0.5rem;
 			align-items: center;
-			background-color: #202020;
+			// background-color: #202020;
+			// padding: 1rem;
 		}
 
 		&__faction {
 			aspect-ratio: 1/1;
-			width: 42px;
+			width: 4rem;
 		}
 
 		&__options {

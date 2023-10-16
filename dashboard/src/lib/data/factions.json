@@ -1,24 +1,24 @@
 [
 	{
-		"side": "corporation",
+		"side": "corp",
 		"code": "haas-bioroid",
 		"name": "Haas-Bioroid",
 		"logo": "/factions/NSG_HB.svg"
 	},
 	{
-		"side": "corporation",
+		"side": "corp",
 		"code": "jinteki",
 		"name": "Jinteki",
 		"logo": "/factions/NSG_JINTEKI.svg"
 	},
 	{
-		"side": "corporation",
+		"side": "corp",
 		"code": "nbn",
 		"name": "NBN",
 		"logo": "/factions/NSG_NBN.svg"
 	},
 	{
-		"side": "corporation",
+		"side": "corp",
 		"code": "weyland-consortium",
 		"name": "Weyland Consortium",
 		"logo": "/factions/NSG_WEYLAND.svg"

@@ -9,17 +9,16 @@
 	$: data = $playerData[player];
 	$: align = data.align;
 	$: side = find_faction_by_id(
-		data.decks.corporation.active
-			? data.decks.corporation.id
-			: data.decks.runner.id
+		data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id
 	)?.side;
+
+	$: code = data.highlight.code;
+	$: active = data?.highlight.active && code.length > 0;
 </script>
 
 <div class="highlight highlight--{align}">
 	<div
-		class="highlight__card {data?.highlight.active
-			? 'highlight__card--active'
-			: ''}"
+		class="highlight__card {active ? 'highlight__card--active' : ''}"
 		{align}
 	>
 		<Card code={data?.highlight.code} {side} />

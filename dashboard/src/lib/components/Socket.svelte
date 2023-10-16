@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
-	import { beforeUpdate, onMount } from "svelte";
+	import { beforeUpdate, getContext, onMount } from "svelte";
 	import { globalData, playerData, timerData } from "$lib/store";
 
 	let socket: WebSocket;
@@ -22,6 +22,7 @@
 
 	onMount(() => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
+		console.info("Websocket connection:", socket);
 
 		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {

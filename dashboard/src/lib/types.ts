@@ -41,19 +41,27 @@ export type Agendas = Counters & {
 	cards?: any[];
 };
 
-export type GameSide = "corporation" | "runner";
+export type GameSide = "corp" | "runner";
 export type Side = "playerOne" | "playerTwo";
 
 export type GlobalData = {
+	websocket: {
+		status: boolean;
+	};
 	overlay: {
 		opacity: number;
 	};
+	country: boolean;
+	wins: boolean;
+	pronoun: boolean;
 	name: boolean;
 	faction: boolean;
 	id: boolean;
 	clicks: boolean;
 	credits: boolean;
 	agendas: boolean;
+	agendas_count: number;
+	threat_level: boolean;
 };
 
 export type TimerData = {
@@ -67,6 +75,7 @@ export type PlayerAttributes = {
 		wins: "0" | "1" | "2";
 		name: string;
 		pronoun: string;
+		country: string | null;
 	};
 	decks: {
 		[key in GameSide]: {

@@ -7,19 +7,20 @@ let data = {
 		align: "left",
 		player: {
 			wins: "0",
-			name: "Player One",
+			name: "Player",
 			pronoun: "",
+			country: null,
 		},
 		decks: {
-			corporation: {
+			corp: {
 				active: true,
 				faction: "jinteki",
-				id: "419: Amoral Scammer",
+				id: "A Teia: IP Recovery",
 			},
 			runner: {
 				active: false,
 				faction: "anarch",
-				id: "Asa Group: Security Through Vigilance",
+				id: "419: Amoral Scammer",
 			},
 		},
 		clicks: {
@@ -44,19 +45,20 @@ let data = {
 		align: "right",
 		player: {
 			wins: "0",
-			name: "Player Two",
+			name: "Player",
 			pronoun: "",
+			country: null,
 		},
 		decks: {
-			corporation: {
+			corp: {
 				active: false,
 				faction: "jinteki",
-				id: "419: Amoral Scammer",
+				id: "A Teia: IP Recovery",
 			},
 			runner: {
 				active: true,
 				faction: "anarch",
-				id: "Asa Group: Security Through Vigilance",
+				id: "419: Amoral Scammer",
 			},
 		},
 		clicks: {
@@ -83,22 +85,19 @@ wss.on("connection", (ws) => {
 	ws.send(JSON.stringify(data));
 
 	ws.addEventListener("message", (event) => {
-		const newData = JSON.parse(event.data);
+		const data = JSON.parse(event.data);
 
-		console.log("--------------------------");
-		console.log(`Recieved new data with type ${newData._type}:`);
+		console.log("-------------------------------------------");
+		console.info(`Recieved new data with type "${data._type}"`, data);
 
-		// Check if the received data is different from the current data
-		if (JSON.stringify(newData) !== JSON.stringify(data)) {
-			data = newData;
-			console.log(data);
-
-			// Send updated data to all connected clients
-			wss.clients.forEach((client) => {
-				client.send(JSON.stringify(data));
-			});
-		} else {
-			console.log("Data is the same, skipping");
+		if (data._type === "all") {
+			console.info("playerOne: ", data.player.playerOne.agendas);
+			console.info("playerTwo: ", data.player.playerTwo.agendas);
 		}
+
+		// Send updated data to all connected clients
+		wss.clients.forEach((client) => {
+			client.send(JSON.stringify(data));
+		});
 	});
 });

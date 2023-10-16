@@ -1,11 +1,19 @@
 {
+	"websocket": {
+		"status": false
+	},
 	"overlay": {
 		"opacity": 0.8
 	},
+	"country": false,
 	"name": true,
+	"pronoun": true,
 	"faction": true,
 	"id": true,
 	"clicks": false,
 	"credits": false,
-	"agendas": true
+	"agendas": true,
+	"agendas_count": 0,
+	"threat_level": false,
+	"wins": true
 }
