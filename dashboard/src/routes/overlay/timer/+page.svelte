@@ -57,8 +57,8 @@
 
 <style lang="scss">
 	.timer {
-		width: 300px;
-		height: 150px;
+		width: 100vw;
+		height: 100vh;
 		padding: 1rem;
 		display: flex;
 		place-items: center;
