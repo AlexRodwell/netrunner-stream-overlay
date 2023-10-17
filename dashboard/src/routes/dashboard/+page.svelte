@@ -16,6 +16,7 @@
 	import Column from "$lib/components/dashboard/ui/Column.svelte";
 	import Preview from "$lib/components/dashboard/Preview.svelte";
 	import ResetState from "$lib/components/dashboard/ResetState.svelte";
+	import FlipPlayers from "$lib/components/dashboard/FlipPlayers.svelte";
 
 	// Icons
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
@@ -185,6 +186,24 @@
 			})
 		);
 	};
+
+	const flipGameState = () => {
+		// Store existing player dat a
+		const playerOne = player.playerOne;
+		const playerTwo = player.playerTwo;
+
+		// Assign player data in reverse order
+		player.playerOne = playerTwo;
+		player.playerTwo = playerOne;
+
+		// Send data to websocket
+		socket.send(
+			JSON.stringify({
+				_type: "player",
+				...player,
+			})
+		);
+	};
 </script>
 
 <main class="dashboard">
@@ -219,6 +238,7 @@
 			/>
 			<Preview title="Overlay" url="/overlay" button="Preview overlay" />
 			<ResetState on:reset={resetGameState} />
+			<FlipPlayers on:flip={flipGameState} />
 			<SaveConfig on:save={saveConfig} />
 		</Actions>
 	</header>

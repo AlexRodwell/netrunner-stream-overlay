@@ -19,6 +19,7 @@ Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.
 | Fuzzy search for NetrunnerDB JSON data (allows for human error such as typos or not knowing the full name of a given card)               |     ✅ |
 | `localStorage` save state, to ensure persistent data in the case of page refresh or browser closure (will not work if host port changes) |     ✅ |
 | Export/import player configuration files (to quickly pre-configure a match ahead of time for quicker setup)                              |     ✅ |
+| Flip player data around                                                                                                                  |     ✅ |
 
 | Improvements                                                                                                         | Status |
 | :------------------------------------------------------------------------------------------------------------------- | -----: |
