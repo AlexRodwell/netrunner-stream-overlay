@@ -15,7 +15,11 @@ export const find_faction_by_id = (id: string) => {
 	);
 	const identity = identities.find((obj) => obj.stripped_title === id);
 
-	return JSON_FACTIONS.find((obj) => obj.code === identity?.faction_code);
+	const code = JSON_FACTIONS.find(
+		(obj) => obj.code === identity?.faction_code
+	);
+
+	return code ?? false;
 };
 
 // code: string & { length: 2 }
