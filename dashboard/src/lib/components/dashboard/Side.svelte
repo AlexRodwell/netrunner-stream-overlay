@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
+	import { createEventDispatcher, setContext } from "svelte";
 	import type {
 		PlayerAttributes,
 		Card as TCard,
@@ -8,7 +8,7 @@
 	} from "$lib/types";
 	import CardsData from "$lib/data/cards.json";
 	import FactionsData from "$lib/data/factions.json";
-	import { playerData } from "$lib/store";
+	import { globalData, playerData } from "$lib/store";
 	import Container from "$lib/components/dashboard/Container.svelte";
 	import Search from "$lib/components/dashboard/Search.svelte";
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
@@ -17,14 +17,15 @@
 	import Counter from "./Counter.svelte";
 	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
 	import JSON_COUNTRIES from "world_countries_lists/data/countries/en/countries.json";
-	import Card from "../Card.svelte";
 
 	export let side: TSide;
+	setContext("side", side);
 
 	const dispatch = createEventDispatcher();
 
 	// let data: PlayerAttributes = $playerData[side];
 
+	$: global = $globalData;
 	$: data = $playerData[side];
 
 	function filterIdentitiesByFaction(_side: TGameSide) {
@@ -71,6 +72,10 @@
 		dispatch("deckSwap");
 	};
 
+	$: disabled = (active: boolean) => {
+		return !active ? "disabled" : "";
+	};
+
 	$: faction = find_faction_by_id(
 		data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id
 	);
@@ -105,45 +110,12 @@
 	</header>
 
 	<section class="side__options">
-		<Container title="Player" level={3}>
-			<label class="side__item side__item--span">
-				<span>Player name</span>
-				<input
-					type="text"
-					bind:value={data.player.name}
-					on:input={deploy}
-				/>
-			</label>
-
-			<!-- Pronouns -->
-			<label class="side__item side__item--span">
-				<span>Player pronouns</span>
-				<input
-					type="text"
-					bind:value={data.player.pronoun}
-					on:input={deploy}
-				/>
-			</label>
-
-			<!-- Country -->
-			<label>
-				<span>Country</span>
-				<select bind:value={data.player.country} on:change={deploy}>
-					<option value="" />
-					<option value="not_representing">🏳️ Not representing</option
-					>
-					{#each JSON_COUNTRIES as country}
-						<option value={country.alpha2}>
-							<!-- Dark magic unicode conversion -->
-							{country.name}
-							{get_flag_by_iso_code(country.alpha2).icon}
-						</option>
-					{/each}
-				</select>
-			</label>
-		</Container>
-
-		<Container title="Identity" level={3} icon={faction.logo}>
+		<Container
+			title="Identity"
+			level={3}
+			icon={faction.logo}
+			className="side__item--wide"
+		>
 			<label>
 				<span> Corporation ID </span>
 				<div class="id-selection">
@@ -193,23 +165,67 @@
 			</label>
 		</Container>
 
-		<Container title="Win counter" level={3}>
-			<div class="wins">
-				{#each [0, 1, 2] as item}
-					<label class="wins__item">
-						<input
-							type="radio"
-							name="wins_{side}"
-							bind:group={data.player.wins}
-							on:change={deploy}
-							value={item}
-						/>
-						<div class="wins__item__count">
-							{item}
+		<Container title="Player" level={3} className="side__item--wide">
+			<Container columns={2} outline={false}>
+				<!-- Name -->
+				<label class="side__item">
+					<span>Player name</span>
+					<input
+						type="text"
+						bind:value={data.player.name}
+						on:input={deploy}
+					/>
+				</label>
+
+				<!-- Pronouns -->
+				<label class="side__item">
+					<span>Pronouns</span>
+					<input
+						type="text"
+						bind:value={data.player.pronoun}
+						on:input={deploy}
+						placeholder="they/them"
+					/>
+				</label>
+			</Container>
+
+			<!-- Wins -->
+			<label class={disabled(global.wins)}>
+				<span>Wins</span>
+				<div class="wins">
+					{#each [0, 1, 2] as item}
+						<div class="wins__item">
+							<input
+								type="radio"
+								name="wins_{side}"
+								bind:group={data.player.wins}
+								on:change={deploy}
+								value={item}
+							/>
+							<div class="wins__item__count">
+								{item}
+							</div>
 						</div>
-					</label>
-				{/each}
-			</div>
+					{/each}
+				</div>
+			</label>
+
+			<!-- Country -->
+			<label>
+				<span>Country</span>
+				<select bind:value={data.player.country} on:change={deploy}>
+					<option value="" />
+					<option value="not_representing">🏳️ Not representing</option
+					>
+					{#each JSON_COUNTRIES as country}
+						<option value={country.alpha2}>
+							<!-- Dark magic unicode conversion -->
+							{country.name}
+							{get_flag_by_iso_code(country.alpha2).icon}
+						</option>
+					{/each}
+				</select>
+			</label>
 		</Container>
 
 		<Container
@@ -218,6 +234,7 @@
 			}`}
 			level={3}
 			icon={ICON_CLICKS}
+			className={disabled(global.clicks)}
 		>
 			<Counter
 				data={data.clicks}
@@ -234,6 +251,7 @@
 			}`}
 			level={3}
 			icon={ICON_CREDITS}
+			className={disabled(global.credits)}
 		>
 			<Counter
 				data={data.credits}
@@ -250,6 +268,7 @@
 			}`}
 			level={3}
 			icon={ICON_AGENDAS}
+			className={disabled(global.agendas)}
 		>
 			<Counter
 				data={data.agendas}
@@ -282,9 +301,9 @@
 				</label>
 
 				<Search
-					limit={1}
-					on:card={(event) => {
-						data.highlight.code = event.detail[0];
+					on:card={({ detail: { current, previous } }) => {
+						data.highlight.current = current;
+						data.highlight.previous = previous;
 						deploy();
 					}}
 				/>
@@ -295,17 +314,10 @@
 
 <style lang="scss">
 	.side {
-		// border: 1px solid #202020;
-		// border-radius: 8px;
 		align-content: flex-start;
 		overflow: hidden;
 		display: grid;
 		gap: 1rem;
-
-		&__header,
-		&__options {
-			//padding: 1rem;
-		}
 
 		&__header {
 			display: grid;
@@ -323,7 +335,7 @@
 
 		&__options {
 			display: grid;
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(6, minmax(0, 1fr));
 			gap: 1rem;
 		}
 

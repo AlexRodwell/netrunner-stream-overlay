@@ -12,7 +12,7 @@
 
 	$: global = $globalData;
 	$: data = $playerData[player];
-	$: align = data.align;
+	$: align = player === "playerOne" ? "left" : "right"; // data.align;
 	$: id = data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id;
 	$: faction = find_faction_by_id(id);
 	$: country = get_flag_by_iso_code(data.player.country);

@@ -86,12 +86,13 @@ export type PlayerAttributes = {
 	};
 	clicks: Counters;
 	credits: Counters;
-	cards?: string[];
 	agendas: Agendas;
 	highlight?: {
-		code: string;
+		current: string | null;
+		previous: string | null;
 		active: boolean;
 	};
+	cards?: string[];
 };
 
 export type PlayerData = {

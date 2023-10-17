@@ -33,7 +33,8 @@
 			"amount": 0
 		},
 		"highlight": {
-			"code": "21063",
+			"current": "21063",
+			"previous": null,
 			"active": false
 		}
 	},
@@ -71,7 +72,8 @@
 			"amount": 0
 		},
 		"highlight": {
-			"code": "21063",
+			"current": "21063",
+			"previous": null,
 			"active": false
 		}
 	}

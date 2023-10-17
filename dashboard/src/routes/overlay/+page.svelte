@@ -3,6 +3,21 @@
 	import { default as PlayerMeta } from "$lib/components/overlay/Meta.svelte";
 	import { default as CardHightlight } from "$lib/components/overlay/Highlight.svelte";
 	import Loading from "$lib/components/Loading.svelte";
+	import { onMount } from "svelte";
+
+	// onMount(() => {
+	// 	if (localStorage.getItem("global")) {
+	// 		localStorage.setItem("global", "");
+	// 	}
+	//
+	// 	if (localStorage.getItem("player")) {
+	// 		localStorage.setItem("player", "");
+	// 	}
+	//
+	// 	if (localStorage.getItem("timer")) {
+	// 		localStorage.setItem("timer", "");
+	// 	}
+	// });
 </script>
 
 {#if $playerData}

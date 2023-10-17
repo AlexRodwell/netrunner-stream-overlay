@@ -100,7 +100,7 @@
 	}
 
 	dialog > div {
-		padding: 1em;
+		padding: 2em;
 	}
 
 	dialog[open] {

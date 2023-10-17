@@ -4,11 +4,13 @@
 	import Container from "$lib/components/dashboard/Container.svelte";
 	import { timerData } from "$lib/store";
 	import type { TimerData as TTimerData } from "$lib/types";
+	import Button from "./ui/Button.svelte";
 
 	// Icons
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
+	import { Timer } from "lucide-svelte";
 
 	let timer: TTimerData = $timerData;
 
@@ -23,11 +25,15 @@
 </script>
 
 <label>
-	<button
+	<Button
+		variant="outline"
 		on:click={() => {
 			display = true;
-		}}>Timer</button
+		}}
 	>
+		<Timer size={16} slot="icon" />
+		Timer
+	</Button>
 	{#if display}
 		<Modal bind:display>
 			<h2 slot="header">Timer</h2>
@@ -35,21 +41,21 @@
 				<span>Timer (minutes)</span>
 				<input type="number" bind:value={timer.count} />
 			</label>
-			<button
+			<Button
 				on:click={() => {
 					timer.action = "set";
 					timer.prev = new Date();
 					deploy();
-				}}>Start timer</button
+				}}>Start timer</Button
 			>
-			<button
+			<Button
 				on:click={() => {
 					timer.action = "clear";
 					timer.prev = new Date();
 					deploy();
 				}}
 				style="background: #242424; border: #242424; color: #fff;"
-				>Clear timer</button
+				>Clear timer</Button
 			>
 		</Modal>
 	{/if}

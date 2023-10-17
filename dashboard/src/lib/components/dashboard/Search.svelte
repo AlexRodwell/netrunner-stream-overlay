@@ -1,81 +1,80 @@
 <!-- src/routes/Search.svelte -->
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
-	import type { Card as TCard } from "$lib/types";
+	import { createEventDispatcher, getContext } from "svelte";
+	import { playerData } from "$lib/store";
+	import type {
+		PlayerAttributes as TPlayerAttributes,
+		Side as TSide,
+	} from "$lib/types";
 	import CardsData from "$lib/data/cards.json";
 	import Card from "../Card.svelte";
 	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_MEMORY from "$lib/assets/icons/NSG_Mu.svg";
 	import Fuse from "fuse.js";
-
-	export let limit: 1 | "uncapped" = 1; // Define how many cards can be selected
+	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
 
 	const fuse = new Fuse(CardsData.data, {
-		keys: ["stripped_title"],
+		keys: ["title", "stripped_title", "flavor"],
 	});
 
+	let side: TSide = getContext("side");
+	$: player = $playerData[side];
 	let searchText = "";
 	// let results: Array<TCard> = [];
 	let results: any = [];
-	$: selected = []; // : string[] | string = []; // Handle either an array of strings (codes) or a singular code (string)
+	let previous: string | null = player?.highlight.previous || null;
+	$: selected = player?.highlight.current || "";
 
 	function filterItems() {
-		const searchTextLowerCase = searchText; // .toLowerCase();
-		//
-		// if (searchTextLowerCase.length === 0) {
-		// 	results = [];
-		// 	return;
-		// }
-		//
-		// results = CardsData.data.filter((item) =>
-		// 	item.stripped_title.toLowerCase().includes(searchTextLowerCase)
-		// );
-
-		// Change the pattern
+		const searchTextLowerCase = searchText;
 
 		results = fuse.search(searchTextLowerCase).slice(0, 6);
-		// return fuse.search(searchTextLowerCase);
 	}
 
 	function cardSelected(code: string) {
+		previous = selected;
+
 		// Remove card if selected is clicked again
-		if (selected.includes(code)) {
-			selected = [];
+		if (selected === code) {
+			selected = null;
+		} else {
+			selected = code;
 		}
 
 		// Multiple ID's
-		else if (limit === "uncapped") {
-			selected = [...selected, code];
-		}
-		// Singular ID
-		else {
-			selected = [code];
-		}
+		// else if (limit === "uncapped") {
+		// 	selected = [...selected, code];
+		// }
+		// // Singular ID
+		// else {
+		// 	selected = [code];
+		// }
 
-		dispatch("card", selected);
+		dispatch("card", {
+			current: selected,
+			previous: previous,
+		});
 	}
 </script>
 
-{#if selected.length > 0}
+<h1>{side} - {JSON.stringify(player.highlight)}</h1>
+
+{#if selected}
 	<p>
 		Currently selected: {CardsData.data.find(
-			(card) => card.code === selected[0]
-		)?.stripped_title} ({selected[0]})
+			(card) => card.code === selected
+		)?.stripped_title} ({selected})
 	</p>
 {/if}
 
 <section class="search">
 	<div
-		class="search__selected {selected.length < 1
-			? 'search__selected--disabled'
-			: ''}"
+		class="search__selected {!selected ? 'search__selected--disabled' : ''}"
 	>
-		{#if selected.length > 0}
-			{#each selected as code}
-				<Card {code} />
-			{/each}
+		{#if selected}
+			<Card code={selected} />
 		{/if}
 	</div>
 	<div class="search__wrapper">
@@ -87,10 +86,9 @@
 		/>
 
 		<div class="search__results">
-			{JSON.stringify(selected)}
 			{#each results.slice(0, 6) as { item: card }}
-				<button
-					class="search__results__item {selected.includes(card.code)
+				<Button
+					class="search__results__item {selected === card.code
 						? 'search__results__item--active'
 						: ''}"
 					on:click={() => {
@@ -135,7 +133,7 @@
 							{/if}
 						{/if}
 					</div>
-				</button>
+				</Button>
 			{/each}
 		</div>
 	</div>

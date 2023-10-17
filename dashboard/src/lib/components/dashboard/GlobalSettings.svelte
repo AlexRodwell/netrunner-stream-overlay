@@ -8,6 +8,8 @@
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
+	import { Settings } from "lucide-svelte";
+	import Button from "./ui/Button.svelte";
 
 	let global: TGlobalData = $globalData;
 
@@ -16,11 +18,15 @@
 </script>
 
 <label>
-	<button
+	<Button
+		variant="outline"
 		on:click={() => {
 			display = true;
-		}}>Global settings</button
+		}}
 	>
+		<Settings size={16} />
+		Global settings
+	</Button>
 	{#if display}
 		<Modal bind:display size="medium">
 			<h2 slot="header">Global settings</h2>

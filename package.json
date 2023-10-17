@@ -23,6 +23,7 @@
 	"type": "module",
 	"dependencies": {
 		"fuse.js": "^6.6.2",
+		"lucide-svelte": "^0.287.0",
 		"world_countries_lists": "^2.8.2",
 		"ws": "^8.13.0"
 	}

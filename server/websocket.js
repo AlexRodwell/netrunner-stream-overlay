@@ -4,9 +4,8 @@ const wss = new WebSocketServer({ port: 8080 });
 
 let data = {
 	playerOne: {
-		align: "left",
 		player: {
-			wins: "0",
+			wins: 0,
 			name: "Player",
 			pronoun: "",
 			country: null,
@@ -31,20 +30,20 @@ let data = {
 			active: true,
 			amount: 5,
 		},
-		cards: [],
 		agendas: {
 			active: true,
 			amount: 0,
 		},
 		highlight: {
-			code: "21063",
+			current: "21063",
+			previous: null,
 			active: false,
 		},
+		cards: [],
 	},
 	playerTwo: {
-		align: "right",
 		player: {
-			wins: "0",
+			wins: 0,
 			name: "Player",
 			pronoun: "",
 			country: null,
@@ -69,15 +68,16 @@ let data = {
 			active: true,
 			amount: 5,
 		},
-		cards: [],
 		agendas: {
 			active: true,
 			amount: 0,
 		},
 		highlight: {
-			code: "21063",
+			current: "21063",
+			previous: null,
 			active: false,
 		},
+		cards: [],
 	},
 };
 

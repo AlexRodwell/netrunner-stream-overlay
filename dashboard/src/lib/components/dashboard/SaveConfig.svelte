@@ -3,6 +3,8 @@
 	import Modal from "$lib/components/dashboard/ui/Modal.svelte";
 	import Actions from "./ui/Actions.svelte";
 	import { playerData } from "$lib/store";
+	import { FileJson2 } from "lucide-svelte";
+	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
 	$: display = false;
@@ -27,8 +29,6 @@
 	const processJSONFile = (fileContents) => {
 		try {
 			const jsonData = JSON.parse(fileContents);
-			// Now you can work with the JSON data, e.g., display it or manipulate it.
-			console.log(jsonData);
 			$playerData = jsonData;
 			display = false;
 		} catch (error) {
@@ -38,28 +38,32 @@
 </script>
 
 <label>
-	<button
+	<Button
+		variant="outline"
 		on:click={() => {
 			display = true;
-		}}>Save/import config</button
+		}}
 	>
+		<FileJson2 size={16} />
+		Save/import config
+	</Button>
 	{#if display}
 		<Modal bind:display>
 			<h2 slot="header">Save/import config</h2>
 			<input type="file" accept=".json" on:change={handleFileSelect} />
 
 			<Actions>
-				<button
+				<Button
 					on:click={() => {
 						dispatch("save");
 						display = false;
-					}}>Save player confog</button
+					}}>Save player confog</Button
 				>
-				<button
+				<Button
 					class="button button--outline"
 					on:click={() => {
 						display = false;
-					}}>Import player config</button
+					}}>Import player config</Button
 				>
 			</Actions>
 		</Modal>

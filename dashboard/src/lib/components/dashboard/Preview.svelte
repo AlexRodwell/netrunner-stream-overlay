@@ -1,5 +1,7 @@
 <script lang="ts">
 	import Modal from "$lib/components/dashboard/ui/Modal.svelte";
+	import { Eye } from "lucide-svelte";
+	import Button from "./ui/Button.svelte";
 
 	export let title: string;
 	export let url: string;
@@ -8,7 +10,10 @@
 	let display: boolean = false;
 </script>
 
-<button on:click={() => (display = true)}>{button}</button>
+<Button variant="outline" on:click={() => (display = true)}>
+	<Eye size={16} />
+	{button}
+</Button>
 
 <Modal bind:display>
 	<h2 slot="header">Previewing: {title}</h2>

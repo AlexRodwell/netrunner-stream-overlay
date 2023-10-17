@@ -2,17 +2,24 @@
 	import { createEventDispatcher } from "svelte";
 	import Modal from "$lib/components/dashboard/ui/Modal.svelte";
 	import Actions from "./ui/Actions.svelte";
+	import { ListRestart } from "lucide-svelte";
+	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
 	$: display = false;
 </script>
 
+<!-- svelte-ignore a11y-label-has-associated-control -->
 <label>
-	<button
+	<Button
+		variant="outline"
 		on:click={() => {
 			display = true;
-		}}>Reset game state</button
+		}}
 	>
+		<ListRestart size={16} />
+		Reset game state
+	</Button>
 	{#if display}
 		<Modal bind:display>
 			<h2 slot="header">Reset game data</h2>
@@ -21,17 +28,17 @@
 				(relative to active side)
 			</p>
 			<Actions>
-				<button
+				<Button
 					on:click={() => {
 						dispatch("reset");
 						display = false;
-					}}>Reset game state</button
+					}}>Reset game state</Button
 				>
-				<button
+				<Button
 					class="button button--outline"
 					on:click={() => {
 						display = false;
-					}}>Cancel</button
+					}}>Cancel</Button
 				>
 			</Actions>
 		</Modal>

@@ -9,7 +9,7 @@
 
 	// export let title: string;
 	export let code: string;
-	export let side: GameSide | string;
+	export let side: GameSide | string | false = false;
 
 	let back = side === "corp" ? BACK_CORPORATION : BACK_RUNNER;
 

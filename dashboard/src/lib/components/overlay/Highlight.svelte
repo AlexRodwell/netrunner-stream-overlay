@@ -7,22 +7,29 @@
 	export let player: Side;
 
 	$: data = $playerData[player];
-	$: align = data.align;
+	$: align = player === "playerOne" ? "left" : "right"; // data.align;
 	$: side = find_faction_by_id(
 		data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id
 	)?.side;
 
-	$: code = data.highlight.code;
-	$: active = data?.highlight.active && code.length > 0;
+	$: code = data.highlight.current;
+	$: active = data?.highlight.active && code?.length > 0;
 </script>
 
 <div class="highlight highlight--{align}">
-	<div
-		class="highlight__card {active ? 'highlight__card--active' : ''}"
-		{align}
-	>
-		<Card code={data?.highlight.code} {side} />
+	<div style="color: #fff; background: red; padding: 4px;">
+		current: {data?.highlight.current} --- previous: {data?.highlight
+			.previous}
 	</div>
+
+	{#if active}
+		<div
+			class="highlight__card {active ? 'highlight__card--active' : ''}"
+			{align}
+		>
+			<Card {code} {side} />
+		</div>
+	{/if}
 </div>
 
 <style lang="scss">

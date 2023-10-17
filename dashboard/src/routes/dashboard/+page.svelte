@@ -208,6 +208,18 @@
 
 <main class="dashboard">
 	<header class="dashboard__header">
+		<Actions>
+			<GlobalSettings on:global={updateGlobal} />
+			<Timer
+				on:timer={(event) => {
+					updateTimer(event.detail);
+				}}
+			/>
+			<Preview title="Overlay" url="/overlay" button="Preview overlay" />
+			<ResetState on:reset={resetGameState} />
+			<FlipPlayers on:flip={flipGameState} />
+			<SaveConfig on:save={saveConfig} />
+		</Actions>
 		<p class="connection connection--{connection ? 'active' : 'inactive'}">
 			{#if connection}
 				<svg
@@ -229,18 +241,6 @@
 				Connection lost, attempting to reconnect
 			{/if}
 		</p>
-		<Actions>
-			<GlobalSettings on:global={updateGlobal} />
-			<Timer
-				on:timer={(event) => {
-					updateTimer(event.detail);
-				}}
-			/>
-			<Preview title="Overlay" url="/overlay" button="Preview overlay" />
-			<ResetState on:reset={resetGameState} />
-			<FlipPlayers on:flip={flipGameState} />
-			<SaveConfig on:save={saveConfig} />
-		</Actions>
 	</header>
 
 	<section class="dashboard__widgets">
@@ -276,6 +276,8 @@
 	.dashboard {
 		width: 100vw;
 		min-height: 100vh;
+		display: grid;
+		grid-template-rows: auto 1fr;
 
 		&__header {
 			position: sticky;
@@ -289,6 +291,7 @@
 			align-items: center;
 			grid-column: 1/-1;
 			border-bottom: 1px solid #202020;
+			z-index: 1;
 		}
 
 		&__actions {
@@ -308,7 +311,7 @@
 			grid-template-columns: repeat(1, minmax(0, 1fr));
 			// grid-template-rows: auto 1fr;
 
-			@media (min-width: 1580px) {
+			@media (min-width: 1200px) {
 				grid-template-columns: repeat(
 					2,
 					minmax(0, 1fr)

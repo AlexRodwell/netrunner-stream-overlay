@@ -41,6 +41,11 @@
 		display: grid;
 		gap: 0.5rem;
 		align-content: flex-start;
+		grid-column: auto/span 2;
+
+		&--wide {
+			grid-column: auto/span 3;
+		}
 
 		&--outline {
 			padding: 1rem;

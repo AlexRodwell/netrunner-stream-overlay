@@ -4,6 +4,8 @@
 	<a class="button" href="/overlay/timer">Timer</a>
 	<a class="button" href="/overlay/player/one">Player One</a>
 	<a class="button" href="/overlay/player/two">Player Two</a>
+	<a class="button" href="/overlay/card/one">Player One Card</a>
+	<a class="button" href="/overlay/card/two">Player Two Card</a>
 </main>
 
 <style lang="scss">
