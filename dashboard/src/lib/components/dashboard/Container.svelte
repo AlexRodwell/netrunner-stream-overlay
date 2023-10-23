@@ -14,6 +14,7 @@
 	{columns > 1 ? `side__item--columns-${columns}` : ''} 
 	{span ? 'side__item--span' : ''} 
 	{className}"
+	{...$$restProps}
 >
 	{#if title}
 		<div class="side__item__title">

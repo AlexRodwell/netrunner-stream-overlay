@@ -1,10 +1,9 @@
 {
 	"playerOne": {
-		"align": "left",
 		"player": {
 			"wins": 0,
 			"name": "Player",
-			"pronoun": "",
+			"pronoun": null,
 			"country": null
 		},
 		"decks": {
@@ -27,7 +26,6 @@
 			"active": true,
 			"amount": 5
 		},
-		"cards": [],
 		"agendas": {
 			"active": true,
 			"amount": 0
@@ -35,15 +33,15 @@
 		"highlight": {
 			"current": "21063",
 			"previous": null,
-			"active": false
+			"active": false,
+			"test": []
 		}
 	},
 	"playerTwo": {
-		"align": "right",
 		"player": {
 			"wins": 0,
 			"name": "Player",
-			"pronoun": "",
+			"pronoun": null,
 			"country": null
 		},
 		"decks": {
@@ -66,7 +64,6 @@
 			"active": true,
 			"amount": 5
 		},
-		"cards": [],
 		"agendas": {
 			"active": true,
 			"amount": 0
@@ -74,7 +71,8 @@
 		"highlight": {
 			"current": "21063",
 			"previous": null,
-			"active": false
+			"active": false,
+			"test": []
 		}
 	}
 }

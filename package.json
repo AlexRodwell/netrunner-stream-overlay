@@ -7,7 +7,9 @@
 		"build": "cd dashboard && vite build",
 		"preview": "cd dashboard && vite preview",
 		"overlay": "cd dashboard && vite dev --port 419",
-		"websocket": "cd server && node ./websocket.js"
+		"websocket": "cd server && node ./websocket.js",
+		"test:integration": "cd dashboard && playwright test",
+		"test:ui": "npx playwright test --ui"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
@@ -22,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@playwright/test": "^1.39.0",
 		"fuse.js": "^6.6.2",
 		"lucide-svelte": "^0.287.0",
 		"world_countries_lists": "^2.8.2",

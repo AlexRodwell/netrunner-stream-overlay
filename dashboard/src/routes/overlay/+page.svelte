@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { playerData } from "$lib/store";
+	import { globalData, playerData } from "$lib/store";
 	import { default as PlayerMeta } from "$lib/components/overlay/Meta.svelte";
 	import { default as CardHightlight } from "$lib/components/overlay/Highlight.svelte";
 	import Loading from "$lib/components/Loading.svelte";
@@ -22,6 +22,9 @@
 
 {#if $playerData}
 	<main class="wrapper">
+		<h1 style="position: absolute; top: 1rem; left: 1rem; color: #fff;">
+			commentators: {$globalData.overlay.commentators}
+		</h1>
 		<CardHightlight player="playerOne" />
 		<CardHightlight player="playerTwo" />
 		<PlayerMeta />

@@ -2,12 +2,21 @@
 	import { createEventDispatcher } from "svelte";
 	import Modal from "$lib/components/dashboard/ui/Modal.svelte";
 	import Actions from "./ui/Actions.svelte";
-	import { playerData } from "$lib/store";
 	import { FileJson2 } from "lucide-svelte";
 	import Button from "./ui/Button.svelte";
+	import { globalData, playerData } from "$lib/store";
+	import type {
+		GlobalData as TGlobalData,
+		PlayerData as TPlayerData,
+	} from "$lib/types";
 
 	const dispatch = createEventDispatcher();
+
+	$: global = $globalData;
+	$: player = $playerData;
+
 	$: display = false;
+	$: success = false;
 
 	let selectedFile = null;
 
@@ -29,8 +38,9 @@
 	const processJSONFile = (fileContents) => {
 		try {
 			const jsonData = JSON.parse(fileContents);
-			$playerData = jsonData;
+			dispatch("import", jsonData);
 			display = false;
+			success = true;
 		} catch (error) {
 			console.error("Error parsing JSON file:", error);
 		}
@@ -52,20 +62,25 @@
 			<h2 slot="header">Save/import config</h2>
 			<input type="file" accept=".json" on:change={handleFileSelect} />
 
-			<Actions>
-				<Button
-					on:click={() => {
-						dispatch("save");
-						display = false;
-					}}>Save player confog</Button
-				>
-				<Button
-					class="button button--outline"
-					on:click={() => {
-						display = false;
-					}}>Import player config</Button
-				>
-			</Actions>
+			{#if success}
+				<p>JSON imported successfully</p>
+				<button on:click={() => (display = false)}>Close</button>
+			{:else}
+				<Actions>
+					<Button
+						on:click={() => {
+							dispatch("save");
+							display = false;
+						}}>Save player config</Button
+					>
+					<Button
+						class="button button--outline"
+						on:click={() => {
+							display = false;
+						}}>Import player config</Button
+					>
+				</Actions>
+			{/if}
 		</Modal>
 	{/if}
 </label>

@@ -19,6 +19,8 @@
 		keys: ["title", "stripped_title", "flavor"],
 	});
 
+	const max = 8;
+
 	let side: TSide = getContext("side");
 	$: player = $playerData[side];
 	let searchText = "";
@@ -30,7 +32,7 @@
 	function filterItems() {
 		const searchTextLowerCase = searchText;
 
-		results = fuse.search(searchTextLowerCase).slice(0, 6);
+		results = fuse.search(searchTextLowerCase).slice(0, max);
 	}
 
 	function cardSelected(code: string) {
@@ -59,15 +61,13 @@
 	}
 </script>
 
-<h1>{side} - {JSON.stringify(player.highlight)}</h1>
-
-{#if selected}
+<!-- {#if selected}
 	<p>
 		Currently selected: {CardsData.data.find(
 			(card) => card.code === selected
 		)?.stripped_title} ({selected})
 	</p>
-{/if}
+{/if} -->
 
 <section class="search">
 	<div
@@ -86,8 +86,8 @@
 		/>
 
 		<div class="search__results">
-			{#each results.slice(0, 6) as { item: card }}
-				<Button
+			{#each results as { item: card }}
+				<button
 					class="search__results__item {selected === card.code
 						? 'search__results__item--active'
 						: ''}"
@@ -133,7 +133,7 @@
 							{/if}
 						{/if}
 					</div>
-				</Button>
+				</button>
 			{/each}
 		</div>
 	</div>
@@ -145,18 +145,19 @@
 		grid-template-columns: 140px 1fr;
 		gap: 1rem;
 		transition: 120ms ease;
+		margin-top: 0.5rem;
 
-		&:hover {
-			grid-template-columns: 80px 4fr;
-
-			.search__selected {
-				mask-image: linear-gradient(
-					to right,
-					black 0%,
-					transparent 100%
-				);
-			}
-		}
+		// &:hover {
+		// 	grid-template-columns: 80px 4fr;
+		//
+		// 	.search__selected {
+		// 		mask-image: linear-gradient(
+		// 			to right,
+		// 			black 0%,
+		// 			transparent 100%
+		// 		);
+		// 	}
+		// }
 
 		&__selected {
 			height: 100%;
@@ -188,10 +189,18 @@
 		}
 
 		&__results {
-			display: flex; // grid;
+			display: grid;
 			gap: 1rem;
 			flex-direction: row;
-			// grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+
+			& :global(.search__results__item) {
+				flex-direction: column;
+			}
+
+			& :global(.search__results__item > div:first-of-type) {
+				width: 100%;
+			}
 
 			&__item {
 				display: grid;

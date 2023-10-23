@@ -1,9 +1,12 @@
 <script lang="ts">
 	import type { Counter } from "$lib/types";
-	import { createEventDispatcher } from "svelte";
+	import type { Side as TSide } from "$lib/types";
+	import { createEventDispatcher, getContext } from "svelte";
 	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
+
+	const side: TSide = getContext("side");
 
 	export let data: Counter;
 	export let min: number = 0;

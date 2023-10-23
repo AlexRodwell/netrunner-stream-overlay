@@ -207,6 +207,20 @@
 							/>
 						</label>
 					</Container>
+					<Container title="Commentators" level={4}>
+						<label>
+							<span>Commentators</span>
+							<input
+								type="text"
+								value={global.overlay.commentators}
+								on:change={(e) => {
+									global.overlay.commentators =
+										e.target.value;
+									dispatch("global");
+								}}
+							/>
+						</label>
+					</Container>
 				</Container>
 			</Container>
 		</Modal>

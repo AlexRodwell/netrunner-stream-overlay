@@ -59,7 +59,6 @@
 	}
 
 	const deploy = () => {
-		console.log(data);
 		dispatch("playerdata", data);
 	};
 
@@ -81,7 +80,7 @@
 	);
 </script>
 
-<section class="side">
+<section class="side" data-uid={side}>
 	<header class="side__header side__item side__item--span">
 		{#if faction?.logo}
 			<img class="side__faction" src={faction.logo} />
@@ -111,12 +110,13 @@
 
 	<section class="side__options">
 		<Container
+			data-uid="side"
 			title="Identity"
 			level={3}
 			icon={faction.logo}
 			className="side__item--wide"
 		>
-			<label>
+			<label data-uid="side-corp">
 				<span> Corporation ID </span>
 				<div class="id-selection">
 					<label class="checkbox">
@@ -138,7 +138,7 @@
 					</select>
 				</div>
 			</label>
-			<label>
+			<label data-uid="side-runner">
 				<span>Runner ID</span>
 				<div class="id-selection">
 					<label class="checkbox">
@@ -168,7 +168,7 @@
 		<Container title="Player" level={3} className="side__item--wide">
 			<Container columns={2} outline={false}>
 				<!-- Name -->
-				<label class="side__item">
+				<label data-uid="name" class="side__item">
 					<span>Player name</span>
 					<input
 						type="text"
@@ -178,7 +178,7 @@
 				</label>
 
 				<!-- Pronouns -->
-				<label class="side__item">
+				<label data-uid="pronouns" class="side__item">
 					<span>Pronouns</span>
 					<input
 						type="text"
@@ -190,7 +190,7 @@
 			</Container>
 
 			<!-- Wins -->
-			<label class={disabled(global.wins)}>
+			<label data-uid="wins" class={disabled(global.wins)}>
 				<span>Wins</span>
 				<div class="wins">
 					{#each [0, 1, 2] as item}
@@ -211,7 +211,7 @@
 			</label>
 
 			<!-- Country -->
-			<label>
+			<label data-uid="country">
 				<span>Country</span>
 				<select bind:value={data.player.country} on:change={deploy}>
 					<option value="" />
@@ -229,6 +229,7 @@
 		</Container>
 
 		<Container
+			data-uid="clicks"
 			title={`Clicks ${
 				data.clicks.amount > 0 ? `(${data.clicks.amount})` : ""
 			}`}
@@ -246,6 +247,7 @@
 		</Container>
 
 		<Container
+			data-uid="credits"
 			title={`Credits ${
 				data.credits.amount > 0 ? `(${data.credits.amount})` : ""
 			}`}
@@ -263,6 +265,7 @@
 		</Container>
 
 		<Container
+			data-uid="agendas"
 			title={`Agendas ${
 				data.agendas.amount > 0 ? `(${data.agendas.amount})` : ""
 			}`}
@@ -288,7 +291,7 @@
 				}`}
 				level={3}
 			>
-				<label class="checkbox" slot="toggle">
+				<label data-uid="card-toggle" class="checkbox" slot="toggle">
 					<input
 						type="checkbox"
 						bind:checked={data.highlight.active}
@@ -314,10 +317,12 @@
 
 <style lang="scss">
 	.side {
-		align-content: flex-start;
-		overflow: hidden;
 		display: grid;
 		gap: 1rem;
+		grid-template-rows: auto 1fr;
+		align-items: flex-start;
+		align-content: stretch;
+		overflow: hidden;
 
 		&__header {
 			display: grid;
@@ -337,6 +342,8 @@
 			display: grid;
 			grid-template-columns: repeat(6, minmax(0, 1fr));
 			gap: 1rem;
+			height: 100%;
+			align-content: flex-start;
 		}
 
 		&__item {

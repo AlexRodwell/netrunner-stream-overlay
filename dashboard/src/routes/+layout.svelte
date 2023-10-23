@@ -1,7 +1,7 @@
 <script lang="ts">
 	import "../app.scss";
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
-	import { onMount } from "svelte";
+	import { onMount, setContext } from "svelte";
 	import { globalData, playerData, timerData } from "$lib/store";
 
 	let socket: WebSocket;
@@ -36,6 +36,7 @@
 		// }
 
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
+		// setContext("websocket", socket);
 
 		window.addEventListener("load", () => {
 			$globalData.websocket.status = socket.readyState === 1;
@@ -54,17 +55,17 @@
 		});
 
 		setInterval(() => {
-			console.info(
-				"Socket connection:",
-				socket.readyState === 1 ? "✔️ Connected" : "❌ Disconnected"
-			);
+			// console.info(
+			// 	"Socket connection:",
+			// 	socket.readyState === 1 ? "✔️ Connected" : "❌ Disconnected"
+			// );
 
 			// if (socket.readyState !== 1) {
 			// 	location.reload();
 			// }
 
 			$globalData.websocket.status = socket.readyState === 1;
-		}, 5000);
+		}, 500);
 
 		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {

@@ -22,14 +22,12 @@
 			.previous}
 	</div>
 
-	{#if active}
-		<div
-			class="highlight__card {active ? 'highlight__card--active' : ''}"
-			{align}
-		>
-			<Card {code} {side} />
-		</div>
-	{/if}
+	<div
+		class="highlight__card {active ? 'highlight__card--active' : ''}"
+		{align}
+	>
+		<Card {code} {side} />
+	</div>
 </div>
 
 <style lang="scss">

@@ -22,7 +22,7 @@
 
 	onMount(() => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
-		console.info("Websocket connection:", socket);
+		// console.info("Websocket connection:", socket);
 
 		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {

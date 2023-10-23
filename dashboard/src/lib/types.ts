@@ -45,11 +45,13 @@ export type GameSide = "corp" | "runner";
 export type Side = "playerOne" | "playerTwo";
 
 export type GlobalData = {
+	deploy: "automatic" | "manual";
 	websocket: {
 		status: boolean;
 	};
 	overlay: {
 		opacity: number;
+		commentators?: string | null;
 	};
 	country: boolean;
 	wins: boolean;
@@ -74,8 +76,8 @@ export type PlayerAttributes = {
 	player: {
 		wins: "0" | "1" | "2";
 		name: string;
-		pronoun: string;
-		country: string | null;
+		pronoun?: string | null;
+		country?: string | null;
 	};
 	decks: {
 		[key in GameSide]: {
@@ -91,8 +93,9 @@ export type PlayerAttributes = {
 		current: string | null;
 		previous: string | null;
 		active: boolean;
+		test: string[];
 	};
-	cards?: string[];
+	// cards?: string[];
 };
 
 export type PlayerData = {
