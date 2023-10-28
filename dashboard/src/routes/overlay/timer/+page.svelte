@@ -38,12 +38,10 @@
 
 	$: {
 		if (count > 0 && action !== "clear") {
-			console.log("1");
 			clearInterval(intervalId);
 			display = true;
 			startCountdown(count);
 		} else {
-			console.log("2");
 			display = false;
 		}
 	}

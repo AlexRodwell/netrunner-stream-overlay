@@ -1,5 +1,10 @@
 import { writable } from "svelte/store";
-import type { GlobalData, PlayerData, TimerData } from "./types";
+import type {
+	GlobalData,
+	PlayerData,
+	TimerData,
+	PlayerAttributes,
+} from "./types";
 
 // JSON
 import DefaultGlobal from "$lib/data/default/global.json";
@@ -10,6 +15,14 @@ import DefaultTimer from "$lib/data/default/timer.json";
 export const globalData: GlobalData = writable(DefaultGlobal);
 export const playerData: PlayerData = writable(DefaultPlayer);
 export const timerData: TimerData = writable(DefaultTimer);
+
+export const playerOneData: PlayerAttributes = writable(
+	DefaultPlayer.playerOne
+);
+
+export const playerTwoData: PlayerAttributes = writable(
+	DefaultPlayer.playerTwo
+);
 
 // Local data
 export const deploy: {

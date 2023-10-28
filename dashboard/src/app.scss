@@ -85,6 +85,10 @@ select {
 			display: flex;
 			transition: 120ms;
 		}
+
+		&:hover:after {
+			transform: translateX(2px);
+		}
 	}
 
 	input[type="checkbox"] {
@@ -98,6 +102,10 @@ select {
 			&:after {
 				margin-left: 24px;
 				background: #fff;
+			}
+
+			&:hover:after {
+				transform: translateX(0px);
 			}
 		}
 	}
@@ -118,7 +126,7 @@ select {
 	justify-content: right;
 }
 
-.disabled {
+[data-disabled="true"] {
 	opacity: 0.5;
 	// pointer-events: none;
 	cursor: not-allowed;

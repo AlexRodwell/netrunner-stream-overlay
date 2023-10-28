@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { globalData } from "$lib/store";
-	import Loading from "$lib/components/Loading.svelte";
+	import Loading from "$components/Loading.svelte";
 	$: connection = $globalData.websocket.status;
 </script>
 

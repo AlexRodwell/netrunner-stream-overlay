@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Modal from "$lib/components/dashboard/ui/Modal.svelte";
+	import Modal from "$components/dashboard/ui/Modal.svelte";
 	import { Eye } from "lucide-svelte";
 	import Button from "./ui/Button.svelte";
 

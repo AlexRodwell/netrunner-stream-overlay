@@ -38,6 +38,7 @@ let data = {
 			current: "21063",
 			previous: null,
 			active: false,
+			test: [],
 		},
 		cards: [],
 	},
@@ -76,6 +77,7 @@ let data = {
 			current: "21063",
 			previous: null,
 			active: false,
+			test: [],
 		},
 		cards: [],
 	},
@@ -87,6 +89,7 @@ wss.on("connection", (ws) => {
 	ws.addEventListener("message", (event) => {
 		const data = JSON.parse(event.data);
 
+		console.log("\r\n");
 		console.log("-------------------------------------------");
 		console.info(`Recieved new data with type "${data._type}"`, data);
 

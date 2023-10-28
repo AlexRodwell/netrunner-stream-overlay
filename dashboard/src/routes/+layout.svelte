@@ -1,57 +1,51 @@
 <script lang="ts">
 	import "../app.scss";
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
-	import { onMount, setContext } from "svelte";
-	import { globalData, playerData, timerData } from "$lib/store";
+	import { onMount } from "svelte";
+	import {
+		globalData,
+		playerOneData,
+		playerTwoData,
+		timerData,
+	} from "$lib/store";
 
 	let socket: WebSocket;
 
 	onMount(() => {
-		// if ("serviceWorker" in navigator) {
-		// 	navigator.serviceWorker
-		// 		.register("/service-worker.js")
-		// 		.then((registration) => {
-		// 			const serviceWorker = registration.active;
-
-		// 			if (serviceWorker) {
-		// 				console.log("here");
-
-		// 				serviceWorker.addEventListener("message", (event) => {
-		// 					const data = event.data;
-		// 					console.log(data);
-
-		// 					// Check for the status message from the service worker
-		// 					if (data.status) {
-		// 						if (data.status === "connected") {
-		// 							console.log("WebSocket connected");
-		// 							$globalData.websocket.status = true;
-		// 						} else if (data.status === "disconnected") {
-		// 							console.log("WebSocket disconnected");
-		// 							$globalData.websocket.status = false;
-		// 						}
-		// 					}
-		// 				});
-		// 			}
-		// 		});
-		// }
-
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
-		// setContext("websocket", socket);
 
 		window.addEventListener("load", () => {
+			console.info("✔️ Window loaded");
+
 			$globalData.websocket.status = socket.readyState === 1;
 
-			if (localStorage.getItem("global")) {
-				$globalData = JSON.parse(localStorage.getItem("global"));
-			}
+			// Persistant storage
+			["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
+				const store = localStorage.getItem(type);
 
-			if (localStorage.getItem("player")) {
-				$playerData = JSON.parse(localStorage.getItem("player"));
-			}
+				if (store && typeof JSON.parse(store) === "object") {
+					console.info(
+						`✔️ Loaded %c${type}%cdata from localStorage`,
+						"background: blue"
+					);
 
-			if (localStorage.getItem("timer")) {
-				$timerData = JSON.parse(localStorage.getItem("timer"));
-			}
+					// Update svelte store with cached (localStorage) data
+					switch (type) {
+						case "global":
+							$globalData = JSON.parse(store);
+							break;
+						case "playerOne":
+							$playerOneData = JSON.parse(store);
+							break;
+						case "playerTwo":
+							$playerTwoData = JSON.parse(store);
+							break;
+						case "timer":
+							$timerData = JSON.parse(store);
+							break;
+					}
+				}
+			});
 		});
 
 		setInterval(() => {
@@ -60,12 +54,8 @@
 			// 	socket.readyState === 1 ? "✔️ Connected" : "❌ Disconnected"
 			// );
 
-			// if (socket.readyState !== 1) {
-			// 	location.reload();
-			// }
-
 			$globalData.websocket.status = socket.readyState === 1;
-		}, 500);
+		}, 1000);
 
 		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {
@@ -73,16 +63,12 @@
 			let type = data._type;
 			delete data["_type"];
 
-			if (type === "all") {
-				$playerData = data.player;
-				localStorage.setItem("player", JSON.stringify(data.player));
-				$timerData = data.timer;
-				localStorage.setItem("timer", JSON.stringify(data.timer));
-				$globalData = data.global;
-				localStorage.setItem("global", JSON.stringify(data.global));
-			} else if (type === "player") {
-				localStorage.setItem("player", JSON.stringify(data));
-				$playerData = data;
+			if (type === "playerOne") {
+				localStorage.setItem("playerOne", JSON.stringify(data));
+				$playerOneData = data;
+			} else if (type === "playerTwo") {
+				localStorage.setItem("playerTwo", JSON.stringify(data));
+				$playerTwoData = data;
 			} else if (type === "timer") {
 				localStorage.setItem("timer", JSON.stringify(data));
 				$timerData = data;

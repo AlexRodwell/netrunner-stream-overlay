@@ -1,32 +1,33 @@
 <script lang="ts">
-	import { globalData, playerData } from "$lib/store";
-	import { default as PlayerMeta } from "$lib/components/overlay/Meta.svelte";
-	import { default as CardHightlight } from "$lib/components/overlay/Highlight.svelte";
-	import Loading from "$lib/components/Loading.svelte";
-	import { onMount } from "svelte";
+	import { playerOneData, playerTwoData } from "$lib/store";
+	import { default as PlayerMeta } from "$components/overlay/Meta.svelte";
+	import CardHightlight from "$components/overlay/CardHighlight.svelte";
+	import Loading from "$components/Loading.svelte";
+	import Commentators from "$components/overlay/Commentators.svelte";
 
-	// onMount(() => {
-	// 	if (localStorage.getItem("global")) {
-	// 		localStorage.setItem("global", "");
-	// 	}
-	//
-	// 	if (localStorage.getItem("player")) {
-	// 		localStorage.setItem("player", "");
-	// 	}
-	//
-	// 	if (localStorage.getItem("timer")) {
-	// 		localStorage.setItem("timer", "");
-	// 	}
-	// });
+	let dev: boolean;
+
+	if (import.meta.env.DEV) {
+		// dev = true;
+	}
 </script>
 
-{#if $playerData}
-	<main class="wrapper">
-		<h1 style="position: absolute; top: 1rem; left: 1rem; color: #fff;">
+{#if $playerOneData && $playerTwoData}
+	<main class="wrapper {dev && 'wrapper--dev'}">
+		<!-- <h1 style="position: absolute; top: 1rem; left: 1rem; color: #fff;">
 			commentators: {$globalData.overlay.commentators}
-		</h1>
-		<CardHightlight player="playerOne" />
-		<CardHightlight player="playerTwo" />
+		</h1> -->
+		<Commentators />
+		<CardHightlight
+			player="playerOne"
+			data={$playerOneData.highlight}
+			side={$playerOneData.side}
+		/>
+		<CardHightlight
+			player="playerTwo"
+			data={$playerTwoData.highlight}
+			side={$playerTwoData.side}
+		/>
 		<PlayerMeta />
 	</main>
 {:else}
@@ -41,14 +42,14 @@
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		grid-template-rows: 1fr auto;
-		width: 100vw; // 1920px;;
-		height: 100vh; // 1080px;;
+		width: var(--width, 100vw);
+		height: var(--height, 100vh);
 		overflow: hidden;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		position: absolute;
-		outline: 1px solid red;
+		position: relative;
+
+		&--dev {
+			background: #121212;
+		}
 
 		&--loading {
 			display: flex;

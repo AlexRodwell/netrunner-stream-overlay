@@ -1,6 +1,7 @@
 <main>
 	<a class="button" href="/dashboard">Dashboard</a>
 	<a class="button" href="/overlay">Overlay</a>
+	<a class="button" href="/overlay/commentators">Timer</a>
 	<a class="button" href="/overlay/timer">Timer</a>
 	<a class="button" href="/overlay/player/one">Player One</a>
 	<a class="button" href="/overlay/player/two">Player Two</a>

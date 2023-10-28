@@ -2,16 +2,21 @@
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 
 	import { onMount } from "svelte";
-	import Preview from "$lib/components/dashboard/Preview.svelte";
-	import ResetState from "$lib/components/dashboard/ResetState.svelte";
-	import FlipPlayers from "$lib/components/dashboard/FlipPlayers.svelte";
-	import Timer from "$lib/components/dashboard/Timer.svelte";
-	import GlobalSettings from "$lib/components/dashboard/GlobalSettings.svelte";
-	import Actions from "$lib/components/dashboard/ui/Actions.svelte";
-	import SaveConfig from "$lib/components/dashboard/SaveConfig.svelte";
-	import Connection from "$lib/components/dashboard/Connection.svelte";
-	import DeployType from "$lib/components/dashboard/DeployType.svelte";
-	import { globalData, playerData, timerData, deploy } from "$lib/store";
+	import Preview from "$components/dashboard/Preview.svelte";
+	import ResetState from "$components/dashboard/ResetState.svelte";
+	import FlipPlayers from "$components/dashboard/FlipPlayers.svelte";
+	import Timer from "$components/dashboard/Timer.svelte";
+	import GlobalSettings from "$components/dashboard/GlobalSettings.svelte";
+	import Actions from "$components/dashboard/ui/Actions.svelte";
+	import SaveConfig from "$components/dashboard/SaveConfig.svelte";
+	import Connection from "$components/dashboard/Connection.svelte";
+	import {
+		globalData,
+		playerOneData,
+		playerTwoData,
+		timerData,
+		deploy,
+	} from "$lib/store";
 	import type {
 		GlobalData as TGlobalData,
 		PlayerData as TPlayerData,
@@ -22,7 +27,6 @@
 
 	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
-	let player: TPlayerData = $playerData;
 	let timer: TTimerData = $timerData;
 
 	onMount(() => {
@@ -63,41 +67,47 @@
 			},
 		};
 
-		const sides: TSide[] = ["playerOne", "playerTwo"];
-
-		sides.forEach((playerKey) => {
-			const deck = {
+		$playerOneData = {
+			...$playerOneData,
+			...{
 				player: {
-					...player[playerKey].player,
+					...$playerOneData.player,
 					wins: 0,
 				},
-				...(player[playerKey].decks.corp.active
+				...($playerOneData.decks.corp.active
 					? corpDefault
 					: runnerDefault),
-			};
+			},
+		};
+		socketSend("playerOne", $playerOneData);
 
-			player[playerKey] = {
-				...player[playerKey],
-				...deck,
-			};
-		});
-
-		socketSend("player", player);
+		$playerTwoData = {
+			...$playerTwoData,
+			...{
+				player: {
+					...$playerTwoData.player,
+					wins: 0,
+				},
+				...($playerTwoData.decks.corp.active
+					? corpDefault
+					: runnerDefault),
+			},
+		};
+		socketSend("playerTwo", $playerTwoData);
 	};
 
 	const flipGameState = () => {
 		// Store existing player dat a
-		const playerOne = player.playerOne;
-		const playerTwo = player.playerTwo;
+		const playerOne = $playerOneData;
+		const playerTwo = $playerTwoData;
 
 		// Assign player data in reverse order
-		player.playerOne = playerTwo;
-		player.playerTwo = playerOne;
-
-		console.log(player);
+		$playerOneData = playerTwo;
+		$playerTwoData = playerOne;
 
 		// Send data to websocket
-		socketSend("player", player);
+		socketSend("playerOne", $playerOneData);
+		socketSend("playerTwo", $playerTwoData);
 	};
 
 	const saveConfig = () => {
@@ -106,7 +116,10 @@
 				JSON.stringify(
 					{
 						global: global,
-						player: player,
+						player: {
+							playerOne: $playerOneData,
+							playerTwo: $playerTwoData,
+						},
 					},
 					null,
 					2
@@ -163,27 +176,36 @@
 			on:save={saveConfig}
 			on:import={(event) => importConfig(event.detail)}
 		/>
-		<DeployType
-			on:proceed={() => {
-				$deploy.proceed = true;
-				socketSend("many", [
-					{
-						type: "global",
-						data: global,
-					},
-					{
-						type: "timer",
-						data: timer,
-					},
-					{
-						type: "player",
-						data: player,
-					},
-				]);
-			}}
-		/>
 	</Actions>
-	<Connection />
+	<Actions>
+		{#if $deploy.type === "manual"}
+			<button
+				on:click={() => {
+					$deploy.proceed = true;
+					socketSend("many", [
+						{
+							type: "global",
+							data: global,
+						},
+						{
+							type: "timer",
+							data: timer,
+						},
+						{
+							type: "playerOne",
+							data: playerOneData,
+						},
+						{
+							type: "playerTwo",
+							data: playerTwoData,
+						},
+					]);
+				}}>Deploy</button
+			>
+		{/if}
+
+		<Connection />
+	</Actions>
 </header>
 
 <style lang="scss">

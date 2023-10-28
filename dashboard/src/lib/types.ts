@@ -1,3 +1,4 @@
+/*
 export type Card = {
 	deck_limit: number;
 	faction_code: string;
@@ -25,6 +26,112 @@ export type Card = {
 	agenda_points?: number;
 	trash_cost?: number;
 };
+*/
+
+export type Card = {
+	attributes: {
+		advancement_requirement?: number | null;
+		agenda_points?: number | null;
+		attribution?: string | number | null;
+		base_link?: string | number | null;
+		card_abilities?: {
+			additional_cost?: boolean | null;
+			advanceable?: boolean | null;
+			gains_subroutines?: boolean | null;
+			interrupt?: boolean | null;
+			link_provided?: string | number | null;
+			mu_provided?: string | number | null;
+			num_printed_subroutines?: string | number | null;
+			on_encounter_effect?: boolean | null;
+			performs_trace?: boolean | null;
+			recurring_credits_provided?: string | number | null;
+			rez_effect?: boolean | null;
+			trash_ability?: boolean | null;
+		};
+		card_cycle_ids?: string[] | null;
+		card_pool_ids?: string[] | null;
+		card_set_ids?: string[] | null;
+		card_subtype_ids?: string[] | null;
+		card_type_id?: string | null;
+		cost?: number | null;
+		date_release?: string | null;
+		deck_limit?: number | null;
+		designed_by?: string | null;
+		display_subtypes?: string | number | null;
+		faction_id?: string | null;
+		format_ids?: string[] | null;
+		in_restriction?: boolean | null;
+		influence_cost?: string | number | null;
+		influence_limit?: string | number | null;
+		is_unique?: boolean | null;
+		latest_printing_id: string | null;
+		memory_cost?: string | number | null;
+		minimum_deck_size?: string | number | null;
+		num_printings?: number | null;
+		printing_ids?: string[] | null;
+		printings_released_by?: string[] | null;
+		restriction_ids?: string[] | null;
+		restrictions?: {
+			banned?: string[] | null;
+			global_penalty?: string[] | null;
+			points?: Record<string, any> | null;
+			restricted?: string[] | null;
+			universal_faction_cost?: Record<string, any> | null;
+		};
+		side_id?: string | null;
+		snapshot_ids?: string[] | null;
+		strength?: string | number | null;
+		stripped_text?: string | null;
+		stripped_title?: string | null;
+		text?: string | null;
+		title?: string | null;
+		trash_cost?: string | number | null;
+		updated_at?: string | null;
+	};
+	id: string | null;
+	links?: {
+		self?: string | null;
+	};
+	relationships?: {
+		card_subtypes?: {
+			links?: {
+				related?: string | null;
+				self?: string | null;
+			};
+		};
+		card_type?: {
+			links?: {
+				related?: string | null;
+				self?: string | null;
+			};
+		};
+		faction?: {
+			links?: {
+				related?: string | null;
+				self?: string | null;
+			};
+		};
+		printings?: {
+			links?: {
+				related?: string | null;
+				self?: string | null;
+			};
+		};
+		rulings?: {
+			links?: {
+				related?: string | null;
+				self?: string | null;
+			};
+		};
+		side?: {
+			links?: {
+				related?: string | null;
+				self?: string | null;
+			};
+		};
+	};
+	type: string;
+};
 
 export type CounterKeys = "clicks" | "credits" | "agendas";
 
@@ -42,7 +149,7 @@ export type Agendas = Counters & {
 };
 
 export type GameSide = "corp" | "runner";
-export type Side = "playerOne" | "playerTwo";
+export type PlayerSide = "playerOne" | "playerTwo";
 
 export type GlobalData = {
 	deploy: "automatic" | "manual";
@@ -72,7 +179,16 @@ export type TimerData = {
 	prev: Date;
 };
 
+export type Highlight = {
+	cards: string[] | [];
+	current: string | null;
+	previous: string | null;
+	active: boolean;
+	test: string[] | [];
+};
+
 export type PlayerAttributes = {
+	side: GameSide;
 	player: {
 		wins: "0" | "1" | "2";
 		name: string;
@@ -89,23 +205,15 @@ export type PlayerAttributes = {
 	clicks: Counters;
 	credits: Counters;
 	agendas: Agendas;
-	highlight?: {
-		current: string | null;
-		previous: string | null;
-		active: boolean;
-		test: string[];
-	};
-	// cards?: string[];
+	highlight?: Highlight;
 };
 
 export type PlayerData = {
-	[key in Side]: PlayerAttributes;
+	[key in PlayerSide]: PlayerAttributes;
 };
 
 type Factions = typeof import("./data/factions.json");
 
-// export type Faction = {
-// 	name: Factions[number]["name"];
-// };
-
 export type Faction = Factions[number]["code"];
+
+export type WebSocketFunction = Function;

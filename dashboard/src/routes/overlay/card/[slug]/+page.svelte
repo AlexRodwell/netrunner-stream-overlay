@@ -1,12 +1,14 @@
 <script lang="ts">
 	import type { PageData } from "./$types";
-	import Highlight from "$lib/components/overlay/Highlight.svelte";
+	import CardHighlight from "$components/overlay/CardHighlight.svelte";
 
 	export let data: PageData;
+
+	$: player = data.player === "playerOne" ? $playerOneData : $playerTwoData;
 </script>
 
 <main>
-	<Highlight player={data.player} />
+	<CardHighlight player={data.player} data={player} side={player.side} />
 </main>
 
 <style lang="scss">

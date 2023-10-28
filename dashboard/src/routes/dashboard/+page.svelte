@@ -1,82 +1,97 @@
 <script lang="ts">
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
-	import { globalData, playerData, deploy } from "$lib/store";
+	import {
+		globalData,
+		playerOneData,
+		playerTwoData,
+		deploy,
+	} from "$lib/store";
 	import type {
+		PlayerAttributes as TPlayerAttributes,
 		GlobalData as TGlobalData,
-		PlayerData as TPlayerData,
 		TimerData as TTimerData,
-		Side as TSide,
-		PlayerAttributes,
+		PlayerSide as TPlayerSide,
+		GameSide as TGameSide,
 	} from "$lib/types";
-	import Side from "$lib/components/dashboard/Side.svelte";
-	import Header from "$lib/components/dashboard/Header.svelte";
+	import Player from "$components/dashboard/Player.svelte";
+	import Header from "$components/dashboard/Header.svelte";
 
 	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
-	let player: TPlayerData = $playerData;
+
+	let players: {
+		[key in "one" | "two"]: TPlayerSide;
+	} = {
+		one: "playerOne",
+		two: "playerTwo",
+	};
 
 	onMount(() => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
 	});
 
 	const socketSend = (
-		type: "many" | "global" | "player" | "timer",
+		type: "many" | "global" | "playerOne" | "playerTwo" | "timer",
 		json:
 			| Array<{
 					type: string;
-					data: TGlobalData | TPlayerData | TTimerData;
+					data: TGlobalData | TPlayerAttributes | TTimerData;
 			  }>
 			| TGlobalData
-			| TPlayerData
+			| TPlayerAttributes
 			| TTimerData
 	) => {
-		console.log("-------------------------------------");
-		console.info("type", $deploy.type);
-		console.log("proceed", $deploy.proceed);
-
-		if (type === "many" && Array.isArray(json)) {
-			json.forEach(({ type, data }) => {
+		try {
+			if (type === "many" && Array.isArray(json)) {
+				json.forEach(({ type, data }) => {
+					socket.send(
+						JSON.stringify({
+							_type: type,
+							...data,
+						})
+					);
+				});
+			} else if (
+				$deploy.type === "automatic" ||
+				($deploy.type === "manual" && $deploy.proceed)
+			) {
 				socket.send(
 					JSON.stringify({
 						_type: type,
-						...data,
+						...json,
 					})
 				);
-			});
-		} else if (
-			$deploy.type === "automatic" ||
-			($deploy.type === "manual" && $deploy.proceed)
-		) {
-			console.warn("firing socket");
-			socket.send(
-				JSON.stringify({
-					_type: type,
-					...json,
-				})
-			);
+			}
+		} catch (error) {
+			alert("Failed to update");
 		}
 
 		$deploy.proceed = false;
 	};
 
-	const updatePlayer = (newData: PlayerAttributes, player_side: TSide) => {
+	const updatePlayer = (
+		newData: PlayerAttributes,
+		player_side: TPlayerSide
+	) => {
 		console.info(
 			`Updating player %c${player_side}:`,
 			`background: ${
-				player_side === "playerOne" ? "blue" : "red"
+				player_side === players.one ? "blue" : "red"
 			}; color: white;`,
 			newData
 		);
 		player[player_side] = newData;
 		updateThreatLevel();
 
-		socketSend("player", player);
+		socketSend(player_side, player);
 	};
 
 	const updateThreatLevel = () => {
-		const playerOneAgendas = player.playerOne.agendas.amount;
-		const playerTwoAgendas = player.playerTwo.agendas.amount;
+		const playerOneAgendas: TPlayerAttributes =
+			player[players.one].agendas.amount;
+		const playerTwoAgendas: TPlayerAttributes =
+			player[players.two].agendas.amount;
 
 		global.agendas_count =
 			playerOneAgendas > playerTwoAgendas
@@ -84,46 +99,75 @@
 				: playerTwoAgendas;
 	};
 
-	const swapDeck = () => {
-		if (player.playerOne.decks.corp.active === true) {
-			player.playerOne.decks.corp.active = false;
-			player.playerOne.decks.runner.active = true;
-			player.playerTwo.decks.corp.active = true;
-			player.playerTwo.decks.runner.active = false;
+	const swapDeck = (swap: {
+		currentPlayer: TPlayerSide;
+		selected: {
+			active: TGameSide;
+			inactive: TGameSide;
+		};
+	}) => {
+		if (swap.currentPlayer === "playerOne") {
+			$playerOneData.side = swap.selected.active;
+			$playerTwoData.side = swap.selected.inactive;
+			$playerOneData.decks[swap.selected.active].active = true;
+			$playerOneData.decks[swap.selected.inactive].active = false;
+			$playerTwoData.decks[swap.selected.active].active = false;
+			$playerTwoData.decks[swap.selected.inactive].active = true;
+			socketSend("playerOne", $playerOneData);
+			socketSend("playerTwo", $playerTwoData);
 		} else {
-			player.playerOne.decks.corp.active = true;
-			player.playerOne.decks.runner.active = false;
-			player.playerTwo.decks.corp.active = false;
-			player.playerTwo.decks.runner.active = true;
+			$playerTwoData.side = swap.selected.active;
+			$playerOneData.side = swap.selected.inactive;
+			$playerTwoData.decks[swap.selected.active].active = true;
+			$playerTwoData.decks[swap.selected.inactive].active = false;
+			$playerOneData.decks[swap.selected.active].active = false;
+			$playerOneData.decks[swap.selected.inactive].active = true;
+			socketSend("playerTwo", $playerTwoData);
+			socketSend("playerOne", $playerOneData);
 		}
-
-		socketSend("player", player);
 	};
 </script>
 
 <main class="dashboard">
+	<!-- Pass the socketSend function as a property to header, so we can utilise the socket, without having to create a new WebSocket -->
 	<Header {socketSend} />
-
 	<section class="dashboard__content">
-		<Side
-			side="playerOne"
+		<Player
+			{socketSend}
+			name="playerOne"
 			on:playerdata={(event) => {
 				updatePlayer(event.detail, "playerOne");
 			}}
-			on:deckSwap={swapDeck}
+			on:deckSwap={(event) => {
+				swapDeck(event.detail);
+			}}
 		/>
-
-		<Side
-			side="playerTwo"
+		<Player
+			{socketSend}
+			name="playerTwo"
 			on:playerdata={(event) => {
 				updatePlayer(event.detail, "playerTwo");
 			}}
-			on:deckSwap={swapDeck}
+			on:deckSwap={(event) => {
+				swapDeck(event.detail);
+			}}
 		/>
 	</section>
 </main>
 
+11
+
 <style lang="scss">
+	:global(html) {
+		scroll-behavior: smooth;
+		font-size: 16px; // Fallback for clamp()
+		font-size: clamp(
+			0.875rem,
+			0.8092rem + 0.2632vw,
+			1.125rem
+		); // Scales between 400-800px https://clamp.font-size.app/
+	}
+
 	:global(body) {
 		color: #fff;
 		background: #030303;

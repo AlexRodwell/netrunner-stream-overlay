@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { fly } from "svelte/transition";
 	import type { GameSide } from "$lib/types";
-
-	import { slugify } from "$lib/utils";
-
 	import BACK_CORPORATION from "$lib/assets/cards/nsg-corp.png";
 	import BACK_RUNNER from "$lib/assets/cards/nsg-runner.png";
 
 	// export let title: string;
 	export let code: string;
 	export let side: GameSide | string | false = false;
+	export let glow: boolean = true;
 
 	let back = side === "corp" ? BACK_CORPORATION : BACK_RUNNER;
 
@@ -19,7 +16,7 @@
 	);
 </script>
 
-<div class="card">
+<div class="card {glow ? 'card--glow' : ''}">
 	<div class="card__front">
 		<!-- svelte-ignore a11y-missing-attribute -->
 		<img src={url} />
@@ -37,8 +34,8 @@
 		aspect-ratio: 64/89;
 		transform-style: preserve-3d;
 		display: flex;
-		transition: 600ms ease;
-		transition-delay: 300ms;
+		transition: calc(var(--transition) * 1.5) ease;
+		transition-delay: var(--transition-delay, 0ms);
 		transform: var(--transform);
 
 		&__front,
@@ -53,7 +50,7 @@
 			overflow: hidden;
 		}
 
-		&__front {
+		&--glow &__front {
 			filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.3));
 		}
 

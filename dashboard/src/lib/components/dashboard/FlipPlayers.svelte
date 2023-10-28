@@ -6,14 +6,12 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<label>
-	<Button
-		variant="outline"
-		on:click={() => {
-			dispatch("flip");
-		}}
-	>
-		<FlipHorizontal2 size={16} />
-		Flip players
-	</Button>
-</label>
+<Button
+	variant="outline"
+	on:click={() => {
+		dispatch("flip");
+	}}
+>
+	<FlipHorizontal2 size={16} />
+	Flip players
+</Button>

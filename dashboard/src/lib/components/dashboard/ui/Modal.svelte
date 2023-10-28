@@ -65,6 +65,7 @@
 			flex-direction: row;
 			justify-content: flex-end;
 			align-items: center;
+			width: 100%;
 		}
 
 		&__title {

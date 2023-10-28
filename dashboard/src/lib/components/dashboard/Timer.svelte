@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Modal from "$lib/components/dashboard/ui/Modal.svelte";
-	import Container from "$lib/components/dashboard/Container.svelte";
+	import Modal from "$components/dashboard/ui/Modal.svelte";
+	import Card from "$components/dashboard/ui/Card.svelte";
 	import { timerData } from "$lib/store";
 	import type { TimerData as TTimerData } from "$lib/types";
 	import Button from "./ui/Button.svelte";

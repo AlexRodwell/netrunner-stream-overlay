@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { globalData, playerData } from "$lib/store";
-	import type { Side } from "$lib/types";
+	import { globalData, playerOneData, playerTwoData } from "$lib/store";
+	import type { PlayerSide as TPlayerSide } from "$lib/types";
 	import ICON_CLICK from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDA from "$lib/assets/icons/NSG_AGENDA.svg";
@@ -8,10 +8,10 @@
 	import Counter from "./Counter.svelte";
 	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
 
-	export let player: Side;
+	export let player: TPlayerSide;
 
 	$: global = $globalData;
-	$: data = $playerData[player];
+	$: data = player === "playerOne" ? $playerOneData : $playerTwoData;
 	$: align = player === "playerOne" ? "left" : "right"; // data.align;
 	$: id = data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id;
 	$: faction = find_faction_by_id(id);

@@ -43,3 +43,18 @@ export const get_flag_by_iso_code = (code: string) => {
 		name: "N/A",
 	};
 };
+
+export const throttle = (callback: any, timeout: number) => {
+	let wait = false;
+
+	return function () {
+		if (!wait) return;
+
+		callback.apply(null, arguments);
+		wait = true;
+
+		setTimeout(() => {
+			wait = false;
+		}, timeout);
+	};
+};

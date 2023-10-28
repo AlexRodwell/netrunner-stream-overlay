@@ -1,8 +1,9 @@
 {
 	"playerOne": {
+		"side": "corp",
 		"player": {
-			"wins": 0,
-			"name": "Player",
+			"wins": "0",
+			"name": "Player A",
 			"pronoun": null,
 			"country": null
 		},
@@ -31,6 +32,7 @@
 			"amount": 0
 		},
 		"highlight": {
+			"cards": [],
 			"current": "21063",
 			"previous": null,
 			"active": false,
@@ -38,9 +40,10 @@
 		}
 	},
 	"playerTwo": {
+		"side": "runner",
 		"player": {
-			"wins": 0,
-			"name": "Player",
+			"wins": "0",
+			"name": "Player B",
 			"pronoun": null,
 			"country": null
 		},
@@ -69,6 +72,7 @@
 			"amount": 0
 		},
 		"highlight": {
+			"cards": [],
 			"current": "21063",
 			"previous": null,
 			"active": false,
