@@ -41,7 +41,7 @@
 				item.type_code === "identity" &&
 				item.side_code === _side &&
 				self.findIndex(
-					(i) => i.stripped_title === item.stripped_title
+					(i) => i.stripped_title === item.stripped_title,
 				) === index
 			);
 		});
@@ -85,7 +85,7 @@
 	$: faction = find_faction_by_id(
 		playerCurrent.decks.corp.active
 			? playerCurrent.decks.corp.id
-			: playerCurrent.decks.runner.id
+			: playerCurrent.decks.runner.id,
 	);
 </script>
 
@@ -135,7 +135,9 @@
 								bind:checked={playerCurrent.decks.corp.active}
 								on:click={(event) => {
 									togglePlayerID(
-										event.target.checked ? "corp" : "runner"
+										event.target.checked
+											? "corp"
+											: "runner",
 									);
 								}}
 							/>
@@ -162,7 +164,9 @@
 								bind:checked={playerCurrent.decks.runner.active}
 								on:click={(event) => {
 									togglePlayerID(
-										event.target.checked ? "runner" : "corp"
+										event.target.checked
+											? "runner"
+											: "corp",
 									);
 								}}
 							/>
