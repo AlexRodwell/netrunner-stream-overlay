@@ -228,7 +228,7 @@
 					</Card>
 
 					<Card outline={false}>
-						<Heading title="Misc" level={3} />
+						<Heading title="Visuals" level={3} />
 						<Card>
 							<Heading title="Faction (logo)" level={4} />
 							<label class="checkbox">
