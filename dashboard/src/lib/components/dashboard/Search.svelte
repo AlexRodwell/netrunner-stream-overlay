@@ -18,35 +18,31 @@
 	const dispatch = createEventDispatcher();
 
 	export let side: TGameSide;
+	export let name: TPlayerSide;
 
-	let prevSide = side;
+	let previous_side = side;
 
-	$: if (prevSide !== side) {
+	// If user swaps side, empty results array
+	$: if (previous_side !== side) {
 		results = [];
 	}
 
-	const cards: TCard[] = CardsData.filter(
-		(card) => card.attributes.side_id === side
-	);
-
-	const fuse = new Fuse(cards, {
-		keys: ["attributes.title", "attributes.stripped_title"],
-	});
-
-	const max = 8;
-	let throttle: boolean = false;
-
-	export let name: TPlayerSide;
-
 	$: player = name === "playerOne" ? $playerOneData : $playerTwoData;
-	let searchText = "";
+	let searchText: string = "";
 	let results: any = [];
 	let selected: string[] = [];
 
 	function filterItems() {
-		const searchTextLowerCase = searchText;
-
-		results = fuse.search(searchTextLowerCase).slice(0, max);
+		results = new Fuse(
+			// Only return an array of cards for the current users side
+			CardsData.filter((card) => card.attributes.side_id === side),
+			{
+				// Filter by title and stripped_title
+				keys: ["attributes.title", "attributes.stripped_title"],
+			},
+		)
+			.search(searchText)
+			.slice(0, 8);
 	}
 
 	function queue(code: string) {
@@ -80,7 +76,7 @@
 			{#each results as { item: card }}
 				<button
 					class="result {selected.includes(
-						card.attributes.latest_printing_id
+						card.attributes.latest_printing_id,
 					)
 						? 'result--active'
 						: ''}"
