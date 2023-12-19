@@ -228,7 +228,7 @@
 					</Card>
 
 					<Card outline={false}>
-						<Heading title="Visuals" level={3} />
+						<Heading title="Misc" level={3} />
 						<Card>
 							<Heading title="Faction (logo)" level={4} />
 							<label class="checkbox">
@@ -278,6 +278,27 @@
 										dispatch("global");
 									}}
 								/>
+							</label>
+						</Card>
+					</Card>
+
+					<Card outline={false}>
+						<Heading title="Misc" level={3} />
+						<Card>
+							<Heading title="Card Size" level={4} />
+							<label class="checkbox">
+								<select
+									bind:value={global.card_size}
+									on:change={(e) => {
+										dispatch("global");
+									}}
+								>
+									{#each ["Small", "Medium", "Large"] as size}
+										<option value={size.toLowerCase()}>
+											{size}
+										</option>
+									{/each}
+								</select>
 							</label>
 						</Card>
 					</Card>
