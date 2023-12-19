@@ -8,11 +8,11 @@
 	export let side: GameSide | string | false = false;
 	export let glow: boolean = true;
 
-	let back = side === "corp" ? BACK_CORPORATION : BACK_RUNNER;
+	$: back = side === "corp" ? BACK_CORPORATION : BACK_RUNNER;
 
 	$: url = `https://card-images.netrunnerdb.com/v1/large/{code}.jpg`.replace(
 		"{code}",
-		code
+		code,
 	);
 </script>
 
