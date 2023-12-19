@@ -11,6 +11,9 @@ import DefaultGlobal from "$lib/data/default/global.json";
 import DefaultPlayer from "$lib/data/default/player.json";
 import DefaultTimer from "$lib/data/default/timer.json";
 
+// API data
+export const netrunnerDB: any = writable(new Map());
+
 // Websocket data
 export const globalData: GlobalData = writable(DefaultGlobal);
 export const playerData: PlayerData = writable(DefaultPlayer);
