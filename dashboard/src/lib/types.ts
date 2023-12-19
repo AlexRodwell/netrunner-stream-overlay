@@ -171,6 +171,7 @@ export type GlobalData = {
 	agendas: boolean;
 	agendas_count: number;
 	threat_level: boolean;
+	card_size: "small" | "medium" | "large";
 };
 
 export type TimerData = {

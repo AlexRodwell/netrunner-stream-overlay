@@ -8,6 +8,7 @@
 	} from "$lib/types";
 	import { find_faction_by_id } from "$lib/utils";
 	import { fly } from "svelte/transition";
+	import { globalData } from "$lib/store";
 
 	export let player: TPlayerSide;
 	export let data: THighlight;
@@ -15,7 +16,7 @@
 
 	$: align = player === "playerOne" ? "left" : "right"; // data.align;
 
-	let displayState: boolean = false;
+	let display_state: boolean = false;
 
 	let dynamicElements: Array<{
 		code: string;
@@ -25,14 +26,9 @@
 	let index: number = 0;
 	let transition: number = 300;
 	let previous: string;
-	let previousDisplay: boolean = displayState;
+	let previous_state: boolean = display_state;
 
 	const queue = (code: string) => {
-		// Handle toggling while there's an active card
-		// if (displayState !== previousDisplay) {
-		// 	return;
-		// }
-
 		// If queued code is the same as the previous, exit early (do nothing)
 		if (code === previous) {
 			return;
@@ -40,8 +36,7 @@
 
 		// If code is not set or undefined, deactivate highlight, reset previous and animate last card out
 		if (!code || code === "undefined") {
-			console.error("here 2");
-			displayState = false;
+			display_state = false;
 			previous = "";
 			dynamicElements[dynamicElements.length - 1].state = "out";
 			return;
@@ -59,42 +54,43 @@
 		dynamicElements = dynamicElements.map((obj, index, array) => ({
 			...obj,
 			state: index === array.length - 1 ? "in" : "out",
-			// flip: index === array.length - 1 ? false : true,
 		}));
-
-		// Wait for card to appear on screen (flipped), before flipping over to reveal the card
-		// setTimeout(() => {
-		// 	dynamicElements[dynamicElements.length - 1].flip = true;
-		// }, transition * 2);
 
 		previous = code;
 		index++;
 	};
 
-	const display = () => {
-		previousDisplay = displayState;
-		displayState = data.active;
+	const display = (state: boolean) => {
+		previous_state = !state;
 
-		// if (!displayState && dynamicElements.length > 0) {
-		// 	dynamicElements[dynamicElements.length - 1].state = "out";
-		// }
+		if (dynamicElements.length > 0) {
+			if (!state) {
+				// Animate out last active card
+				dynamicElements[dynamicElements.length - 1].state = "out";
+
+				// Clean up {#each} HTML (remove all previous HTML elements, except the last) if dislay is equals false (hidden)
+				setTimeout(() => {
+					dynamicElements = [
+						dynamicElements[dynamicElements.length - 1],
+					];
+				}, transition * 4);
+			} else {
+				dynamicElements[dynamicElements.length - 1].state = "in";
+			}
+		}
 	};
 
-	$: data.active, display();
-	$: data.cards, queue(data.cards.at(-1));
+	$: data.active, display(data.active);
+	$: data.cards, queue(data.cards[data.cards.length - 1]);
 </script>
 
-<div
-	class="highlight highlight--{align} {displayState
-		? 'highlight--active'
-		: ''}"
-	style="--transition: {transition}ms;"
->
+<div class="highlight highlight--{align}" style="--transition: {transition}ms;">
 	{#each dynamicElements as { code, state, flip }}
 		<div
 			class="highlight__card highlight__card--{state} {flip
 				? 'highlight__card--flip'
 				: ''}"
+			data-size={$globalData.card_size}
 			in:fly={{
 				delay: 400,
 				x: align === "left" ? "-100%" : "100%",
@@ -116,7 +112,6 @@
 		transition-delay: var(--transition);
 
 		&--left {
-			transform: translateX(-200%);
 			left: 0;
 			place-content: flex-start;
 			place-items: flex-end;
@@ -132,7 +127,6 @@
 		}
 
 		&--right {
-			transform: translateX(200%);
 			right: 0;
 			place-content: flex-end;
 			place-items: flex-end;
@@ -147,11 +141,6 @@
 			}
 		}
 
-		&--active {
-			transition-delay: 0;
-			transform: translateX(0%);
-		}
-
 		&__card {
 			flex: 0 0 100%;
 			width: 280px;
@@ -161,9 +150,15 @@
 			bottom: 0;
 			--transform: rotateY(-180deg);
 
-			// &--flip {
-			// 	--transform: rotateY(0deg);
-			// }
+			// &[data-size=small] {}
+
+			&[data-size="medium"] {
+				width: 360px;
+			}
+
+			&[data-size="large"] {
+				width: 480px;
+			}
 
 			&--out {
 				--transform: rotateY(-180deg);
@@ -172,9 +167,7 @@
 			}
 
 			&--in {
-				--transform: rotateY(
-					0deg
-				); // Comment out if you want flip on 'in' state
+				--transform: rotateY(0deg);
 				transform: translateX(0%);
 				opacity: 1;
 			}
