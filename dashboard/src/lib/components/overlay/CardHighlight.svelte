@@ -73,7 +73,7 @@
 					dynamicElements = [
 						dynamicElements[dynamicElements.length - 1],
 					];
-				}, transition * 4);
+				}, transition);
 			} else {
 				dynamicElements[dynamicElements.length - 1].state = "in";
 			}
