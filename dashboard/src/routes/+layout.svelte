@@ -3,16 +3,35 @@
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
+		netrunnerDB,
 		globalData,
 		playerOneData,
 		playerTwoData,
 		timerData,
 	} from "$lib/store";
+	import api from "$lib/data/api.json";
 
 	let socket: WebSocket;
 
-	onMount(() => {
+	onMount(async () => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
+
+		if (Object.keys($netrunnerDB).length === 0) {
+
+			try {
+				// Fetch data from the API endpoint
+				const response = await fetch(api.endpoint + api.cards);
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+
+				const data = await response.json();
+
+				$netrunnerDB = data;
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		}
 
 		window.addEventListener("load", () => {
 			console.info("✔️ Window loaded");
@@ -26,7 +45,7 @@
 				if (store && typeof JSON.parse(store) === "object") {
 					console.info(
 						`✔️ Loaded %c${type}%cdata from localStorage`,
-						"background: blue"
+						"background: blue",
 					);
 
 					// Update svelte store with cached (localStorage) data
