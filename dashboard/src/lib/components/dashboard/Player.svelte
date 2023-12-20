@@ -88,19 +88,11 @@
 
 	let faction: TFaction | null;
 
-	$: {
-		(async () => {
-			try {
-				faction = await find_faction_by_id(
-					playerCurrent.decks.corp.active
-						? playerCurrent.decks.corp.id
-						: playerCurrent.decks.runner.id,
-				);
-			} catch (error) {
-				console.error("Error fetching faction:", error);
-			}
-		})();
-	}
+	$: faction = find_faction_by_id(
+		playerCurrent.decks.corp.active
+			? playerCurrent.decks.corp.id
+			: playerCurrent.decks.runner.id,
+	);
 </script>
 
 <section
@@ -140,12 +132,7 @@
 				<Heading title="Identity" icon={faction?.logo} level={3} />
 				<label data-uid="side-corp">
 					<span>Corporation ID </span>
-					<SearchIdentity
-						side="corp"
-						on:change={(e) => {
-							playerCurrent.decks.corp.id = e.detail;
-						}}
-					/>
+
 					<div class="id-selection">
 						<label class="checkbox">
 							<input
@@ -161,7 +148,15 @@
 							/>
 							<span class="checkbox__mark" />
 						</label>
-						<select
+						<SearchIdentity
+							player={name}
+							side="corp"
+							on:change={(e) => {
+								playerCurrent.decks.corp.id = e.detail;
+								deploy();
+							}}
+						/>
+						<!-- <select
 							bind:value={playerCurrent.decks.corp.id}
 							on:change={deploy}
 						>
@@ -172,17 +167,11 @@
 										.stripped_title}</option
 								>
 							{/each}
-						</select>
+						</select> -->
 					</div>
 				</label>
 				<label data-uid="side-runner">
 					<span>Runner ID</span>
-					<SearchIdentity
-						side="runner"
-						on:change={(e) => {
-							playerCurrent.decks.runner.id = e.detail;
-						}}
-					/>
 					<div class="id-selection">
 						<label class="checkbox">
 							<input
@@ -198,7 +187,15 @@
 							/>
 							<span class="checkbox__mark" />
 						</label>
-						<select
+						<SearchIdentity
+							player={name}
+							side="runner"
+							on:change={(e) => {
+								playerCurrent.decks.runner.id = e.detail;
+								deploy();
+							}}
+						/>
+						<!-- <select
 							bind:value={playerCurrent.decks.runner.id}
 							on:change={deploy}
 						>
@@ -209,7 +206,7 @@
 										.stripped_title}</option
 								>
 							{/each}
-						</select>
+						</select> -->
 					</div>
 				</label>
 			</Card>
