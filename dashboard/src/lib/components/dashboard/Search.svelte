@@ -1,4 +1,3 @@
-<!-- src/routes/Search.svelte -->
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { netrunnerDB, playerOneData, playerTwoData } from "$lib/store";
