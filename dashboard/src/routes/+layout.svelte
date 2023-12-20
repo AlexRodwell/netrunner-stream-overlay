@@ -10,6 +10,8 @@
 		timerData,
 	} from "$lib/store";
 	import api from "$lib/data/api.json";
+	import Loading from "$components/Loading.svelte";
+	import { page } from "$app/stores";
 
 	let socket: WebSocket;
 	let initialising: boolean = true;
@@ -106,5 +108,24 @@
 {#if !initialising}
 	<slot />
 {:else}
-	<h2>Initialising app...</h2>
+	<div class="initialising">
+		<Loading
+			fill={$page.url.pathname !== "/dashboard" ? "black" : "white"}
+			size="2rem"
+		/>
+		<h2>Initialising</h2>
+	</div>
 {/if}
+
+<style lang="scss">
+	.initialising {
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		gap: 0.5rem;
+	}
+</style>

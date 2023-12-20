@@ -1,13 +1,23 @@
-<div class="loading" />
+<script lang="ts">
+	export let fill: "white" | "black" = "white";
+	export let size: string = "4rem";
+</script>
+
+<div
+	class="loading"
+	style="--fill: {fill === 'white'
+		? 'rgb(255,255,255)'
+		: 'rgb(0,0,0)'}; --size: {size}"
+/>
 
 <style lang="scss">
 	.loading {
 		animation: spin 800ms linear infinite;
-		height: 4rem;
-		width: 4rem;
+		height: var(--size);
+		width: var(--size);
 		border-radius: 100%;
-		border: 0.5rem solid rgba(255, 255, 255, 0.1);
-		border-top: 0.5rem solid rgb(255, 255, 255);
+		border: calc(var(--size) / 6) solid var(--fill);
+		border-top: calc(var(--size) / 6) solid transparent;
 
 		@keyframes spin {
 			0% {
