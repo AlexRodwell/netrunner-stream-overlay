@@ -10,10 +10,10 @@ export const slugify = (text: string) => {
 		.replace(/^-+|-+$/g, "");
 };
 
-export const find_faction_by_id = async (id: string) => {
+export const find_faction_by_id = (id: string) => {
 	let cards: Array<TCard> = [];
 
-	await netrunnerDB.subscribe((subscription: any) => {
+	netrunnerDB.subscribe((subscription: any) => {
 		cards = subscription.data;
 	});
 
@@ -32,7 +32,7 @@ export const find_faction_by_id = async (id: string) => {
 			faction.code === identity?.attributes.faction_id
 	);
 
-	return code ?? null;
+	return code ?? null; // JSON_FACTIONS[JSON_FACTIONS.length - 1];
 };
 
 // code: string & { length: 2 }
