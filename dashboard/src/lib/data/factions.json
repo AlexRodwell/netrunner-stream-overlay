@@ -1,15 +1,15 @@
 [
 	{
 		"side": "neutral-corp",
-		"code": "neutral-corp",
+		"code": "neutral_corp",
 		"name": "Neutral Corp",
 		"logo": "/factions/NSG_HB.svg"
 	},
 	{
 		"side": "corp",
-		"code": "haas-bioroid",
+		"code": "haas_bioroid",
 		"name": "Haas-Bioroid",
-		"logo": "/factions/NSG_LOGO.png"
+		"logo": "/factions/NSG_HB.svg"
 	},
 	{
 		"side": "corp",
@@ -25,13 +25,13 @@
 	},
 	{
 		"side": "corp",
-		"code": "weyland-consortium",
+		"code": "weyland_consortium",
 		"name": "Weyland Consortium",
 		"logo": "/factions/NSG_WEYLAND.svg"
 	},
 	{
 		"side": "neutral-runner",
-		"code": "neutral-runner",
+		"code": "neutral_runner",
 		"name": "Neutral Runner",
 		"logo": "/factions/NSG_LOGO.png"
 	},
@@ -52,5 +52,11 @@
 		"code": "shaper",
 		"name": "Shaper",
 		"logo": "/factions/NSG_SHAPER.svg"
+	},
+	{
+		"side": "default",
+		"code": "default",
+		"name": "NSG",
+		"logo": "/factions/NSG_LOGO.png"
 	}
 ]
