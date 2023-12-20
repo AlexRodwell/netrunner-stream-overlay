@@ -2,12 +2,18 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import { netrunnerDB } from "$lib/store";
-	import type { GameSide as TGameSide, Card as TCard } from "$lib/types";
+	import type {
+		PlayerSide as TPlayerSide,
+		GameSide as TGameSide,
+		Card as TCard,
+	} from "$lib/types";
 	import Card from "../Card.svelte";
 	import Fuse from "fuse.js";
+	import { find_faction_by_id } from "$lib/utils";
 
 	const dispatch = createEventDispatcher();
 
+	export let player: TPlayerSide;
 	export let side: TGameSide;
 
 	let previous_side = side;
@@ -52,7 +58,7 @@
 				<div class="id__item">
 					<input
 						type="radio"
-						name="id_{side}"
+						name="id_{player}_{side}"
 						bind:group={selected}
 						on:change={() => {
 							dispatch("change", selected);
@@ -60,6 +66,13 @@
 						value={card.attributes.stripped_title}
 					/>
 					<div class="id__item__count">
+						<!-- svelte-ignore a11y-missing-attribute -->
+						<img
+							class="id__item__logo"
+							src={find_faction_by_id(
+								card.attributes.stripped_title,
+							)?.logo}
+						/>
 						{card.attributes.stripped_title}
 					</div>
 				</div>
@@ -69,9 +82,12 @@
 </section>
 
 <style lang="scss">
+	.search {
+		width: 100%;
+	}
+
 	.id {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 0.5rem;
 
 		&__item {
@@ -83,11 +99,15 @@
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-				justify-content: center;
-				text-align: center;
+				justify-content: flex-start;
+				text-align: left;
 				gap: 0.5rem;
 				padding: 0.5rem;
 				background: #121212;
+			}
+
+			&__logo {
+				width: 32px;
 			}
 
 			input[type="radio"] {
