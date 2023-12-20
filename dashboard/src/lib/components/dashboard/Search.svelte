@@ -1,6 +1,6 @@
 <!-- src/routes/Search.svelte -->
 <script lang="ts">
-	import { createEventDispatcher, getContext } from "svelte";
+	import { createEventDispatcher } from "svelte";
 	import { netrunnerDB, playerOneData, playerTwoData } from "$lib/store";
 	import type {
 		Card as TCard,

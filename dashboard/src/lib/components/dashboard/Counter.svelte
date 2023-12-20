@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Counter } from "$lib/types";
-	import { createEventDispatcher, getContext } from "svelte";
+	import { createEventDispatcher } from "svelte";
 	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
