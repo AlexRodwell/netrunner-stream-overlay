@@ -22,6 +22,7 @@
 		PlayerData as TPlayerData,
 		TimerData as TTimerData,
 	} from "$lib/types";
+	import JSON_PLAYER from "$lib/data/default/player.json";
 
 	export let socketSend: Function;
 
@@ -43,56 +44,10 @@
 	};
 
 	const resetGameState = () => {
-		const corpDefault = {
-			clicks: {
-				amount: 3,
-			},
-			credits: {
-				amount: 5,
-			},
-			agendas: {
-				amount: 0,
-			},
-		};
-
-		const runnerDefault = {
-			clicks: {
-				amount: 4,
-			},
-			credits: {
-				amount: 5,
-			},
-			agendas: {
-				amount: 0,
-			},
-		};
-
-		$playerOneData = {
-			...$playerOneData,
-			...{
-				player: {
-					...$playerOneData.player,
-					wins: 0,
-				},
-				...($playerOneData.decks.corp.active
-					? corpDefault
-					: runnerDefault),
-			},
-		};
+		$playerOneData = JSON_PLAYER.playerOne;
 		socketSend("playerOne", $playerOneData);
 
-		$playerTwoData = {
-			...$playerTwoData,
-			...{
-				player: {
-					...$playerTwoData.player,
-					wins: 0,
-				},
-				...($playerTwoData.decks.corp.active
-					? corpDefault
-					: runnerDefault),
-			},
-		};
+		$playerTwoData = JSON_PLAYER.playerTwo;
 		socketSend("playerTwo", $playerTwoData);
 	};
 
@@ -122,12 +77,12 @@
 						},
 					},
 					null,
-					2
+					2,
 				),
 			],
 			{
 				type: "application/json",
-			}
+			},
 		);
 
 		// Create a URL for the Blob
@@ -154,9 +109,9 @@
 			socketSend("global", global);
 		}
 
-		if (data.player) {
-			player = data.player;
-			socketSend("player", player);
+		if (data?.player && data.player.playerOne && data.player.playerTwo) {
+			socketSend("playerOne", data.player.playerOne);
+			socketSend("playerTwo", data.player.playerTwo);
 		}
 	};
 </script>
