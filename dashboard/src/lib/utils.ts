@@ -1,6 +1,7 @@
-import JSON_CARDS from "$lib/data/cards.json";
 import JSON_FACTIONS from "$lib/data/factions.json";
 import JSON_COUNTRIES from "world_countries_lists/data/countries/en/countries.json";
+import { netrunnerDB } from "./store";
+import type { Card as TCard } from "./types";
 
 export const slugify = (text: string) => {
 	return text
@@ -9,14 +10,26 @@ export const slugify = (text: string) => {
 		.replace(/^-+|-+$/g, "");
 };
 
-export const find_faction_by_id = (id: string) => {
-	const identities = JSON_CARDS.data.filter(
-		(obj) => obj.type_code === "identity"
+export const find_faction_by_id = async (id: string) => {
+	let cards: Array<TCard> = [];
+
+	await netrunnerDB.subscribe((subscription: any) => {
+		cards = subscription.data;
+	});
+
+	const identities = cards.filter(
+		(card: TCard) =>
+			card.attributes.card_type_id === "corp_identity" ||
+			card.attributes.card_type_id === "runner_identity"
 	);
-	const identity = identities.find((obj) => obj.stripped_title === id);
+
+	const identity = identities.find(
+		(identity: TCard) => identity.attributes.stripped_title === id
+	);
 
 	const code = JSON_FACTIONS.find(
-		(obj) => obj.code === identity?.faction_code
+		(faction: { [key: string]: string }) =>
+			faction.code === identity?.attributes.faction_id
 	);
 
 	return code ?? false;

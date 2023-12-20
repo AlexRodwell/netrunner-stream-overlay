@@ -1,15 +1,17 @@
 <script lang="ts">
-	import { createEventDispatcher, setContext } from "svelte";
+	import { createEventDispatcher } from "svelte";
 	import type {
-		PlayerAttributes as TPlayerAttributes,
 		Card as TCard,
 		PlayerSide as TPlayerSide,
 		GameSide as TGameSide,
 		WebSocketFunction as TWebSocketFunction,
 	} from "$lib/types";
-	import CardsData from "$lib/data/cards.json";
-	import FactionsData from "$lib/data/factions.json";
-	import { globalData, playerOneData, playerTwoData } from "$lib/store";
+	import {
+		netrunnerDB,
+		globalData,
+		playerOneData,
+		playerTwoData,
+	} from "$lib/store";
 	import Card from "$components/dashboard/ui/Card.svelte";
 	import Search from "$components/dashboard/Search.svelte";
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
@@ -30,26 +32,27 @@
 
 	// Assign data relative to store name
 	$: playerCurrent = name === "playerOne" ? $playerOneData : $playerTwoData;
-	$: playerOpposite = name === "playerOne" ? $playerTwoData : $playerOneData;
 
 	$: global = $globalData;
 
 	function filterIdentitiesByFaction(_side: TGameSide) {
 		// Filter card data to return an array of unique ID's (findIndex), that has a type_code of "identity" and side_code of corp or runner
-		const identities = CardsData.data.filter((item, index, self) => {
+		const identities = $netrunnerDB.data.filter((item, index, self) => {
 			return (
-				item.type_code === "identity" &&
-				item.side_code === _side &&
+				item.attributes.side_id === _side &&
+				item.attributes.card_type_id === `${_side}_identity` &&
 				self.findIndex(
-					(i) => i.stripped_title === item.stripped_title,
+					(i) =>
+						i.attributes.stripped_title ===
+						item.attributes.stripped_title,
 				) === index
 			);
 		});
 
 		// Sort alphabetically
 		const alphabetical = identities.sort((a: TCard, b: TCard) => {
-			const prev = a.stripped_title.toLowerCase();
-			const next = b.stripped_title.toLowerCase();
+			const prev = a.attributes.stripped_title.toLowerCase();
+			const next = b.attributes.stripped_title.toLowerCase();
 
 			if (prev < next) {
 				return -1;
@@ -65,7 +68,6 @@
 	}
 
 	const deploy = () => {
-		// console.log(`[${name}] Deploying...`);
 		const type = name === "playerOne" ? "playerOne" : "playerTwo";
 		socketSend(type, playerCurrent);
 	};
@@ -82,14 +84,22 @@
 		});
 	};
 
-	$: faction = find_faction_by_id(
-		playerCurrent.decks.corp.active
-			? playerCurrent.decks.corp.id
-			: playerCurrent.decks.runner.id,
-	);
-</script>
+	let faction; // Declare faction variable
 
-<!-- <pre>{JSON.stringify(data, null, 2)}</pre> -->
+	$: {
+		(async () => {
+			try {
+				faction = await find_faction_by_id(
+					playerCurrent.decks.corp.active
+						? playerCurrent.decks.corp.id
+						: playerCurrent.decks.runner.id,
+				);
+			} catch (error) {
+				console.error("Error fetching faction:", error);
+			}
+		})();
+	}
+</script>
 
 <section
 	class="side"
@@ -148,8 +158,10 @@
 							on:change={deploy}
 						>
 							{#each filterIdentitiesByFaction("corp") as identity}
-								<option value={identity.stripped_title}
-									>{identity.stripped_title}</option
+								<option
+									value={identity.attributes.stripped_title}
+									>{identity.attributes
+										.stripped_title}</option
 								>
 							{/each}
 						</select>
@@ -177,8 +189,10 @@
 							on:change={deploy}
 						>
 							{#each filterIdentitiesByFaction("runner") as identity}
-								<option value={identity.stripped_title}
-									>{identity.stripped_title}</option
+								<option
+									value={identity.attributes.stripped_title}
+									>{identity.attributes
+										.stripped_title}</option
 								>
 							{/each}
 						</select>

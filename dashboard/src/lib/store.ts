@@ -10,6 +10,7 @@ import type {
 import DefaultGlobal from "$lib/data/default/global.json";
 import DefaultPlayer from "$lib/data/default/player.json";
 import DefaultTimer from "$lib/data/default/timer.json";
+import api from "$lib/data/api.json";
 
 // API data
 export const netrunnerDB: any = writable(new Map());

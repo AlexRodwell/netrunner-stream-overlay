@@ -1,19 +1,15 @@
 <!-- src/routes/Search.svelte -->
 <script lang="ts">
 	import { createEventDispatcher, getContext } from "svelte";
-	import { playerOneData, playerTwoData } from "$lib/store";
+	import { netrunnerDB, playerOneData, playerTwoData } from "$lib/store";
 	import type {
 		Card as TCard,
 		PlayerAttributes as TPlayerAttributes,
 		GameSide as TGameSide,
 		PlayerSide as TPlayerSide,
 	} from "$lib/types";
-	import CardsData from "$lib/data/_cards.json";
 	import Card from "../Card.svelte";
-	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
-	import ICON_MEMORY from "$lib/assets/icons/NSG_Mu.svg";
 	import Fuse from "fuse.js";
-	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
 
@@ -35,7 +31,9 @@
 	function filterItems() {
 		results = new Fuse(
 			// Only return an array of cards for the current users side
-			CardsData.filter((card) => card.attributes.side_id === side),
+			$netrunnerDB.data.filter(
+				(card) => card.attributes.side_id === side,
+			),
 			{
 				// Filter by title and stripped_title
 				keys: ["attributes.title", "attributes.stripped_title"],
@@ -88,10 +86,6 @@
 					/>
 					<div class="result__title">
 						<p>{card.attributes.stripped_title}</p>
-						<p class="result__cost">
-							<img src={ICON_CREDIT} />
-							{card.attributes.cost}
-						</p>
 					</div>
 				</button>
 			{/each}
@@ -231,7 +225,7 @@
 				rgba(0, 0, 0, 0.9) 30%,
 				rgba(0, 0, 0, 0) 100%
 			);
-			font-size: 1.5rem;
+			font-size: 1rem;
 			font-weight: bold;
 		}
 

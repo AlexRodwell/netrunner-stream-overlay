@@ -12,29 +12,28 @@
 	import api from "$lib/data/api.json";
 
 	let socket: WebSocket;
+	let initialising: boolean = true;
 
 	onMount(async () => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
 
-		if (Object.keys($netrunnerDB).length === 0) {
+		window.addEventListener("load", async () => {
+			console.info("✔️ Window loaded");
 
 			try {
-				// Fetch data from the API endpoint
 				const response = await fetch(api.endpoint + api.cards);
+
 				if (!response.ok) {
 					throw new Error("Network response was not ok");
 				}
 
 				const data = await response.json();
 
+				initialising = false;
 				$netrunnerDB = data;
 			} catch (error) {
 				console.error("Error fetching data:", error);
 			}
-		}
-
-		window.addEventListener("load", () => {
-			console.info("✔️ Window loaded");
 
 			$globalData.websocket.status = socket.readyState === 1;
 
@@ -104,4 +103,8 @@
 	<link rel="preconnect" href="https://static.nrdbassets.com/" />
 </svelte:head>
 
-<slot />
+{#if !initialising}
+	<slot />
+{:else}
+	<h2>Initialising app...</h2>
+{/if}

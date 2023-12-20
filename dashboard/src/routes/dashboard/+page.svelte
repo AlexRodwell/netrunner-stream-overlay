@@ -2,6 +2,7 @@
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
+		netrunnerDB,
 		globalData,
 		playerOneData,
 		playerTwoData,
@@ -40,7 +41,7 @@
 			  }>
 			| TGlobalData
 			| TPlayerAttributes
-			| TTimerData
+			| TTimerData,
 	) => {
 		try {
 			if (type === "many" && Array.isArray(json)) {
@@ -49,7 +50,7 @@
 						JSON.stringify({
 							_type: type,
 							...data,
-						})
+						}),
 					);
 				});
 			} else if (
@@ -60,7 +61,7 @@
 					JSON.stringify({
 						_type: type,
 						...json,
-					})
+					}),
 				);
 			}
 		} catch (error) {
@@ -72,14 +73,14 @@
 
 	const updatePlayer = (
 		newData: PlayerAttributes,
-		player_side: TPlayerSide
+		player_side: TPlayerSide,
 	) => {
 		console.info(
 			`Updating player %c${player_side}:`,
 			`background: ${
 				player_side === players.one ? "blue" : "red"
 			}; color: white;`,
-			newData
+			newData,
 		);
 		player[player_side] = newData;
 		updateThreatLevel();
@@ -154,8 +155,6 @@
 		/>
 	</section>
 </main>
-
-11
 
 <style lang="scss">
 	:global(html) {
