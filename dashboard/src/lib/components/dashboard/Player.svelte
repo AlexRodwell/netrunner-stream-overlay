@@ -23,6 +23,7 @@
 	import JSON_COUNTRIES from "world_countries_lists/data/countries/en/countries.json";
 	import Heading from "./ui/Heading.svelte";
 	import Column from "./ui/Column.svelte";
+	import SearchIdentity from "$components/dashboard/SearchIdentity.svelte";
 
 	// Properties
 	export let name: TPlayerSide;
@@ -139,6 +140,12 @@
 				<Heading title="Identity" icon={faction?.logo} level={3} />
 				<label data-uid="side-corp">
 					<span>Corporation ID </span>
+					<SearchIdentity
+						side="corp"
+						on:change={(e) => {
+							playerCurrent.decks.corp.id = e.detail;
+						}}
+					/>
 					<div class="id-selection">
 						<label class="checkbox">
 							<input
@@ -170,6 +177,12 @@
 				</label>
 				<label data-uid="side-runner">
 					<span>Runner ID</span>
+					<SearchIdentity
+						side="runner"
+						on:change={(e) => {
+							playerCurrent.decks.runner.id = e.detail;
+						}}
+					/>
 					<div class="id-selection">
 						<label class="checkbox">
 							<input
