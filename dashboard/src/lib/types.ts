@@ -213,8 +213,11 @@ export type PlayerData = {
 	[key in PlayerSide]: PlayerAttributes;
 };
 
-type Factions = typeof import("./data/factions.json");
-
-export type Faction = Factions[number]["code"];
+export type Faction = {
+	side: string; // "corp";
+	code: string; // "nbn";
+	name: string; // "NBN";
+	logo: string; // "/factions/NSG_NBN.svg";
+};
 
 export type WebSocketFunction = Function;

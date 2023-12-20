@@ -32,7 +32,7 @@ export const find_faction_by_id = async (id: string) => {
 			faction.code === identity?.attributes.faction_id
 	);
 
-	return code ?? false;
+	return code ?? null;
 };
 
 // code: string & { length: 2 }

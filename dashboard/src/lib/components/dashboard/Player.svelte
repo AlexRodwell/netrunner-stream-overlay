@@ -5,6 +5,7 @@
 		PlayerSide as TPlayerSide,
 		GameSide as TGameSide,
 		WebSocketFunction as TWebSocketFunction,
+		Faction as TFaction,
 	} from "$lib/types";
 	import {
 		netrunnerDB,
@@ -84,7 +85,7 @@
 		});
 	};
 
-	let faction; // Declare faction variable
+	let faction: TFaction | null;
 
 	$: {
 		(async () => {
