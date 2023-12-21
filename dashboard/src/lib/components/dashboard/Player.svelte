@@ -106,7 +106,7 @@
 
 		<div>
 			<span
-				>{"playerOne" === "playerOne"
+				>{name === "playerOne"
 					? "Player One (left)"
 					: "Player Two (right)"}</span
 			>
