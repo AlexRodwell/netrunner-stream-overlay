@@ -2,6 +2,7 @@ import JSON_FACTIONS from "$lib/data/factions.json";
 import JSON_COUNTRIES from "world_countries_lists/data/countries/en/countries.json";
 import { netrunnerDB } from "./store";
 import type { Card as TCard } from "./types";
+import api from "$lib/data/api.json";
 
 export const slugify = (text: string) => {
 	return text
@@ -70,4 +71,28 @@ export const throttle = (callback: any, timeout: number) => {
 			wait = false;
 		}, timeout);
 	};
+};
+
+export const fetch_cards = async () => {
+	try {
+		const response = await fetch(api.endpoint + api.cards);
+
+		netrunnerDB.subscribe((value) => {
+			console.log(value);
+		});
+
+		if (!response.ok) {
+			throw new Error("Network response was not ok");
+		}
+
+		const data = await response.json();
+
+		netrunnerDB.set(data);
+
+		return true;
+	} catch (error) {
+		console.error("Error fetching data:", error);
+
+		return false;
+	}
 };

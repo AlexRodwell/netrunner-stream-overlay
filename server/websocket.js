@@ -87,20 +87,19 @@ wss.on("connection", (ws) => {
 	ws.send(JSON.stringify(data));
 
 	ws.addEventListener("message", (event) => {
-		const data = JSON.parse(event.data);
+		const recieved_data = JSON.parse(event.data);
 
-		console.log("\r\n");
-		console.log("-------------------------------------------");
-		console.info(`Recieved new data with type "${data._type}"`, data);
+		// Check if the received data is different from the current data
+		if (JSON.stringify(recieved_data) !== JSON.stringify(data)) {
+			data = recieved_data;
+			console.log(data);
 
-		if (data._type === "all") {
-			console.info("playerOne: ", data.player.playerOne.agendas);
-			console.info("playerTwo: ", data.player.playerTwo.agendas);
+			// Send updated data to all connected clients
+			wss.clients.forEach((client) => {
+				client.send(JSON.stringify(data));
+			});
+		} else {
+			console.log("Data is the same, skipping");
 		}
-
-		// Send updated data to all connected clients
-		wss.clients.forEach((client) => {
-			client.send(JSON.stringify(data));
-		});
 	});
 });

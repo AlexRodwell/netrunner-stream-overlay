@@ -2,7 +2,6 @@
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
-		netrunnerDB,
 		globalData,
 		playerOneData,
 		playerTwoData,

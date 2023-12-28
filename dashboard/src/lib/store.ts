@@ -12,19 +12,22 @@ import DefaultPlayer from "$lib/data/default/player.json";
 import DefaultTimer from "$lib/data/default/timer.json";
 import api from "$lib/data/api.json";
 
+// Session token
+export const websocketToken = writable<string>();
+
 // API data
-export const netrunnerDB: any = writable(new Map());
+export const netrunnerDB = writable<Map<string, any>>(new Map());
 
 // Websocket data
-export const globalData: GlobalData = writable(DefaultGlobal);
-export const playerData: PlayerData = writable(DefaultPlayer);
-export const timerData: TimerData = writable(DefaultTimer);
+export const globalData = writable<GlobalData>(DefaultGlobal);
+export const playerData = writable<PlayerData>(DefaultPlayer);
+export const timerData = writable<TimerData>(DefaultTimer);
 
-export const playerOneData: PlayerAttributes = writable(
+export const playerOneData = writable<PlayerAttributes>(
 	DefaultPlayer.playerOne
 );
 
-export const playerTwoData: PlayerAttributes = writable(
+export const playerTwoData = writable<PlayerAttributes>(
 	DefaultPlayer.playerTwo
 );
 

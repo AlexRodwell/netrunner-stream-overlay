@@ -1,132 +1,102 @@
-/*
-export type Card = {
-	deck_limit: number;
-	faction_code: string;
-	faction_cost: number;
-	flavor?: string;
-	illustrator?: string;
-	influence_limit?: null | number;
-	keywords?: string;
-	minimum_deck_size?: number;
-	pack_code: string;
-	position: number;
-	quantity: number;
-	side_code: string;
-	stripped_text?: string;
-	stripped_title: string;
-	text?: string;
-	title: string;
-	type_code: string;
-	uniqueness: boolean;
-	base_link?: number;
-	cost?: null | number;
-	memory_cost?: number;
-	strength?: null | number;
-	advancement_cost?: null | number;
-	agenda_points?: number;
-	trash_cost?: number;
-};
-*/
-
 export type Card = {
 	attributes: {
-		advancement_requirement?: number | null;
-		agenda_points?: number | null;
-		attribution?: string | number | null;
-		base_link?: string | number | null;
+		advancement_requirement?: number;
+		agenda_points?: number;
+		attribution?: string | number;
+		base_link?: string | number;
 		card_abilities?: {
-			additional_cost?: boolean | null;
-			advanceable?: boolean | null;
-			gains_subroutines?: boolean | null;
-			interrupt?: boolean | null;
-			link_provided?: string | number | null;
-			mu_provided?: string | number | null;
-			num_printed_subroutines?: string | number | null;
-			on_encounter_effect?: boolean | null;
-			performs_trace?: boolean | null;
-			recurring_credits_provided?: string | number | null;
-			rez_effect?: boolean | null;
-			trash_ability?: boolean | null;
+			additional_cost?: boolean;
+			advanceable?: boolean;
+			gains_subroutines?: boolean;
+			interrupt?: boolean;
+			link_provided?: string | number;
+			mu_provided?: string | number;
+			num_printed_subroutines?: string | number;
+			on_encounter_effect?: boolean;
+			performs_trace?: boolean;
+			recurring_credits_provided?: string | number;
+			rez_effect?: boolean;
+			trash_ability?: boolean;
 		};
-		card_cycle_ids?: string[] | null;
-		card_pool_ids?: string[] | null;
-		card_set_ids?: string[] | null;
-		card_subtype_ids?: string[] | null;
-		card_type_id?: string | null;
-		cost?: number | null;
-		date_release?: string | null;
-		deck_limit?: number | null;
-		designed_by?: string | null;
-		display_subtypes?: string | number | null;
-		faction_id?: string | null;
-		format_ids?: string[] | null;
-		in_restriction?: boolean | null;
-		influence_cost?: string | number | null;
-		influence_limit?: string | number | null;
-		is_unique?: boolean | null;
-		latest_printing_id: string | null;
-		memory_cost?: string | number | null;
-		minimum_deck_size?: string | number | null;
-		num_printings?: number | null;
-		printing_ids?: string[] | null;
-		printings_released_by?: string[] | null;
-		restriction_ids?: string[] | null;
+		card_cycle_ids?: string[];
+		card_pool_ids?: string[];
+		card_set_ids?: string[];
+		card_subtype_ids?: string[];
+		card_type_id?: string;
+		cost?: number;
+		date_release?: string;
+		deck_limit?: number;
+		designed_by?: string;
+		display_subtypes?: string | number;
+		faction_id?: string;
+		format_ids?: string[];
+		in_restriction?: boolean;
+		influence_cost?: string | number;
+		influence_limit?: string | number;
+		is_unique?: boolean;
+		latest_printing_id: string;
+		memory_cost?: string | number;
+		minimum_deck_size?: string | number;
+		num_printings?: number;
+		printing_ids?: string[];
+		printings_released_by?: string[];
+		restriction_ids?: string[];
 		restrictions?: {
-			banned?: string[] | null;
-			global_penalty?: string[] | null;
-			points?: Record<string, any> | null;
-			restricted?: string[] | null;
-			universal_faction_cost?: Record<string, any> | null;
+			banned?: string[];
+			global_penalty?: string[];
+			points?: Record<string, any>;
+			restricted?: string[];
+			universal_faction_cost?: Record<string, any>;
 		};
-		side_id?: string | null;
-		snapshot_ids?: string[] | null;
-		strength?: string | number | null;
-		stripped_text?: string | null;
-		stripped_title?: string | null;
-		text?: string | null;
-		title?: string | null;
-		trash_cost?: string | number | null;
-		updated_at?: string | null;
+		side_id?: string;
+		snapshot_ids?: string[];
+		strength?: string | number;
+		stripped_text?: string;
+		stripped_title?: string;
+		text?: string;
+		title?: string;
+		trash_cost?: string | number;
+		updated_at?: string;
 	};
 	id: string | null;
 	links?: {
-		self?: string | null;
+		self?: string;
 	};
 	relationships?: {
 		card_subtypes?: {
 			links?: {
-				related?: string | null;
-				self?: string | null;
+				related?: string;
+				self?: string;
 			};
 		};
 		card_type?: {
 			links?: {
-				related?: string | null;
-				self?: string | null;
+				related?: string;
+				self?: string;
 			};
 		};
 		faction?: {
 			links?: {
-				related?: string | null;
-				self?: string | null;
+				related?: string;
+				self?: string;
 			};
 		};
 		printings?: {
 			links?: {
-				related?: string | null;
-				self?: string | null;
+				related?: string;
+				self?: string;
 			};
 		};
 		rulings?: {
 			links?: {
-				related?: string | null;
-				self?: string | null;
+				related?: string;
+				self?: string;
 			};
 		};
 		side?: {
 			links?: {
-				related?: string | null;
-				self?: string | null;
+				related?: string;
+				self?: string;
 			};
 		};
 	};
@@ -158,7 +128,7 @@ export type GlobalData = {
 	};
 	overlay: {
 		opacity: number;
-		commentators?: string | null;
+		commentators?: string;
 	};
 	country: boolean;
 	wins: boolean;
@@ -181,11 +151,11 @@ export type TimerData = {
 };
 
 export type Highlight = {
-	cards: string[] | [];
-	current: string | null;
-	previous: string | null;
+	cards: string[];
+	current?: string;
+	previous?: string;
 	active: boolean;
-	test: string[] | [];
+	test: string[];
 };
 
 export type PlayerAttributes = {
@@ -193,8 +163,8 @@ export type PlayerAttributes = {
 	player: {
 		wins: "0" | "1" | "2";
 		name: string;
-		pronoun?: string | null;
-		country?: string | null;
+		pronoun?: string;
+		country?: string;
 	};
 	decks: {
 		[key in GameSide]: {

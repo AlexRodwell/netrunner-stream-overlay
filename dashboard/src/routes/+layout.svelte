@@ -3,82 +3,61 @@
 	import { PUBLIC_WEBSOCKET } from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
-		netrunnerDB,
 		globalData,
 		playerOneData,
 		playerTwoData,
 		timerData,
 	} from "$lib/store";
-	import api from "$lib/data/api.json";
 	import Loading from "$components/Loading.svelte";
 	import { page } from "$app/stores";
+	import { fetch_cards } from "$lib/utils";
 
 	let socket: WebSocket;
-	let initialising: boolean = true;
 
 	onMount(async () => {
 		socket = new WebSocket(PUBLIC_WEBSOCKET);
+		console.info("✔️ Window loaded");
 
-		window.addEventListener("load", async () => {
-			console.info("✔️ Window loaded");
+		// TODO: Fix, this does not properly await the fetch_cards logic, so there's a chance it breaks
+		setTimeout(() => {
+			$globalData.websocket.status = socket.readyState === 1;
+		}, 2000);
 
-			try {
-				const response = await fetch(api.endpoint + api.cards);
+		// Persistant storage
+		["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
+			const store = localStorage.getItem(type);
 
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+			if (store && typeof JSON.parse(store) === "object") {
+				console.info(
+					`✔️ Loaded %c${type}%cdata from localStorage`,
+					"background: blue",
+				);
+
+				// Update svelte store with cached (localStorage) data
+				switch (type) {
+					case "global":
+						$globalData = JSON.parse(store);
+						break;
+					case "playerOne":
+						$playerOneData = JSON.parse(store);
+						break;
+					case "playerTwo":
+						$playerTwoData = JSON.parse(store);
+						break;
+					case "timer":
+						$timerData = JSON.parse(store);
+						break;
 				}
-
-				const data = await response.json();
-
-				initialising = false;
-				$netrunnerDB = data;
-			} catch (error) {
-				console.error("Error fetching data:", error);
 			}
-
-			$globalData.websocket.status = socket.readyState === 1;
-
-			// Persistant storage
-			["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
-				const store = localStorage.getItem(type);
-
-				if (store && typeof JSON.parse(store) === "object") {
-					console.info(
-						`✔️ Loaded %c${type}%cdata from localStorage`,
-						"background: blue",
-					);
-
-					// Update svelte store with cached (localStorage) data
-					switch (type) {
-						case "global":
-							$globalData = JSON.parse(store);
-							break;
-						case "playerOne":
-							$playerOneData = JSON.parse(store);
-							break;
-						case "playerTwo":
-							$playerTwoData = JSON.parse(store);
-							break;
-						case "timer":
-							$timerData = JSON.parse(store);
-							break;
-					}
-				}
-			});
 		});
-
-		setInterval(() => {
-			// console.info(
-			// 	"Socket connection:",
-			// 	socket.readyState === 1 ? "✔️ Connected" : "❌ Disconnected"
-			// );
-
-			$globalData.websocket.status = socket.readyState === 1;
-		}, 1000);
 
 		// Recieve and parse data from websocket
 		socket.addEventListener("message", (event) => {
+			console.log(
+				"recieving websocket connection...",
+				JSON.parse(event.data),
+			);
+
 			let data = JSON.parse(event.data);
 			let type = data._type;
 			delete data["_type"];
@@ -105,9 +84,7 @@
 	<link rel="preconnect" href="https://static.nrdbassets.com/" />
 </svelte:head>
 
-{#if !initialising}
-	<slot />
-{:else}
+{#await fetch_cards()}
 	<div class="initialising">
 		<Loading
 			fill={$page.url.pathname !== "/dashboard" ? "black" : "white"}
@@ -115,7 +92,13 @@
 		/>
 		<h2>Initialising</h2>
 	</div>
-{/if}
+{:then}
+	<slot />
+{:catch}
+	<div class="initialising">
+		<h2>Error</h2>
+	</div>
+{/await}
 
 <style lang="scss">
 	.initialising {

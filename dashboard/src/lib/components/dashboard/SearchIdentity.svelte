@@ -15,6 +15,7 @@
 	export let player: TPlayerSide;
 	export let side: TGameSide;
 
+	let idListActive: boolean = false;
 	let previous_side = side;
 
 	// If user swaps side, empty results array
@@ -27,6 +28,8 @@
 	let selected: any;
 
 	function filterItems() {
+		idListActive = true;
+
 		results = new Fuse(
 			$netrunnerDB.data.filter(
 				(card: TCard) =>
@@ -52,7 +55,7 @@
 			on:input={filterItems}
 		/>
 
-		<div class="id">
+		<div class="id {idListActive ? 'id--active' : ''}">
 			{#each results as { item: card }}
 				<div class="id__item">
 					<input
@@ -83,11 +86,38 @@
 <style lang="scss">
 	.search {
 		width: 100%;
+
+		&__wrapper {
+			position: relative;
+		}
+
+		input:focus,
+		input:focus-within {
+			+ .id {
+				visibility: visible;
+			}
+		}
 	}
 
 	.id {
+		visibility: hidden;
 		display: grid;
-		gap: 0.5rem;
+		gap: 0.25rem;
+		max-height: 360px;
+		overflow-x: auto;
+		position: absolute;
+		width: 100%;
+		z-index: 1;
+		background: #242424;
+		padding: 0.25rem;
+
+		&--active {
+			visibility: visible;
+		}
+
+		// &:empty {
+		// 	display: none;
+		// }
 
 		&__item {
 			position: relative;
@@ -111,6 +141,7 @@
 
 			input[type="radio"] {
 				opacity: 0;
+				cursor: pointer;
 
 				&:checked ~ .id__item__count {
 					background: #fff;

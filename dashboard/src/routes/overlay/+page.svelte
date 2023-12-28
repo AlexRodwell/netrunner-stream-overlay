@@ -1,19 +1,13 @@
 <script lang="ts">
-	import { playerOneData, playerTwoData } from "$lib/store";
+	import { netrunnerDB, playerOneData, playerTwoData } from "$lib/store";
 	import { default as PlayerMeta } from "$components/overlay/Meta.svelte";
 	import CardHightlight from "$components/overlay/CardHighlight.svelte";
 	import Loading from "$components/Loading.svelte";
 	import Commentators from "$components/overlay/Commentators.svelte";
-
-	let dev: boolean;
-
-	if (import.meta.env.DEV) {
-		// dev = true;
-	}
 </script>
 
-{#if $playerOneData && $playerTwoData}
-	<main class="wrapper {dev && 'wrapper--dev'}">
+{#if $netrunnerDB && $playerOneData && $playerTwoData}
+	<main class="wrapper">
 		<!-- <h1 style="position: absolute; top: 1rem; left: 1rem; color: #fff;">
 			commentators: {$globalData.overlay.commentators}
 		</h1> -->
@@ -46,10 +40,6 @@
 		height: var(--height, 100vh);
 		overflow: hidden;
 		position: relative;
-
-		&--dev {
-			background: #121212;
-		}
 
 		&--loading {
 			display: flex;
