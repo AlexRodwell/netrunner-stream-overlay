@@ -4,22 +4,22 @@ const wss = new WebSocketServer({ port: 8080 });
 
 let data = {
 	playerOne: {
-		align: "left",
 		player: {
-			wins: "0",
-			name: "Player One",
+			wins: 0,
+			name: "Player",
 			pronoun: "",
+			country: null,
 		},
 		decks: {
-			corporation: {
+			corp: {
 				active: true,
 				faction: "jinteki",
-				id: "419: Amoral Scammer",
+				id: "A Teia: IP Recovery",
 			},
 			runner: {
 				active: false,
 				faction: "anarch",
-				id: "Asa Group: Security Through Vigilance",
+				id: "419: Amoral Scammer",
 			},
 		},
 		clicks: {
@@ -30,33 +30,35 @@ let data = {
 			active: true,
 			amount: 5,
 		},
-		cards: [],
 		agendas: {
 			active: true,
 			amount: 0,
 		},
 		highlight: {
-			code: "21063",
+			current: "21063",
+			previous: null,
 			active: false,
+			test: [],
 		},
+		cards: [],
 	},
 	playerTwo: {
-		align: "right",
 		player: {
-			wins: "0",
-			name: "Player Two",
+			wins: 0,
+			name: "Player",
 			pronoun: "",
+			country: null,
 		},
 		decks: {
-			corporation: {
+			corp: {
 				active: false,
 				faction: "jinteki",
-				id: "419: Amoral Scammer",
+				id: "A Teia: IP Recovery",
 			},
 			runner: {
 				active: true,
 				faction: "anarch",
-				id: "Asa Group: Security Through Vigilance",
+				id: "419: Amoral Scammer",
 			},
 		},
 		clicks: {
@@ -67,15 +69,17 @@ let data = {
 			active: true,
 			amount: 5,
 		},
-		cards: [],
 		agendas: {
 			active: true,
 			amount: 0,
 		},
 		highlight: {
-			code: "21063",
+			current: "21063",
+			previous: null,
 			active: false,
+			test: [],
 		},
+		cards: [],
 	},
 };
 
@@ -83,14 +87,11 @@ wss.on("connection", (ws) => {
 	ws.send(JSON.stringify(data));
 
 	ws.addEventListener("message", (event) => {
-		const newData = JSON.parse(event.data);
-
-		console.log("--------------------------");
-		console.log(`Recieved new data with type ${newData._type}:`);
+		const recieved_data = JSON.parse(event.data);
 
 		// Check if the received data is different from the current data
-		if (JSON.stringify(newData) !== JSON.stringify(data)) {
-			data = newData;
+		if (JSON.stringify(recieved_data) !== JSON.stringify(data)) {
+			data = recieved_data;
 			console.log(data);
 
 			// Send updated data to all connected clients

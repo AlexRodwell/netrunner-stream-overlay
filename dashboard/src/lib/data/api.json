@@ -1,0 +1,6 @@
+{
+	"endpoint": "https://api-preview.netrunnerdb.com/api/v3/public",
+	"cards": "/cards?page[limit]=2000",
+	"factions": "/factions",
+	"identities": "/cards?filter[card_type_id]=corp_identity&runner_identity&page[limit]=1000"
+}

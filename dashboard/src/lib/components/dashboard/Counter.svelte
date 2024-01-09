@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Counter } from "$lib/types";
 	import { createEventDispatcher } from "svelte";
+	import Button from "./ui/Button.svelte";
 
 	const dispatch = createEventDispatcher();
 
@@ -29,19 +30,19 @@
 		{max}
 	/>
 
-	<button
+	<Button
 		class="counter__button"
 		on:click={() => {
 			data.amount - 1 >= min ? data.amount-- : null;
 			dispatch("count", data.amount);
-		}}>-</button
+		}}>-</Button
 	>
-	<button
+	<Button
 		class="counter__button"
 		on:click={() => {
 			data.amount + 1 <= max ? data.amount++ : null;
 			dispatch("count", data.amount);
-		}}>+</button
+		}}>+</Button
 	>
 </div>
 

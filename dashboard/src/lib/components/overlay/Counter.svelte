@@ -2,6 +2,7 @@
 	import { spring } from "svelte/motion";
 
 	export let count: number;
+	export let align: "left" | "right";
 
 	const displayed_count = spring();
 	$: displayed_count.set(count);
@@ -18,10 +19,14 @@
 		class="counter__digits"
 		style="transform: translate(0, {100 * offset}%)"
 	>
-		<span class="counter__number counter__number--hidden" aria-hidden="true"
-			>{Math.floor($displayed_count + 1)}</span
+		<span
+			class="counter__number counter__number--hidden"
+			aria-hidden="true"
+			{align}>{Math.floor($displayed_count + 1)}</span
 		>
-		<span class="counter__number">{Math.floor($displayed_count)}</span>
+		<span class="counter__number" {align}
+			>{Math.floor($displayed_count)}</span
+		>
 	</div>
 </div>
 
@@ -52,7 +57,7 @@
 			font-weight: 400;
 			color: var(--color-theme-1);
 			align-items: center;
-			justify-content: center;
+			// justify-content: center;
 			width: 100%;
 			text-align: center;
 

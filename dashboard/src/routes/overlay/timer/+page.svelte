@@ -23,7 +23,7 @@
 		clearInterval(intervalId);
 	});
 
-	function formatTime(seconds) {
+	function formatTime(seconds: number | string) {
 		const minutes = Math.floor(seconds / 60);
 		const remainingSeconds = seconds % 60;
 		const formattedMinutes = minutes < 10 ? minutes : minutes;
@@ -38,12 +38,10 @@
 
 	$: {
 		if (count > 0 && action !== "clear") {
-			console.log("1");
 			clearInterval(intervalId);
 			display = true;
 			startCountdown(count);
 		} else {
-			console.log("2");
 			display = false;
 		}
 	}
@@ -57,8 +55,8 @@
 
 <style lang="scss">
 	.timer {
-		width: 300px;
-		height: 150px;
+		width: 100vw;
+		height: 100vh;
 		padding: 1rem;
 		display: flex;
 		place-items: center;
