@@ -36,8 +36,8 @@
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		grid-template-rows: 1fr auto;
-		width: var(--width, 100vw);
-		height: var(--height, 100vh);
+		width: 100vw; //  var(--width, 100vw);
+		height: 100vh; //  var(--height, 100vh);
 		overflow: hidden;
 		position: relative;
 
