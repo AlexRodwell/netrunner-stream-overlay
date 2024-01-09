@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET } from "$env/static/public";
+	import { PUBLIC_WEBSOCKET_URL } from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
 		globalData,
@@ -28,7 +28,7 @@
 	};
 
 	onMount(() => {
-		socket = new WebSocket(PUBLIC_WEBSOCKET);
+		socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
 	});
 
 	const socketSend = (
@@ -51,6 +51,8 @@
 							...data,
 						}),
 					);
+
+					localStorage.setItem(type, JSON.stringify(data));
 				});
 			} else if (
 				$deploy.type === "automatic" ||
@@ -62,6 +64,8 @@
 						...json,
 					}),
 				);
+
+				localStorage.setItem(type, JSON.stringify(json));
 			}
 		} catch (error) {
 			alert("Failed to update");

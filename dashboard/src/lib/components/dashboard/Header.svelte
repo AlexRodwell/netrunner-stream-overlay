@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET } from "$env/static/public";
+	import { PUBLIC_WEBSOCKET_URL } from "$env/static/public";
 
 	import { onMount } from "svelte";
 	import Preview from "$components/dashboard/Preview.svelte";
@@ -31,7 +31,7 @@
 	let timer: TTimerData = $timerData;
 
 	onMount(() => {
-		socket = new WebSocket(PUBLIC_WEBSOCKET);
+		socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
 	});
 
 	const updateGlobal = () => {

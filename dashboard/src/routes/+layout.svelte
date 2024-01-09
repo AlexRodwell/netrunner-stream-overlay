@@ -1,6 +1,9 @@
 <script lang="ts">
 	import "../app.scss";
-	import { PUBLIC_WEBSOCKET } from "$env/static/public";
+	import {
+		PUBLIC_WEBSOCKET_CONNECTION,
+		PUBLIC_WEBSOCKET_URL,
+	} from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
 		globalData,
@@ -15,67 +18,101 @@
 	let socket: WebSocket;
 
 	onMount(async () => {
-		socket = new WebSocket(PUBLIC_WEBSOCKET);
 		console.info("✔️ Window loaded");
-
-		// TODO: Fix, this does not properly await the fetch_cards logic, so there's a chance it breaks
-		setTimeout(() => {
-			$globalData.websocket.status = socket.readyState === 1;
-		}, 2000);
 
 		// Persistant storage
 		["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
-			const store = localStorage.getItem(type);
+			const store = JSON.parse(localStorage.getItem(type));
 
-			if (store && typeof JSON.parse(store) === "object") {
+			if (store && typeof store === "object") {
 				console.info(
 					`✔️ Loaded %c${type}%cdata from localStorage`,
 					"background: blue",
 				);
 
 				// Update svelte store with cached (localStorage) data
-				switch (type) {
-					case "global":
-						$globalData = JSON.parse(store);
-						break;
-					case "playerOne":
-						$playerOneData = JSON.parse(store);
-						break;
-					case "playerTwo":
-						$playerTwoData = JSON.parse(store);
-						break;
-					case "timer":
-						$timerData = JSON.parse(store);
-						break;
+				if (store) {
+					switch (type) {
+						case "global":
+							$globalData = store;
+							break;
+						case "playerOne":
+							$playerOneData = store;
+							break;
+						case "playerTwo":
+							$playerTwoData = store;
+							break;
+						case "timer":
+							$timerData = store;
+							break;
+					}
 				}
 			}
 		});
 
 		// Recieve and parse data from websocket
-		socket.addEventListener("message", (event) => {
-			console.log(
-				"recieving websocket connection...",
-				JSON.parse(event.data),
-			);
+		if (PUBLIC_WEBSOCKET_CONNECTION) {
+			socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
 
-			let data = JSON.parse(event.data);
-			let type = data._type;
-			delete data["_type"];
+			// TODO: Fix, this does not properly await the fetch_cards logic, so there's a chance it breaks
+			setTimeout(() => {
+				$globalData.websocket.status = socket.readyState === 1;
+			}, 2000);
 
-			if (type === "playerOne") {
-				localStorage.setItem("playerOne", JSON.stringify(data));
-				$playerOneData = data;
-			} else if (type === "playerTwo") {
-				localStorage.setItem("playerTwo", JSON.stringify(data));
-				$playerTwoData = data;
-			} else if (type === "timer") {
-				localStorage.setItem("timer", JSON.stringify(data));
-				$timerData = data;
-			} else if (type === "global") {
-				localStorage.setItem("global", JSON.stringify(data));
-				$globalData = data;
-			}
-		});
+			socket.addEventListener("message", (event) => {
+				console.log(
+					"recieving websocket connection...",
+					JSON.parse(event.data),
+				);
+
+				let data = JSON.parse(event.data);
+				let type = data._type;
+				delete data["_type"];
+
+				if (type === "playerOne") {
+					// localStorage.setItem("playerOne", JSON.stringify(data));
+					$playerOneData = data;
+				} else if (type === "playerTwo") {
+					// localStorage.setItem("playerTwo", JSON.stringify(data));
+					$playerTwoData = data;
+				} else if (type === "timer") {
+					// localStorage.setItem("timer", JSON.stringify(data));
+					$timerData = data;
+				} else if (type === "global") {
+					// localStorage.setItem("global", JSON.stringify(data));
+					$globalData = data;
+				}
+			});
+		}
+
+		//
+		else {
+			window.addEventListener("storage", () => {
+				["global", "playerOne", "playerTwo", "timer"].forEach(
+					(type) => {
+						const store = JSON.parse(localStorage.getItem(type));
+						console.log(`updating ${type}...`, store);
+
+						if (store) {
+							switch (type) {
+								case "global":
+									$globalData = store;
+									break;
+								case "playerOne":
+									$playerOneData = store;
+									break;
+								case "playerTwo":
+									$playerTwoData = store;
+									break;
+								case "timer":
+									$timerData = store;
+									break;
+							}
+						}
+					},
+				);
+			});
+		}
 	});
 </script>
 
@@ -85,13 +122,12 @@
 </svelte:head>
 
 {#await fetch_cards()}
-	<div class="initialising">
-		<Loading
-			fill={$page.url.pathname !== "/dashboard" ? "black" : "white"}
-			size="2rem"
-		/>
-		<h2>Initialising</h2>
-	</div>
+	{#if !$page.url.pathname.includes("/overlay")}
+		<div class="initialising">
+			<Loading fill="white" size="2rem" />
+			<h2>Initialising</h2>
+		</div>
+	{/if}
 {:then}
 	<slot />
 {:catch}
