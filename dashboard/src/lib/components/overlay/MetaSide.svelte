@@ -112,6 +112,7 @@
 		justify-content: flex-start;
 		background: rgba(255, 255, 255, 0.5);
 		max-width: 50vw;
+		width: var(--width);
 		height: $height;
 		margin-bottom: calc(2 * $faction);
 		outline-offset: 5px;
