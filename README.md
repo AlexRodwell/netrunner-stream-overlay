@@ -68,3 +68,4 @@ Inside OBS or a similar broadcast software, simply add a 'browser' source with t
 -   **Fonts:** Based on [fontsinuse.com's Android: Netrunner font list](https://fontsinuse.com/uses/15378/android-netrunner)
     -   [**Monkirta Pursuit NC by Jayvee Enaguas**](https://www.dafont.com/monkirta-pursuit-nc.font) (Free)
     -   [**Cinzel by Natanael Gama**](https://fonts.google.com/specimen/Cinzel) (Open font license), similar to Trajan (Adobe) used in the Fantasy Flight Games' artwork
+-   **Shadcn Svelte** UI components from [Shadcn Svelte](https://www.shadcn-svelte.com/) (an unofficial Svelte port of [shadcn/ui](https://github.com/shadcn/ui))
