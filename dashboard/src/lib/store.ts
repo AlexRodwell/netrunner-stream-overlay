@@ -32,10 +32,11 @@ export const playerTwoData = writable<PlayerAttributes>(
 );
 
 // Local data
-export const deploy: {
+export const deploy = writable<{
 	type: "automatic" | "manual";
 	proceed: boolean;
-} = writable({
+	last?: string;
+}>({
 	type: "automatic",
-	proceed: false,
+	proceed: true,
 });
