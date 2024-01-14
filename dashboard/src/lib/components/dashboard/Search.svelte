@@ -9,6 +9,8 @@
 	} from "$lib/types";
 	import Card from "../Card.svelte";
 	import Fuse from "fuse.js";
+	import { Input } from "$lib/components/ui/input";
+	import { Label } from "$lib/components/ui/label";
 
 	const dispatch = createEventDispatcher();
 
@@ -62,7 +64,7 @@
 		{/if}
 	</div>
 	<div class="search__wrapper">
-		<input
+		<Input
 			type="text"
 			bind:value={searchText}
 			placeholder="Search..."
@@ -103,7 +105,7 @@
 		&__selected {
 			height: 100%;
 			position: relative;
-			z-index: -1;
+			// z-index: -1;
 			width: 140px;
 			height: auto;
 			aspect-ratio: 64/89;

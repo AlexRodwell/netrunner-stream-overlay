@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Modal from "$components/dashboard/ui/Modal.svelte";
 	import { Eye } from "lucide-svelte";
-	import Button from "./ui/Button.svelte";
+	import { Button } from "$lib/components/ui/button";
 
 	export let title: string;
 	export let url: string;

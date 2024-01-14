@@ -1,33 +1,31 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import type {
-		Card as TCard,
 		PlayerSide as TPlayerSide,
 		GameSide as TGameSide,
 		WebSocketFunction as TWebSocketFunction,
 		Faction as TFaction,
 	} from "$lib/types";
-	import {
-		netrunnerDB,
-		globalData,
-		playerOneData,
-		playerTwoData,
-	} from "$lib/store";
-	import Card from "$components/dashboard/ui/Card.svelte";
+	import { globalData, playerOneData, playerTwoData } from "$lib/store";
 	import Search from "$components/dashboard/Search.svelte";
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Counter from "./Counter.svelte";
 	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
-	import JSON_COUNTRIES from "world_countries_lists/data/countries/en/countries.json";
 	import Heading from "./ui/Heading.svelte";
 	import Column from "./ui/Column.svelte";
 	import SearchIdentity from "$components/dashboard/SearchIdentity.svelte";
+	import Country from "$components/dashboard/Country.svelte";
+	import { Checkbox } from "$lib/components/ui/checkbox";
+	import { Input } from "$lib/components/ui/input";
+	import { Label } from "$lib/components/ui/label";
+	import { Switch } from "$lib/components/ui/switch";
+	import * as Card from "$lib/components/ui/card";
 
 	// Properties
 	export let name: TPlayerSide;
-	export let socketSend: TWebSocketFunction;
+	export let update: TWebSocketFunction;
 
 	// Constants
 	const dispatch = createEventDispatcher();
@@ -37,47 +35,26 @@
 
 	$: global = $globalData;
 
-	function filterIdentitiesByFaction(_side: TGameSide) {
-		// Filter card data to return an array of unique ID's (findIndex), that has a type_code of "identity" and side_code of corp or runner
-		const identities = $netrunnerDB.data.filter((item, index, self) => {
-			return (
-				item.attributes.side_id === _side &&
-				item.attributes.card_type_id === `${_side}_identity` &&
-				self.findIndex(
-					(i) =>
-						i.attributes.stripped_title ===
-						item.attributes.stripped_title,
-				) === index
-			);
-		});
-
-		// Sort alphabetically
-		const alphabetical = identities.sort((a: TCard, b: TCard) => {
-			const prev = a.attributes.stripped_title.toLowerCase();
-			const next = b.attributes.stripped_title.toLowerCase();
-
-			if (prev < next) {
-				return -1;
-			}
-			if (prev > next) {
-				return 1;
-			}
-
-			return 0; // Names are equal
-		});
-
-		return alphabetical;
-	}
-
 	const deploy = () => {
 		const type = name === "playerOne" ? "playerOne" : "playerTwo";
-		socketSend(type, playerCurrent);
+		update({
+			type: type,
+			data: playerCurrent,
+		});
 	};
 
 	const togglePlayerID = (active: TGameSide) => {
 		let opposite: TGameSide = active === "corp" ? "runner" : "corp";
 
-		dispatch("deckSwap", {
+		// console.log('================================================', {
+		// 	currentPlayer: name,
+		// 	selected: {
+		// 		active: active,
+		// 		inactive: opposite,
+		// 	},
+		// })
+
+		dispatch("swap_deck", {
 			currentPlayer: name,
 			selected: {
 				active: active,
@@ -93,6 +70,24 @@
 			? playerCurrent.decks.corp.id
 			: playerCurrent.decks.runner.id,
 	);
+
+	const types = [
+		{
+			name: "Clicks",
+			type: "clicks",
+			icon: ICON_CLICKS,
+		},
+		{
+			name: "Credits",
+			type: "credits",
+			icon: ICON_CREDITS,
+		},
+		{
+			name: "Agendas",
+			type: "agendas",
+			icon: ICON_AGENDAS,
+		},
+	];
 </script>
 
 <section
@@ -127,27 +122,36 @@
 	</header>
 
 	<section class="side__options">
-		<Column span="auto/span 3">
-			<Card data-uid="side" className="side__item--wide">
-				<Heading title="Identity" icon={faction?.logo} level={3} />
+		<Card.Root class="col-[auto/span_3]">
+			<Card.Header>
+				<Card.Title>
+					<img
+						slot="icon"
+						src={faction?.logo}
+						class="min-w-6 w-6 min-h-6 h-6"
+					/>
+					Identity
+				</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label data-uid="side-corp">
 					<span>Corporation ID </span>
 
-					<div class="id-selection">
-						<label class="checkbox">
-							<input
-								type="checkbox"
-								bind:checked={playerCurrent.decks.corp.active}
-								on:click={(event) => {
-									togglePlayerID(
-										event.target.checked
-											? "corp"
-											: "runner",
-									);
-								}}
-							/>
-							<span class="checkbox__mark" />
-						</label>
+					<div
+						class="id-selection grid grid-cols-[auto,1fr] gap-4 items-center"
+					>
+						<Checkbox
+							class="aspect-square h-full w-auto max-h-[44px]"
+							bind:checked={playerCurrent.decks.corp.active}
+							on:click={(event) => {
+								togglePlayerID(
+									playerCurrent.decks.corp.active
+										? "runner"
+										: "corp",
+								);
+							}}
+						/>
 						<SearchIdentity
 							player={name}
 							side="corp"
@@ -156,37 +160,25 @@
 								deploy();
 							}}
 						/>
-						<!-- <select
-							bind:value={playerCurrent.decks.corp.id}
-							on:change={deploy}
-						>
-							{#each filterIdentitiesByFaction("corp") as identity}
-								<option
-									value={identity.attributes.stripped_title}
-									>{identity.attributes
-										.stripped_title}</option
-								>
-							{/each}
-						</select> -->
 					</div>
 				</label>
+				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label data-uid="side-runner">
 					<span>Runner ID</span>
-					<div class="id-selection">
-						<label class="checkbox">
-							<input
-								type="checkbox"
-								bind:checked={playerCurrent.decks.runner.active}
-								on:click={(event) => {
-									togglePlayerID(
-										event.target.checked
-											? "runner"
-											: "corp",
-									);
-								}}
-							/>
-							<span class="checkbox__mark" />
-						</label>
+					<div
+						class="id-selection grid grid-cols-[auto,1fr] gap-4 items-center"
+					>
+						<Checkbox
+							class="aspect-square h-full w-auto max-h-[44px]"
+							bind:checked={playerCurrent.decks.runner.active}
+							on:click={(event) => {
+								togglePlayerID(
+									playerCurrent.decks.runner.active
+										? "corp"
+										: "runner",
+								);
+							}}
+						/>
 						<SearchIdentity
 							player={name}
 							side="runner"
@@ -195,190 +187,115 @@
 								deploy();
 							}}
 						/>
-						<!-- <select
-							bind:value={playerCurrent.decks.runner.id}
-							on:change={deploy}
-						>
-							{#each filterIdentitiesByFaction("runner") as identity}
-								<option
-									value={identity.attributes.stripped_title}
-									>{identity.attributes
-										.stripped_title}</option
-								>
-							{/each}
-						</select> -->
 					</div>
 				</label>
-			</Card>
-		</Column>
+			</Card.Content>
+		</Card.Root>
 
-		<!-- Player -->
-		<Column span="auto/span 3">
-			<Card className="side__item--wide">
-				<Heading title="Player" level={3} />
+		<Card.Root class="col-[auto/span_3]">
+			<Card.Header>
+				<Card.Title>Player</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<!-- Name -->
+				<Label data-uid="name" class="side__item" for="player_name"
+					>Player name</Label
+				>
+				<Input
+					id="player_name"
+					type="text"
+					bind:value={playerCurrent.player.name}
+					on:input={deploy}
+				/>
 
-				<Card outline={false}>
-					<Column columns={2}>
-						<!-- Name -->
-						<label data-uid="name" class="side__item">
-							<span>Player name</span>
-							<input
-								type="text"
-								bind:value={playerCurrent.player.name}
-								on:input={deploy}
-							/>
-						</label>
-
-						<!-- Pronouns -->
-						<label data-uid="pronouns" class="side__item">
-							<span>Pronouns</span>
-							<input
-								type="text"
-								bind:value={playerCurrent.player.pronoun}
-								on:input={deploy}
-								placeholder="they/them"
-							/>
-						</label>
-					</Column>
-				</Card>
+				<Label data-uid="pronouns" class="side__item" for="pronouns"
+					>Pronouns</Label
+				>
+				<Input
+					id="pronouns"
+					type="text"
+					bind:value={playerCurrent.player.pronoun}
+					on:input={deploy}
+					placeholder="they/them"
+				/>
 
 				<!-- Wins -->
-				<label data-uid="wins" data-disabled={!global.wins}>
+				<Label data-uid="wins" data-disabled={!global.wins}>
 					<span>Wins</span>
-					<div class="wins">
-						{#each [0, 1, 2] as item}
-							<div class="wins__item">
-								<input
-									type="radio"
-									name="wins_{name}"
-									bind:group={playerCurrent.player.wins}
-									on:change={deploy}
-									value={item}
-								/>
-								<div class="wins__item__count">
-									{item}
-								</div>
-							</div>
-						{/each}
-					</div>
-				</label>
+				</Label>
+				<div class="wins">
+					{#each [0, 1, 2] as item}
+						<Input
+							type="radio"
+							name="wins_{name}"
+							bind:group={playerCurrent.player.wins}
+							on:change={deploy}
+							value={item}
+						/>
+					{/each}
+				</div>
 
 				<!-- Country -->
-				<label data-uid="country">
-					<span>Country</span>
-					<select
-						bind:value={playerCurrent.player.country}
-						on:change={deploy}
-					>
-						<option value="" />
-						<option value="not_representing"
-							>🏳️ Not representing</option
-						>
-						{#each JSON_COUNTRIES as country}
-							<option value={country.alpha2}>
-								<!-- Dark magic unicode conversion -->
-								{country.name}
-								{get_flag_by_iso_code(country.alpha2).icon}
-							</option>
-						{/each}
-					</select>
-				</label>
-			</Card>
-		</Column>
-
-		<Column span="auto/span 2">
-			<Card data-uid="clicks" data-disabled={!global.clicks}>
-				<Heading title="Clicks" icon={ICON_CLICKS} level={3} />
-				<Counter
-					data={playerCurrent.clicks}
-					on:count={(event) => {
-						playerCurrent.clicks.amount = event.detail;
+				<Label data-uid="country" for="player_country">Country</Label>
+				<Country
+					on:country={(event) => {
+						console.log(event);
+						playerCurrent.player.country = event.detail.name;
 						deploy();
 					}}
 				/>
-			</Card>
-		</Column>
+			</Card.Content>
+		</Card.Root>
 
-		<Column span="auto/span 2">
-			<Card data-uid="credits" data-disabled={!global.credits}>
-				<Heading
-					title={`Credits ${
-						playerCurrent.credits.amount > 0
-							? `(${playerCurrent.credits.amount})`
-							: ""
-					}`}
-					icon={ICON_CREDITS}
-					level={3}
-				/>
-				<Counter
-					data={playerCurrent.credits}
-					on:count={(event) => {
-						playerCurrent.credits.amount = event.detail;
-						deploy();
-					}}
-				/>
-			</Card>
-		</Column>
+		{#each types as { name, type, icon }}
+			<Card.Root class="col-[auto/span_2]">
+				<Card.Header>
+					<Card.Title>
+						<!-- svelte-ignore a11y-missing-attribute -->
+						<img
+							slot="icon"
+							src={icon}
+							class="min-w-6 w-6 min-h-6 h-6"
+						/>
+						{name}
+					</Card.Title>
+				</Card.Header>
+				<Card.Content>
+					<Counter
+						data={playerCurrent[type]}
+						on:count={(event) => {
+							playerCurrent[type].amount = parseInt(event.detail);
+							deploy();
+						}}
+					/>
+				</Card.Content>
+			</Card.Root>
+		{/each}
 
-		<Column span="auto/span 2">
-			<Card data-uid="agendas" data-disabled={!global.agendas}>
-				<Heading
-					title={`Agendas ${
-						playerCurrent.agendas.amount !== 0
-							? `(${playerCurrent.agendas.amount})`
-							: ""
-					}`}
-					icon={ICON_AGENDAS}
-					level={3}
-				/>
-				<!-- min={-9} = Possible to have negative agendas (i.e. Nightmare Archive https://netrunnerdb.com/en/card/33097) -->
-				<Counter
-					data={playerCurrent.agendas}
-					on:count={(event) => {
-						playerCurrent.agendas.amount = event.detail;
-						deploy();
-					}}
-					min={-9}
-				/>
-			</Card>
-		</Column>
-
-		<Column span="1/-1">
-			<Card>
-				<Heading
-					title={`Display card ${
+		<Card.Root class="col-[1/-1]">
+			<Card.Header>
+				<Card.Title>
+					{@html `Display card ${
 						playerCurrent.highlight.active
 							? `<span style="color: red;">(VISIBLE)</span>`
 							: ""
 					}`}
-					level={3}
-				>
-					<label
-						data-uid="card-toggle"
-						class="checkbox"
-						slot="toggle"
-					>
-						<input
-							type="checkbox"
+
+					<div slot="action">
+						<Switch
+							id="{name}-display-card"
 							bind:checked={playerCurrent.highlight.active}
 							on:click={(event) => {
 								playerCurrent.highlight.active =
-									event.target.checked;
-
-								// Cleanup previously displayed array by emptying it
-								if (!event.target.checked) {
-									// console.log("emptying cards list");
-									// playerCurrent.highlight.cards = [];
-									// console.table(data.highlight.cards);
-								}
-
+									!playerCurrent.highlight.active;
 								deploy();
 							}}
 						/>
-						<span class="checkbox__mark" />
-					</label>
-				</Heading>
-
+						<Label for="{name}-display-card">Display card</Label>
+					</div>
+				</Card.Title>
+			</Card.Header>
+			<Card.Content>
 				<Search
 					{name}
 					side={playerCurrent.side}
@@ -387,8 +304,8 @@
 						deploy();
 					}}
 				/>
-			</Card>
-		</Column>
+			</Card.Content>
+		</Card.Root>
 	</section>
 </section>
 

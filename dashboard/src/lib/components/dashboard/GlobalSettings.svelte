@@ -10,7 +10,7 @@
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import { Settings } from "lucide-svelte";
-	import Button from "./ui/Button.svelte";
+	import { Button } from "$lib/components/ui/button";
 	import Column from "./ui/Column.svelte";
 
 	let global: TGlobalData = $globalData;
@@ -51,6 +51,8 @@
 										$deploy.type = e.target.checked
 											? "manual"
 											: "automatic";
+										$deploy.proceed =
+											$deploy.type === "automatic";
 									}}
 								/>
 								<span class="checkbox__mark" />

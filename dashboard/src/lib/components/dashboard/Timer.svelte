@@ -4,7 +4,7 @@
 	import Card from "$components/dashboard/ui/Card.svelte";
 	import { timerData } from "$lib/store";
 	import type { TimerData as TTimerData } from "$lib/types";
-	import Button from "./ui/Button.svelte";
+	import { Button } from "$lib/components/ui/button";
 
 	// Icons
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
@@ -20,7 +20,7 @@
 	const dispatch = createEventDispatcher();
 
 	const deploy = () => {
-		console.log(timer);
+		// console.log(timer);
 		dispatch("timer", timer);
 	};
 

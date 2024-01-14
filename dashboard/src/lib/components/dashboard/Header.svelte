@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET_URL } from "$env/static/public";
-
 	import { onMount } from "svelte";
 	import Preview from "$components/dashboard/Preview.svelte";
 	import ResetState from "$components/dashboard/ResetState.svelte";
@@ -23,32 +21,40 @@
 		TimerData as TTimerData,
 	} from "$lib/types";
 	import JSON_PLAYER from "$lib/data/default/player.json";
+	import { Button } from "$lib/components/ui/button";
 
-	export let socketSend: Function;
+	export let update: Function;
 
-	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
 	let timer: TTimerData = $timerData;
 
-	onMount(() => {
-		socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
-	});
-
 	const updateGlobal = () => {
-		socketSend("global", global);
+		update({
+			type: "global",
+			global,
+		});
 	};
 
 	const updateTimer = (newData: TTimerData) => {
 		timer = newData;
-		socketSend("timer", timer);
+		update({
+			type: "timer",
+			data: timer,
+		});
 	};
 
 	const resetGameState = () => {
 		$playerOneData = JSON_PLAYER.playerOne;
-		socketSend("playerOne", $playerOneData);
+		update({
+			type: "playerOne",
+			data: $playerOneData,
+		});
 
 		$playerTwoData = JSON_PLAYER.playerTwo;
-		socketSend("playerTwo", $playerTwoData);
+		update({
+			type: "playerTwo",
+			data: $playerTwoData,
+		});
 	};
 
 	const flipGameState = () => {
@@ -61,8 +67,14 @@
 		$playerTwoData = playerOne;
 
 		// Send data to websocket
-		socketSend("playerOne", $playerOneData);
-		socketSend("playerTwo", $playerTwoData);
+		update({
+			type: "playerOne",
+			data: $playerOneData,
+		});
+		update({
+			type: "playerTwo",
+			data: $playerTwoData,
+		});
 	};
 
 	const saveConfig = () => {
@@ -106,12 +118,21 @@
 	}) => {
 		if (data.global) {
 			global = data.global;
-			socketSend("global", global);
+			update({
+				type: "global",
+				data: global,
+			});
 		}
 
 		if (data?.player && data.player.playerOne && data.player.playerTwo) {
-			socketSend("playerOne", data.player.playerOne);
-			socketSend("playerTwo", data.player.playerTwo);
+			update({
+				type: "playerOne",
+				data: data.player.playerOne,
+			});
+			update({
+				type: "playerTwo",
+				data: data.player.playerTwo,
+			});
 		}
 	};
 </script>
@@ -134,28 +155,27 @@
 	</Actions>
 	<Actions>
 		{#if $deploy.type === "manual"}
-			<button
+			<Button
+				variant="default"
 				on:click={() => {
 					$deploy.proceed = true;
-					socketSend("many", [
-						{
-							type: "global",
-							data: global,
-						},
-						{
-							type: "timer",
-							data: timer,
-						},
-						{
-							type: "playerOne",
-							data: playerOneData,
-						},
-						{
-							type: "playerTwo",
-							data: playerTwoData,
-						},
-					]);
-				}}>Deploy</button
+					update({
+						type: "global",
+						data: global,
+					});
+					update({
+						type: "timer",
+						data: timer,
+					});
+					update({
+						type: "playerOne",
+						data: playerOneData,
+					});
+					update({
+						type: "playerTwo",
+						data: playerTwoData,
+					});
+				}}>Deploy</Button
 			>
 		{/if}
 

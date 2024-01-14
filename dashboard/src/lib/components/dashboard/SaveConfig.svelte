@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Modal from "$components/dashboard/ui/Modal.svelte";
 	import Actions from "./ui/Actions.svelte";
 	import { FileJson2 } from "lucide-svelte";
-	import Button from "./ui/Button.svelte";
 	import Card from "./ui/Card.svelte";
 	import Heading from "$components/dashboard/ui/Heading.svelte";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import * as Dialog from "$lib/components/ui/dialog";
+	import { Input } from "$lib/components/ui/input";
+	import { Label } from "$lib/components/ui/label";
+	import { Terminal } from "lucide-svelte";
+  import * as Alert from "$lib/components/ui/alert";
 
 	const dispatch = createEventDispatcher();
 
@@ -41,55 +45,36 @@
 	};
 </script>
 
-<label>
-	<Button
-		variant="outline"
-		on:click={() => {
-			display = true;
-		}}
-	>
+<Dialog.Root>
+	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
 		<FileJson2 size={16} />
 		Save/import config
-	</Button>
-	{#if display}
-		<Modal bind:display>
-			<h2 slot="header">Save/import config</h2>
+	</Dialog.Trigger>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header>
+			<Dialog.Title>Save/import config</Dialog.Title>
+		</Dialog.Header>
 
-			<Card>
-				<Heading title="Import config" level={4} />
-				<input
-					type="file"
-					accept=".json"
-					on:change={handleFileSelect}
-				/>
-				{#if success}
-					<p>JSON imported successfully</p>
-					<button on:click={() => (display = false)}>Close</button>
-				{:else}
-					<Actions>
-						<Button
-							class="button button--outline"
-							on:click={() => {
-								display = false;
-							}}>Import player config</Button
-						>
-					</Actions>
-				{/if}
-			</Card>
+	
+		<div class="grid w-full max-w-sm items-center gap-1.5">
+			<Label for="picture">Import</Label>
+			<Input id="picture" type="file" accept=".json" on:change={handleFileSelect} />
+		</div>
 
-			<Card>
-				<Heading title="Save config" level={4} />
-				<Button
-					on:click={() => {
-						dispatch("save");
-						display = false;
-					}}>Save player config</Button
-				>
-			</Card>
-		</Modal>
-	{/if}
-</label>
+		{#if success}
+		<Alert.Root variant="default">
+			<Alert.Title>JSON imported successfully</Alert.Title>
+		</Alert.Root>
+		{/if}
 
-<style lang="scss">
-	// TODO
-</style>
+		<Dialog.Footer>
+			<Button
+				variant="outline"
+				on:click={() => {
+					dispatch("save");
+					display = false;
+				}}>Save player config</Button
+			>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

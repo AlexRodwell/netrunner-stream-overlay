@@ -1,5 +1,6 @@
 <script lang="ts">
-	import "../app.scss";
+	import "../app.pcss";
+	// import "../app.scss";
 	import {
 		PUBLIC_WEBSOCKET_CONNECTION,
 		PUBLIC_WEBSOCKET_URL,
@@ -22,13 +23,18 @@
 
 		// Persistant storage
 		["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
+			if (
+				Object.keys(JSON.parse(localStorage.getItem(type))).length === 0
+			)
+				return;
+
 			const store = JSON.parse(localStorage.getItem(type));
 
 			if (store && typeof store === "object") {
-				console.info(
-					`✔️ Loaded %c${type}%cdata from localStorage`,
-					"background: blue",
-				);
+				// console.info(
+				// 	`✔️ Loaded %c${type}%cdata from localStorage`,
+				// 	"background: blue",
+				// );
 
 				// Update svelte store with cached (localStorage) data
 				if (store) {
@@ -51,7 +57,7 @@
 		});
 
 		// Recieve and parse data from websocket
-		if (PUBLIC_WEBSOCKET_CONNECTION) {
+		if (PUBLIC_WEBSOCKET_CONNECTION.toLowerCase() === "true") {
 			socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
 
 			// TODO: Fix, this does not properly await the fetch_cards logic, so there's a chance it breaks
@@ -88,10 +94,11 @@
 		//
 		else {
 			window.addEventListener("storage", () => {
+				console.info("localStorage change detected");
+
 				["global", "playerOne", "playerTwo", "timer"].forEach(
 					(type) => {
 						const store = JSON.parse(localStorage.getItem(type));
-						console.log(`updating ${type}...`, store);
 
 						if (store) {
 							switch (type) {
@@ -123,28 +130,13 @@
 
 {#await fetch_cards()}
 	{#if !$page.url.pathname.includes("/overlay")}
-		<div class="initialising">
-			<Loading fill="white" size="2rem" />
+		<div
+			class="w-[100vw] h-[100vh] flex flex-col justify-center items-center text-center gap-2"
+		>
+			<Loading fill="white" size="2rem"></Loading>
 			<h2>Initialising</h2>
 		</div>
 	{/if}
 {:then}
 	<slot />
-{:catch}
-	<div class="initialising">
-		<h2>Error</h2>
-	</div>
 {/await}
-
-<style lang="scss">
-	.initialising {
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		gap: 0.5rem;
-	}
-</style>

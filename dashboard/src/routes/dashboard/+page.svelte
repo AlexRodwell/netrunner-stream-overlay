@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { PUBLIC_WEBSOCKET_URL } from "$env/static/public";
+	import {
+		PUBLIC_WEBSOCKET_CONNECTION,
+		PUBLIC_WEBSOCKET_URL,
+	} from "$env/static/public";
 	import { onMount } from "svelte";
 	import {
 		globalData,
@@ -27,11 +30,19 @@
 		two: "playerTwo",
 	};
 
+	let websocket = PUBLIC_WEBSOCKET_CONNECTION.toLowerCase() === "true";
+
 	onMount(() => {
-		socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
+		if (websocket) {
+			socket = new WebSocket(PUBLIC_WEBSOCKET_URL);
+		}
 	});
 
-	const socketSend = (
+	/*
+
+	const hold_json = () => {};
+
+	const deploy_data = (
 		type: "many" | "global" | "playerOne" | "playerTwo" | "timer",
 		json:
 			| Array<{
@@ -42,53 +53,67 @@
 			| TPlayerAttributes
 			| TTimerData,
 	) => {
-		try {
-			if (type === "many" && Array.isArray(json)) {
-				json.forEach(({ type, data }) => {
-					socket.send(
-						JSON.stringify({
-							_type: type,
-							...data,
-						}),
-					);
 
-					localStorage.setItem(type, JSON.stringify(data));
-				});
-			} else if (
-				$deploy.type === "automatic" ||
-				($deploy.type === "manual" && $deploy.proceed)
-			) {
-				socket.send(
-					JSON.stringify({
-						_type: type,
-						...json,
-					}),
-				);
+		// if (new Date() > new Date($deploy.last)) {
+		// 	console.log("here 1");
+		// 	$deploy.proceed = true;
+		// }
 
-				localStorage.setItem(type, JSON.stringify(json));
+		if ($deploy.proceed) {
+
+			["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
+
+				if (
+					Object.keys(
+						JSON.parse(localStorage.getItem(`hold_${type}`)),
+					).length === 0
+				)
+					return;
+
+				const data = JSON.parse(localStorage.getItem(`hold_${type}`));
+
+				console.log("========================");
+				console.log("type", type);
+				console.log(data);
+
+				if (websocket) {
+					try {
+						socket.send(
+							JSON.stringify({
+								_type: type,
+								...data,
+							}),
+						);
+					} catch (error) {
+						alert("Failed to update data via websocket");
+					}
+				}
+
+				// Update the real value
+				localStorage.setItem(type, JSON.stringify(data));
+			});
+
+			// Set deploy proceed state to false after a manual deployment
+			if ($deploy.type === "manual") {
+				$deploy.proceed = false;
 			}
-		} catch (error) {
-			alert("Failed to update");
+		} else {
+			$deploy.last = new Date().toISOString();
 		}
-
-		$deploy.proceed = false;
 	};
 
-	const updatePlayer = (
-		newData: PlayerAttributes,
-		player_side: TPlayerSide,
-	) => {
-		console.info(
-			`Updating player %c${player_side}:`,
-			`background: ${
-				player_side === players.one ? "blue" : "red"
-			}; color: white;`,
-			newData,
-		);
+	const update = (newData: PlayerAttributes, player_side: TPlayerSide) => {
+		// console.info(
+		// 	`Updating player %c${player_side}:`,
+		// 	`background: ${
+		// 		player_side === players.one ? "blue" : "red"
+		// 	}; color: white;`,
+		// 	newData,
+		// );
 		player[player_side] = newData;
 		updateThreatLevel();
 
-		socketSend(player_side, player);
+		deploy_data(player_side, player);
 	};
 
 	const updateThreatLevel = () => {
@@ -103,7 +128,9 @@
 				: playerTwoAgendas;
 	};
 
-	const swapDeck = (swap: {
+	*/
+
+	const swap_deck = (swap: {
 		currentPlayer: TPlayerSide;
 		selected: {
 			active: TGameSide;
@@ -117,8 +144,14 @@
 			$playerOneData.decks[swap.selected.inactive].active = false;
 			$playerTwoData.decks[swap.selected.active].active = false;
 			$playerTwoData.decks[swap.selected.inactive].active = true;
-			socketSend("playerOne", $playerOneData);
-			socketSend("playerTwo", $playerTwoData);
+			store_data({
+				type: "playerOne",
+				data: $playerOneData,
+			});
+			store_data({
+				type: "playerTwo",
+				data: $playerTwoData,
+			});
 		} else {
 			$playerTwoData.side = swap.selected.active;
 			$playerOneData.side = swap.selected.inactive;
@@ -126,35 +159,109 @@
 			$playerTwoData.decks[swap.selected.inactive].active = false;
 			$playerOneData.decks[swap.selected.active].active = false;
 			$playerOneData.decks[swap.selected.inactive].active = true;
-			socketSend("playerTwo", $playerTwoData);
-			socketSend("playerOne", $playerOneData);
+			store_data({
+				type: "playerTwo",
+				data: $playerTwoData,
+			});
+			store_data({
+				type: "playerOne",
+				data: $playerOneData,
+			});
 		}
+	};
+
+	///////////////////////////////////////////////////////////////////
+	// NEW DATA HANDLER
+
+	type DataTypeMap = {
+		global: TGlobalData;
+		playerOne: TPlayerAttributes;
+		playerTwo: TPlayerAttributes;
+		timer: TTimerData;
+	};
+
+	const store_data = (incoming: {
+		type: keyof DataTypeMap;
+		data: DataTypeMap[keyof DataTypeMap];
+	}) => {
+		const { type, data } = incoming;
+
+		// Store data locally
+		localStorage.setItem(`hold_${type}`, JSON.stringify(data));
+
+		// Return early if proceed is not true, it will always be true for automatic, and only true for manual when the deploy button is clicked
+		if ($deploy.proceed !== true) return;
+
+		// if ($deploy.type === "manual") {
+		// 	console.log("manual");
+		// 	// deploy_data();
+		// 	deploy_data();
+		// } else {
+		// 	console.log("automatic");
+		// 	deploy_data();
+		// }
+
+		deploy_data();
+
+		// Handle deploy state
+
+		// Call a seperate function that actually deploys the data
+	};
+
+	const deploy_data = () => {
+		["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
+			// Return if hold_ value does not exist in localStorage
+			if (
+				localStorage.getItem(`hold_${type}`) === null ||
+				Object.keys(JSON.parse(localStorage.getItem(`hold_${type}`)))
+					.length === 0
+			) {
+				console.log(`${type} hold data is empty, skipping...`);
+				return;
+			}
+
+			const hold = JSON.parse(localStorage.getItem(`hold_${type}`));
+
+			if (websocket) {
+				try {
+					socket.send(
+						JSON.stringify({
+							_type: type,
+							...hold,
+						}),
+					);
+				} catch (error) {
+					alert("Failed to update data via websocket");
+				}
+			}
+
+			// Update the real value
+			localStorage.setItem(type, JSON.stringify(hold));
+
+			// Remove hold value
+			// localStorage.removeItem(`hold_${type}`);
+
+			// Set deploy proceed state to false after a manual deployment
+			if ($deploy.type === "manual") {
+				$deploy.proceed = false;
+			}
+		});
 	};
 </script>
 
 <main class="dashboard">
-	<!-- Pass the socketSend function as a property to header, so we can utilise the socket, without having to create a new WebSocket -->
-	<Header {socketSend} />
+	<!-- Pass the deploy_data function as a property to header, so we can utilise the socket, without having to create a new WebSocket -->
+	<Header update={store_data} />
 	<section class="dashboard__content">
 		<Player
-			{socketSend}
+			update={store_data}
 			name="playerOne"
-			on:playerdata={(event) => {
-				updatePlayer(event.detail, "playerOne");
-			}}
-			on:deckSwap={(event) => {
-				swapDeck(event.detail);
-			}}
+			on:swap_deck={(event) => swap_deck(event.detail)}
 		/>
 		<Player
-			{socketSend}
+			update={store_data}
 			name="playerTwo"
-			on:playerdata={(event) => {
-				updatePlayer(event.detail, "playerTwo");
-			}}
-			on:deckSwap={(event) => {
-				swapDeck(event.detail);
-			}}
+			on:swap_deck={(event) => swap_deck(event.detail)}
 		/>
 	</section>
 </main>
