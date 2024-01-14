@@ -30,6 +30,24 @@
 		"logo": "/factions/NSG_WEYLAND.svg"
 	},
 	{
+		"side": "corp",
+		"code": "adam",
+		"name": "Adam",
+		"logo": "/factions/NSG_ADAM.svg"
+	},
+	{
+		"side": "corp",
+		"code": "apex",
+		"name": "Apex",
+		"logo": "/factions/NSG_APEX.svg"
+	},
+	{
+		"side": "corp",
+		"code": "sunny-lebeau",
+		"name": "Sunny Lebeau",
+		"logo": "/factions/NSG_SUNNY.svg"
+	},
+	{
 		"side": "neutral-runner",
 		"code": "neutral_runner",
 		"name": "Neutral Runner",
