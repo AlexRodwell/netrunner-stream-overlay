@@ -5,9 +5,10 @@
 	import * as Dialog from "$lib/components/ui/dialog";
 
 	const dispatch = createEventDispatcher();
+	let open: boolean = false;
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
 		<ListRestart size={16} />
 		Reset game state
@@ -16,13 +17,15 @@
 		<Dialog.Header>
 			<Dialog.Title>Reset game data</Dialog.Title>
 			<Dialog.Description>
-				Reset clicks, credits, agendas, and wins to default state (relative to active side)
+				Reset clicks, credits, agendas, and wins to default state
+				(relative to active side)
 			</Dialog.Description>
 		</Dialog.Header>
 		<Dialog.Footer>
 			<Button
 				variant="destructive"
 				on:click={() => {
+					open = !open;
 					dispatch("reset");
 				}}>Reset game state</Button
 			>
