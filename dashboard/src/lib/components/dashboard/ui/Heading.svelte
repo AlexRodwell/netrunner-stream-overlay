@@ -4,50 +4,31 @@
 	export let icon: string | null = null;
 </script>
 
-<div class="heading">
+<div class="flex flex-row items-center gap-2">
 	{#if icon}
 		<!-- svelte-ignore a11y-missing-attribute -->
-		<img class="heading__icon" src={icon} />
+		<img class="w-6 h-6 fill-white" src={icon} />
 	{/if}
 
 	{#if level === 1}
-		<h1 class="heading__title">{@html title}</h1>
+		<h1 class="title">{@html title}</h1>
 	{:else if level === 2}
-		<h2 class="heading__title">{@html title}</h2>
+		<h2 class="title">{@html title}</h2>
 	{:else if level === 3}
-		<h3 class="heading__title">{@html title}</h3>
+		<h3 class="title">{@html title}</h3>
 	{:else if level === 4}
-		<h4 class="heading__title">{@html title}</h4>
+		<h4 class="title">{@html title}</h4>
 	{:else if level === 5}
-		<h4 class="heading__title">{@html title}</h4>
+		<h4 class="title">{@html title}</h4>
 	{:else if level === 6}
-		<h4 class="heading__title">{@html title}</h4>
+		<h4 class="title">{@html title}</h4>
 	{/if}
 
 	<slot name="toggle" />
 </div>
 
 <style lang="scss">
-	.heading {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 0.5rem;
-
-		&__icon {
-			width: 1.5rem;
-			height: 1.5rem;
-			fill: #fff;
-		}
-
-		&__title {
-			display: flex;
-			flex-direction: row;
-			justify-content: flex-start;
-			align-items: center;
-			gap: 0.25rem;
-			flex-grow: 1;
-			grid-column: 1/-1;
-		}
+	.title {
+		@apply flex flex-row justify-start items-center gap-1 flex-grow col-[1/-1];
 	}
 </style>
