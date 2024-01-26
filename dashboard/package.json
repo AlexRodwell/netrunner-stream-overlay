@@ -27,14 +27,15 @@
 	"type": "module",
 	"dependencies": {
 		"@playwright/test": "^1.39.0",
-		"fuse.js": "^6.6.2",
-		"world_countries_lists": "^2.8.2",
-		"ws": "^8.13.0",
 		"bits-ui": "^0.14.0",
 		"clsx": "^2.1.0",
 		"cmdk-sv": "^0.0.12",
+		"fuse.js": "^6.6.2",
 		"lucide-svelte": "^0.308.0",
+		"sveltekit-i18n": "^2.4.2",
 		"tailwind-merge": "^2.2.0",
-		"tailwind-variants": "^0.1.20"
+		"tailwind-variants": "^0.1.20",
+		"world_countries_lists": "^2.8.2",
+		"ws": "^8.13.0"
 	}
 }
