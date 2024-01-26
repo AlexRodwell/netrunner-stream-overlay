@@ -20,13 +20,13 @@ Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.
 | `localStorage` save state, to ensure persistent data in the case of page refresh or browser closure (will not work if host port changes) |     ✅ |
 | Export/import player configuration files (to quickly pre-configure a match ahead of time for quicker setup)                              |     ✅ |
 | Flip player data around                                                                                                                  |     ✅ |
+| Highlight 2 related cards (i.e. corp ice and runner program)                                                                             |     ✅ |
 
 | Improvements                                                                                                        | Status |
 | :------------------------------------------------------------------------------------------------------------------ | -----: |
-| Highlight 2 related cards (i.e. corp ice and runner program) for discussion                                         |     🚧 |
-| Improve visual clarity of active/inactive states in dashboard                                                       |     🚧 |
 | Refactor CSS to stylesheets to better allow for theming/customisation of code                                       |     🚧 |
 | Write tests (cypress, playwright or similar) to ensure builds function and pass as expected before version releases |     🚧 |
+| OBS Demo file (with all standard pages for each part of the overlay)                                                |     🚧 |
 
 If you'd like to request a feature, please make an [issue](https://github.com/AlexRodwell/netrunner-east-anglia-stream-overlay/issues/new) outlining what you'd like to see (examples appreciated).
 
