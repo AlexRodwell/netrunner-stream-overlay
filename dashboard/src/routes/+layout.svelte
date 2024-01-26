@@ -1,6 +1,5 @@
 <script lang="ts">
 	import "../app.pcss";
-	// import "../app.scss";
 	import {
 		PUBLIC_WEBSOCKET_CONNECTION,
 		PUBLIC_WEBSOCKET_URL,
@@ -17,13 +16,35 @@
 	import { fetch_cards } from "$lib/utils";
 
 	let socket: WebSocket;
+	let storage_keys: string[] = ["global", "playerOne", "playerTwo", "timer"];
 
 	onMount(async () => {
 		console.info("✔️ Window loaded");
 
+		if (!localStorage.getItem("language")) {
+			localStorage.setItem(
+				"language",
+				navigator.language.substring(0, 2),
+			);
+		}
+
+		// If session token does not exist, clear localStorage, to ensure any old data is removed and does not cause any errors
+		if (!sessionStorage.getItem("session_token")) {
+			storage_keys.forEach((type) => {
+				localStorage.removeItem(type);
+			});
+
+			// Store session token for later onMount reference
+			sessionStorage.setItem(
+				"session_token",
+				Math.floor(Math.random() * Math.pow(10, 10)).toString(),
+			);
+		}
+
 		// Persistant storage
-		["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
+		storage_keys.forEach((type) => {
 			if (
+				JSON.parse(localStorage.getItem(type)) !== null &&
 				Object.keys(JSON.parse(localStorage.getItem(type))).length === 0
 			)
 				return;
@@ -96,28 +117,35 @@
 			window.addEventListener("storage", () => {
 				console.info("localStorage change detected");
 
-				["global", "playerOne", "playerTwo", "timer"].forEach(
-					(type) => {
-						const store = JSON.parse(localStorage.getItem(type));
+				storage_keys.forEach((type) => {
+					if (
+						localStorage.getItem(type) === null ||
+						Object.keys(JSON.parse(localStorage.getItem(type)))
+							.length === 0
+					) {
+						console.log(`${type} data is funky, skipping...`);
+						return;
+					}
 
-						if (store) {
-							switch (type) {
-								case "global":
-									$globalData = store;
-									break;
-								case "playerOne":
-									$playerOneData = store;
-									break;
-								case "playerTwo":
-									$playerTwoData = store;
-									break;
-								case "timer":
-									$timerData = store;
-									break;
-							}
+					const store = JSON.parse(localStorage.getItem(type));
+
+					if (store) {
+						switch (type) {
+							case "global":
+								$globalData = store;
+								break;
+							case "playerOne":
+								$playerOneData = store;
+								break;
+							case "playerTwo":
+								$playerTwoData = store;
+								break;
+							case "timer":
+								$timerData = store;
+								break;
 						}
-					},
-				);
+					}
+				});
 			});
 		}
 	});
