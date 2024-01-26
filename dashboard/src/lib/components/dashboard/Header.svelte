@@ -31,7 +31,7 @@
 	const updateGlobal = () => {
 		update({
 			type: "global",
-			global,
+			data: global,
 		});
 	};
 
@@ -44,16 +44,14 @@
 	};
 
 	const resetGameState = () => {
-		$playerOneData = JSON_PLAYER.playerOne;
 		update({
 			type: "playerOne",
-			data: $playerOneData,
+			data: JSON_PLAYER.playerOne,
 		});
 
-		$playerTwoData = JSON_PLAYER.playerTwo;
 		update({
 			type: "playerTwo",
-			data: $playerTwoData,
+			data: JSON_PLAYER.playerTwo,
 		});
 	};
 
