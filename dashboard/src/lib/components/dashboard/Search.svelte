@@ -16,6 +16,7 @@
 
 	export let side: TGameSide;
 	export let name: TPlayerSide;
+	export let type: "primary" | "secondary";
 
 	let previous_side = side;
 
@@ -32,9 +33,7 @@
 	function filterItems() {
 		results = new Fuse(
 			// Only return an array of cards for the current users side
-			$netrunnerDB.data.filter(
-				(card) => card.attributes.side_id === side,
-			),
+			$netrunnerDB.data.filter((card) => true), // card.attributes.side_id === side
 			{
 				// Filter by title and stripped_title
 				keys: ["attributes.title", "attributes.stripped_title"],
@@ -51,7 +50,7 @@
 			selected = [code];
 		}
 
-		if (player.highlight.active) {
+		if (player.highlight[type].active) {
 			dispatch("card", selected);
 		}
 	}
@@ -59,8 +58,8 @@
 
 <section class="search">
 	<div class="search__selected" data-disabled={!selected}>
-		{#if player.highlight.cards && player.highlight.cards.at(-1)}
-			<Card code={player.highlight.cards.at(-1)} glow={false} />
+		{#if player.highlight[type].cards && player.highlight[type].cards.at(-1)}
+			<Card code={player.highlight[type].cards.at(-1)} glow={false} />
 		{/if}
 	</div>
 	<div class="search__wrapper">

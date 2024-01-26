@@ -301,6 +301,7 @@
 				<Search
 					{name}
 					side={playerCurrent.side}
+					type="primary"
 					on:card={(e) => {
 						playerCurrent.highlight.primary.cards = e.detail;
 						deploy();
@@ -336,6 +337,7 @@
 				<Search
 					{name}
 					side={playerCurrent.side}
+					type="secondary"
 					on:card={(e) => {
 						playerCurrent.highlight.secondary.cards = e.detail;
 						deploy();
