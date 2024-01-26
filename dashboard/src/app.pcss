@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
 	:root {
 		--background: 20 14.3% 4.1%;
@@ -27,13 +28,20 @@
 	.dark {
 	}
 }
+
 @layer base {
 	* {
 		@apply border-border min-w-0;
 	}
 
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-[#242424] text-foreground;
 		font-feature-settings: "rlig" 1, "calt" 1;
+	}
+}
+
+@layer utilities {
+	.switch-group {
+		@apply flex flex-row items-center gap-2;
 	}
 }

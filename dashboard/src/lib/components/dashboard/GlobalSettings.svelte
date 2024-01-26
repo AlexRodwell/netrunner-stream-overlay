@@ -1,315 +1,168 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Modal from "$components/dashboard/ui/Modal.svelte";
 	import Card from "$components/dashboard/ui/Card.svelte";
 	import { globalData, deploy } from "$lib/store";
 	import Heading from "$components/dashboard/ui/Heading.svelte";
+	import * as Dialog from "$lib/components/ui/dialog";
 
 	// Icons
 	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import { Settings } from "lucide-svelte";
-	import { Button } from "$lib/components/ui/button";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import Column from "./ui/Column.svelte";
+	import { Label } from "$lib/components/ui/label";
+	import { Switch } from "$lib/components/ui/switch";
+	import * as CardNew from "$lib/components/ui/card";
+	import { t } from "$lib/translations";
+	import type { GlobalData as TGlobalData } from "$lib/types";
+	import { Slider } from "$lib/components/ui/slider";
+	import { Input } from "$lib/components/ui/input";
+	import * as Select from "$lib/components/ui/select";
 
 	let global: TGlobalData = $globalData;
+	let deployType: boolean = $deploy.type !== "automatic";
+
+	const icons: Record<string, string> = {
+		clicks: ICON_CLICKS,
+		credits: ICON_CREDITS,
+		agendas: ICON_AGENDAS,
+	};
 
 	const dispatch = createEventDispatcher();
-	$: display = false;
 </script>
 
-<label>
-	<Button
-		variant="outline"
-		on:click={() => {
-			display = true;
-		}}
-	>
+<Dialog.Root>
+	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
 		<Settings size={16} />
-		Global settings
-	</Button>
-	{#if display}
-		<Modal bind:display size="medium">
-			<h2 slot="header">Global settings</h2>
-
+		{$t("global_settings")}
+	</Dialog.Trigger>
+	<Dialog.Content class="min-w-[fit-content]">
+		<Dialog.Header>
+			<Dialog.Title>{$t("global_settings")}</Dialog.Title>
+		</Dialog.Header>
+		<div>
 			<Card title="Deploy method" outline={false} uid="display">
 				<Column columns={3}>
 					<Column span="1/-1">
-						<Card>
-							<Heading title="Deployment type" level={4} />
-							<label class="checkbox">
-								<span
-									>{$deploy.type === "manual"
-										? "Manual"
-										: "Automatic (instant)"}</span
-								>
-								<input
-									type="checkbox"
-									checked={$deploy.type === "manual"}
-									on:click={(e) => {
-										$deploy.type = e.target.checked
-											? "manual"
-											: "automatic";
+						<CardNew.Root>
+							<CardNew.Header>Deployment type</CardNew.Header>
+							<CardNew.Content class="switch-group">
+								<Switch
+									id="deploy-type"
+									bind:checked={deployType}
+									on:click={(event) => {
+										$deploy.type = deployType
+											? "automatic"
+											: "manual";
 										$deploy.proceed =
 											$deploy.type === "automatic";
 									}}
 								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
+								<Label for="deploy-type">
+									{$deploy.type === "manual"
+										? "Manual"
+										: "Automatic (instant)"}
+								</Label>
+							</CardNew.Content>
+						</CardNew.Root>
 					</Column>
 
-					<Card outline={false}>
-						<Heading title="Player" level={3} />
+					{#each Object.keys(global).filter((key) => !["deploy", "websocket", "overlay", "agendas_count", "card_size"].includes(key)) as name}
+						<CardNew.Root>
+							<CardNew.Header
+								class="switch-group justify-between"
+							>
+								<div class="flex flex-row gap-1 items-center">
+									{#if ["clicks", "credits", "agendas"].includes(name)}
+										<!-- svelte-ignore a11y-missing-attribute -->
+										<img
+											class="w-6 h-6 fill-white"
+											src={icons[name]}
+										/>
+									{/if}
+									<Label for="deploy-type">
+										{$t(name)}
+									</Label>
+								</div>
+								<Switch
+									id="deploy-type"
+									bind:checked={global[name]}
+									on:click={(event) => {
+										global[name] = !global[name];
+										dispatch("global");
+									}}
+								/>
+							</CardNew.Header>
+						</CardNew.Root>
+					{/each}
 
-						<Card>
-							<Heading title="Name" level={4} />
-							<label class="checkbox">
-								<span>{global.name ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.name}
-									on:click={(e) => {
-										global.name = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-						<Card>
-							<Heading title="Pronouns" level={4} />
-							<label class="checkbox">
-								<span>{global.pronoun ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.pronoun}
-									on:click={(e) => {
-										global.pronoun = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-						<Card>
-							<Heading title="ID" level={4} />
-							<label class="checkbox">
-								<span>{global.id ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.id}
-									on:click={(e) => {
-										global.id = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-						<Card>
-							<Heading title="Country" level={4} />
-							<label class="checkbox">
-								<span>{global.country ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.country}
-									on:click={(e) => {
-										global.country = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-					</Card>
-
-					<Card outline={false}>
-						<Heading title="Game" level={3} />
-						<Card>
-							<Heading
-								title="Clicks"
-								icon={ICON_CLICKS}
-								level={4}
+					<CardNew.Root>
+						<CardNew.Header class="switch-group justify-between">
+							<span>Opacity ({global.overlay.opacity}%)</span>
+							<Slider
+								value={[global.overlay.opacity]}
+								max={100}
+								step={1}
+								on:input={(e) => {
+									console.log(e);
+									global.overlay.opacity =
+										parseInt(e.detail[0]) / 100;
+									dispatch("global");
+								}}
+								onValueChange={(event) => {
+									// https://www.bits-ui.com/docs/components/slider#component-api
+									global.overlay.opacity = event[0];
+								}}
 							/>
-							<label class="checkbox">
-								<span>{global.clicks ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.clicks}
-									on:click={(e) => {
-										global.clicks = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
+						</CardNew.Header>
+					</CardNew.Root>
 
-						<Card>
-							<Heading
-								title="Credits"
-								icon={ICON_CREDITS}
-								level={4}
+					<CardNew.Root>
+						<CardNew.Header class="switch-group justify-between">
+							<Label for="commentators">Commentators</Label>
+						</CardNew.Header>
+						<CardNew.Content>
+							<Input
+								id="commentators"
+								bind:value={global.overlay.commentators}
+								type="text"
+								placeholder="Metropole Grid"
+								class="max-w-xs"
+								on:input={(e) => {
+									dispatch("global");
+								}}
 							/>
-							<label class="checkbox">
-								<span>{global.credits ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.credits}
-									on:click={(e) => {
-										global.credits = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
+						</CardNew.Content>
+					</CardNew.Root>
 
-						<Card>
-							<Heading
-								title="Agendas"
-								icon={ICON_AGENDAS}
-								level={4}
-							/>
-							<label class="checkbox">
-								<span>{global.agendas ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.agendas}
-									on:click={(e) => {
-										global.agendas = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-
-						<Card>
-							<Heading
-								title="Threat Level"
-								icon={ICON_AGENDAS}
-								level={4}
-							/>
-							<label class="checkbox">
-								<span>{global.threat_level ? "On" : "Off"}</span
-								>
-								<input
-									type="checkbox"
-									bind:checked={global.threat_level}
-									on:click={(e) => {
-										global.threat_level = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-
-						<Card>
-							<Heading
-								title="Wins"
-								icon={ICON_AGENDAS}
-								level={4}
-							/>
-							<label class="checkbox">
-								<span>{global.wins ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.wins}
-									on:click={(e) => {
-										global.wins = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-					</Card>
-
-					<Card outline={false}>
-						<Heading title="Visuals" level={3} />
-						<Card>
-							<Heading title="Faction (logo)" level={4} />
-							<label class="checkbox">
-								<span>{global.faction ? "On" : "Off"}</span>
-								<input
-									type="checkbox"
-									bind:checked={global.faction}
-									on:click={(e) => {
-										global.faction = e.target.checked;
-										dispatch("global");
-									}}
-								/>
-								<span class="checkbox__mark" />
-							</label>
-						</Card>
-						<Card>
-							<Heading title="Overlay opacity" level={4} />
-							<label>
-								<span
-									>Opacity ({(
-										global.overlay.opacity * 100
-									).toFixed(0)}%)</span
-								>
-								<input
-									type="range"
-									min="0"
-									max="1"
-									value={global.overlay.opacity.toString()}
-									step="0.1"
-									on:change={(e) => {
-										global.overlay.opacity = e.target.value;
-										dispatch("global");
-									}}
-								/>
-							</label>
-						</Card>
-						<Card>
-							<Heading title="Commentators" level={4} />
-							<label>
-								<span>Commentators</span>
-								<input
-									type="text"
-									bind:value={global.overlay.commentators}
-									on:change={(e) => {
-										global.overlay.commentators =
-											e.target.value;
-										dispatch("global");
-									}}
-								/>
-							</label>
-						</Card>
-					</Card>
-
-					<Card outline={false}>
-						<Heading title="Misc" level={3} />
-						<Card>
-							<Heading title="Card Size" level={4} />
-							<label class="checkbox">
-								<select
-									bind:value={global.card_size}
-									on:change={(e) => {
-										dispatch("global");
-									}}
-								>
+					<CardNew.Root>
+						<CardNew.Header class="switch-group justify-between">
+							<Label for="card_size">Card size</Label>
+						</CardNew.Header>
+						<CardNew.Content>
+							<Select.Root
+								onSelectedChange={(event) => {
+									global.card_size = event.value;
+									dispatch("global");
+								}}
+							>
+								<Select.Trigger class="w-[180px]">
+									<Select.Value placeholder="Size" />
+								</Select.Trigger>
+								<Select.Content>
 									{#each ["Small", "Medium", "Large"] as size}
-										<option value={size.toLowerCase()}>
-											{size}
-										</option>
+										<Select.Item value={size.toLowerCase()}
+											>{size}</Select.Item
+										>
 									{/each}
-								</select>
-							</label>
-						</Card>
-					</Card>
+								</Select.Content>
+							</Select.Root>
+						</CardNew.Content>
+					</CardNew.Root>
 				</Column>
 			</Card>
-		</Modal>
-	{/if}
-</label>
-
-<style lang="scss">
-	// TODO
-</style>
+		</div>
+	</Dialog.Content>
+</Dialog.Root>

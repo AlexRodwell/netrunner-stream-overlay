@@ -16,53 +16,33 @@
 	);
 </script>
 
-<div class="card {glow ? 'card--glow' : ''}">
-	<div class="card__front">
+<div
+	class="aspect-[64/89] [transform-style:preserve-3d] flex transition-[calc(var(--transition)*1.5)] ease-linear delay-[var(--transition-delay,0ms)] [transform:var(--transform)] {glow
+		? 'card--glow'
+		: ''} {$$props['class']}"
+>
+	<div
+		class="face {glow
+			? '[filter:drop-shadow(0px_0px_20px_rgba(255,255,255,0.3))]'
+			: ''}"
+	>
 		<!-- svelte-ignore a11y-missing-attribute -->
-		<img src={url} />
+		<img class="image" src={url} />
 	</div>
 	{#if side}
-		<div class="card__back">
+		<div class="face [transform:rotateY(180deg)]">
 			<!-- svelte-ignore a11y-missing-attribute -->
-			<img src={back} />
+			<img class="image" src={back} />
 		</div>
 	{/if}
 </div>
 
 <style lang="scss">
-	.card {
-		aspect-ratio: 64/89;
-		transform-style: preserve-3d;
-		display: flex;
-		transition: calc(var(--transition) * 1.5) ease;
-		transition-delay: var(--transition-delay, 0ms);
-		transform: var(--transform);
+	.face {
+		@apply absolute h-full w-full text-center [backface-visibility:hidden] overflow-hidden rounded-[4%];
+	}
 
-		&__front,
-		&__back {
-			position: absolute;
-			height: 100%;
-			width: 100%;
-			text-align: center;
-			backface-visibility: hidden;
-			overflow: hidden;
-			border-radius: 4%;
-			overflow: hidden;
-		}
-
-		&--glow &__front {
-			filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.3));
-		}
-
-		&__back {
-			transform: rotateY(180deg);
-		}
-
-		img {
-			width: 100%;
-			height: 100%;
-			object-fit: fill;
-			display: inline-block;
-		}
+	.image {
+		@apply w-full h-full object-fill inline-block;
 	}
 </style>

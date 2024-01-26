@@ -13,9 +13,8 @@
 	export let max: number = 99;
 </script>
 
-<div class="counter">
+<div class="flex flex-row items-center gap-1">
 	<Input
-		class="counter__input"
 		type="number"
 		bind:value={data.amount}
 		on:change={(event) => {
@@ -35,7 +34,6 @@
 
 	<Button
 		variant="outline"
-		class="counter__button"
 		on:click={() => {
 			data.amount - 1 >= min ? data.amount-- : null;
 			dispatch("count", data.amount);
@@ -43,34 +41,9 @@
 	>
 	<Button
 		variant="outline"
-		class="counter__button"
 		on:click={() => {
 			data.amount + 1 <= max ? data.amount++ : null;
 			dispatch("count", data.amount);
 		}}>+</Button
 	>
 </div>
-
-<style lang="scss">
-	.counter {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 0.5rem;
-
-		&__input {
-			width: 100%;
-		}
-
-		&__button {
-			aspect-ratio: 1/1;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100%;
-			background-color: #202020;
-			color: #ffffff;
-			border-color: #323232;
-		}
-	}
-</style>

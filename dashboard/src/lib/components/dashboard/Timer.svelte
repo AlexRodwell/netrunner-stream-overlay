@@ -1,16 +1,10 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Modal from "$components/dashboard/ui/Modal.svelte";
-	import Card from "$components/dashboard/ui/Card.svelte";
 	import { timerData } from "$lib/store";
 	import type { TimerData as TTimerData } from "$lib/types";
-	import { Button } from "$lib/components/ui/button";
-
-	// Icons
-	import ICON_CLICKS from "$lib/assets/icons/NSG_CLICK.svg";
-	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
-	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import { Timer } from "lucide-svelte";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import * as Dialog from "$lib/components/ui/dialog";
 
 	let timer: TTimerData = $timerData;
 
@@ -37,23 +31,19 @@
 			}
 		}, 100); // Update every 10 milliseconds
 	};
-
-	$: display = false;
 </script>
 
-<label>
-	<Button
-		variant="outline"
-		on:click={() => {
-			display = true;
-		}}
-	>
+<Dialog.Root>
+	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
 		<Timer size={16} slot="icon" />
 		Timer
-	</Button>
-	{#if display}
-		<Modal bind:display>
-			<h2 slot="header">Timer</h2>
+	</Dialog.Trigger>
+	<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Header>
+			<Dialog.Title>Timer</Dialog.Title>
+		</Dialog.Header>
+		<div>
+			<h2>Timer</h2>
 			<label>
 				<span>Timer (minutes)</span>
 				<input type="number" bind:value={timer.count} />
@@ -104,15 +94,6 @@
 				style="background: #242424; border: #242424; color: #fff;"
 				>Clear timer</Button
 			>
-		</Modal>
-	{/if}
-</label>
-
-<style lang="scss">
-	section {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 1rem;
-	}
-</style>
+		</div>
+	</Dialog.Content>
+</Dialog.Root>

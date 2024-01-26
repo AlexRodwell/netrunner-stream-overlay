@@ -4,17 +4,8 @@
 	$: data = $globalData;
 </script>
 
-<div class="commentators">{data.overlay.commentators}</div>
-
-<style lang="scss">
-	.commentators {
-		padding: 0.75rem;
-		background: #fff;
-		color: #000;
-		position: absolute;
-		top: 1rem;
-		left: 50%;
-		transform: translateX(-50%);
-		font-size: 1.5rem;
-	}
-</style>
+<div
+	class="p-3 bg-white text-black absolute top-4 left-2/4 -translate-x-1/2 text-[1.5rem]"
+>
+	{data.overlay.commentators}
+</div>

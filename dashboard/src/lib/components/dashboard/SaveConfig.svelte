@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import Actions from "./ui/Actions.svelte";
 	import { FileJson2 } from "lucide-svelte";
-	import Card from "./ui/Card.svelte";
-	import Heading from "$components/dashboard/ui/Heading.svelte";
 	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import * as Dialog from "$lib/components/ui/dialog";
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
-	import { Terminal } from "lucide-svelte";
-  import * as Alert from "$lib/components/ui/alert";
+	import * as Alert from "$lib/components/ui/alert";
+	import * as Card from "$lib/components/ui/card";
+	import Header from "./Header.svelte";
 
 	const dispatch = createEventDispatcher();
 
-	$: display = false;
-	$: success = false;
+	let success: boolean = false;
+	let loading: boolean = false;
 
 	let selectedFile = null;
 
@@ -37,15 +35,20 @@
 		try {
 			const jsonData = JSON.parse(fileContents);
 			dispatch("import", jsonData);
-			display = false;
-			success = true;
+			loading = true;
+			setTimeout(() => {
+				success = true;
+				loading = false;
+			}, 1500);
 		} catch (error) {
 			console.error("Error parsing JSON file:", error);
 		}
 	};
+
+	let open: boolean = false;
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open closeOnOutsideClick={false}>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
 		<FileJson2 size={16} />
 		Save/import config
@@ -55,26 +58,41 @@
 			<Dialog.Title>Save/import config</Dialog.Title>
 		</Dialog.Header>
 
-	
-		<div class="grid w-full max-w-sm items-center gap-1.5">
-			<Label for="picture">Import</Label>
-			<Input id="picture" type="file" accept=".json" on:change={handleFileSelect} />
-		</div>
+		<Card.Root>
+			<Card.Header>
+				<Label for="picture">Import</Label>
+			</Card.Header>
+			<Card.Content class="grid w-full max-w-sm items-center gap-1.5">
+				<Input
+					id="picture"
+					type="file"
+					accept=".json"
+					on:change={handleFileSelect}
+				/>
+				{#if loading}
+					loading...
+				{/if}
+				{#if success}
+					<Alert.Root variant="default">
+						<Alert.Title>JSON imported successfully</Alert.Title>
+					</Alert.Root>
+				{/if}
+			</Card.Content>
+		</Card.Root>
 
-		{#if success}
-		<Alert.Root variant="default">
-			<Alert.Title>JSON imported successfully</Alert.Title>
-		</Alert.Root>
-		{/if}
-
-		<Dialog.Footer>
-			<Button
-				variant="outline"
-				on:click={() => {
-					dispatch("save");
-					display = false;
-				}}>Save player config</Button
-			>
-		</Dialog.Footer>
+		<Card.Root>
+			<Card.Header>
+				<Label for="picture">Export</Label>
+			</Card.Header>
+			<Card.Content class="grid w-full max-w-sm items-center gap-1.5">
+				<Button
+					variant="outline"
+					on:click={() => {
+						// open = !open;
+						dispatch("save");
+					}}>Save player config</Button
+				>
+			</Card.Content>
+		</Card.Root>
 	</Dialog.Content>
 </Dialog.Root>
