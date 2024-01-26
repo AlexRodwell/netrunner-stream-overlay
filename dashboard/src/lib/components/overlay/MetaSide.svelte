@@ -20,7 +20,7 @@
 
 <section
 	class="side side--{align}"
-	style="--opacity: {global.overlay.opacity ?? '0.8'}"
+	style="--opacity: 0.{global.overlay.opacity ?? '0.8'}"
 >
 	{#if global.faction && faction?.logo}
 		<div class="side__faction">
