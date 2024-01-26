@@ -32,11 +32,18 @@
 			"amount": 0
 		},
 		"highlight": {
-			"cards": [],
-			"current": "21063",
-			"previous": null,
-			"active": false,
-			"test": []
+			"primary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			},
+			"secondary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			}
 		}
 	},
 	"playerTwo": {
@@ -72,11 +79,18 @@
 			"amount": 0
 		},
 		"highlight": {
-			"cards": [],
-			"current": "21063",
-			"previous": null,
-			"active": false,
-			"test": []
+			"primary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			},
+			"secondary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			}
 		}
 	}
 }

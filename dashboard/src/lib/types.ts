@@ -150,6 +150,11 @@ export type TimerData = {
 	prev: Date;
 };
 
+export type HighlightGroup = {
+	primary: Highlight;
+	secondary: Highlight;
+};
+
 export type Highlight = {
 	cards: string[];
 	current?: string;
@@ -176,7 +181,10 @@ export type PlayerAttributes = {
 	clicks: Counters;
 	credits: Counters;
 	agendas: Agendas;
-	highlight?: Highlight;
+	highlight?: {
+		primary: Highlight;
+		secondary: Highlight;
+	};
 };
 
 export type PlayerData = {

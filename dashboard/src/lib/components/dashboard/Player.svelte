@@ -13,8 +13,6 @@
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Counter from "./Counter.svelte";
 	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
-	import Heading from "./ui/Heading.svelte";
-	import Column from "./ui/Column.svelte";
 	import SearchIdentity from "$components/dashboard/SearchIdentity.svelte";
 	import Country from "$components/dashboard/Country.svelte";
 	import { Checkbox } from "$lib/components/ui/checkbox";
@@ -22,6 +20,8 @@
 	import { Label } from "$lib/components/ui/label";
 	import { Switch } from "$lib/components/ui/switch";
 	import * as Card from "$lib/components/ui/card";
+	import { t } from "$lib/translations";
+	import { Description } from "$components/ui/alert";
 
 	// Properties
 	export let name: TPlayerSide;
@@ -90,38 +90,43 @@
 	];
 </script>
 
-<section
-	class="side"
-	data-uid={name === "playerOne" ? "playerOne" : "playerTwo"}
->
-	<header class="side__header side__item side__item--span">
-		{#if faction?.logo}
-			<img class="side__faction" src={faction.logo} />
-		{/if}
-
-		<div>
-			<span
-				>{name === "playerOne"
-					? "Player One (left)"
-					: "Player Two (right)"}</span
-			>
-			<h2>
-				{#if playerCurrent?.player?.name}
-					{playerCurrent.player.name}
-				{:else}
-					{name}
+<Card.Root data-uid={name === "playerOne" ? "playerOne" : "playerTwo"}>
+	<Card.Header class="pb-0">
+		<Card.Title>
+			<div slot="icon">
+				{#if faction?.logo}
+					<img
+						class="aspect-square w-16"
+						src={faction?.logo
+							? faction.logo
+							: "/static/factions/NSG_NEUTRAL.svg"}
+					/>
 				{/if}
-				{#if faction?.name && faction?.side}
-					&mdash;
-					<span>
-						{faction.name} ({faction.side})
-					</span>
-				{/if}
-			</h2>
-		</div>
-	</header>
+			</div>
 
-	<section class="side__options">
+			<div>
+				<span
+					>{name === "playerOne"
+						? "Player One (left)"
+						: "Player Two (right)"}</span
+				>
+				<h2>
+					{#if playerCurrent?.player?.name}
+						{playerCurrent.player.name}
+					{:else}
+						{name}
+					{/if}
+					{#if faction?.name && faction?.side}
+						&mdash;
+						<span>
+							{faction.name} ({faction.side})
+						</span>
+					{/if}
+				</h2>
+			</div>
+		</Card.Title>
+	</Card.Header>
+	<Card.Content class="grid grid-cols-6 p-4 gap-4">
 		<Card.Root class="col-[auto/span_3]">
 			<Card.Header>
 				<Card.Title>
@@ -139,10 +144,10 @@
 					<span>Corporation ID </span>
 
 					<div
-						class="id-selection grid grid-cols-[auto,1fr] gap-4 items-center"
+						class="id-selection grid grid-cols-[auto,1fr] gap-2 items-center"
 					>
 						<Checkbox
-							class="aspect-square h-full w-auto max-h-[44px]"
+							class="aspect-square h-full w-auto w-[40px] h-[40px]"
 							bind:checked={playerCurrent.decks.corp.active}
 							on:click={(event) => {
 								togglePlayerID(
@@ -166,10 +171,10 @@
 				<label data-uid="side-runner">
 					<span>Runner ID</span>
 					<div
-						class="id-selection grid grid-cols-[auto,1fr] gap-4 items-center"
+						class="id-selection grid grid-cols-[auto,1fr] gap-2 items-center"
 					>
 						<Checkbox
-							class="aspect-square h-full w-auto max-h-[44px]"
+							class="aspect-square h-full w-auto w-[40px] h-[40px]"
 							bind:checked={playerCurrent.decks.runner.active}
 							on:click={(event) => {
 								togglePlayerID(
@@ -272,26 +277,23 @@
 			</Card.Root>
 		{/each}
 
+		<!-- Main card -->
 		<Card.Root class="col-[1/-1]">
 			<Card.Header>
 				<Card.Title>
-					{@html `Display card ${
-						playerCurrent.highlight.active
-							? `<span style="color: red;">(VISIBLE)</span>`
-							: ""
-					}`}
-
-					<div slot="action">
+					{$t("primary") + " " + $t("card").toLowerCase()}
+					<div slot="action" class="switch-group">
 						<Switch
 							id="{name}-display-card"
-							bind:checked={playerCurrent.highlight.active}
+							bind:checked={playerCurrent.highlight.primary
+								.active}
 							on:click={(event) => {
-								playerCurrent.highlight.active =
-									!playerCurrent.highlight.active;
+								playerCurrent.highlight.primary.active =
+									!playerCurrent.highlight.primary.active;
 								deploy();
 							}}
 						/>
-						<Label for="{name}-display-card">Display card</Label>
+						<Label for="{name}-display-card">{$t("display")}</Label>
 					</div>
 				</Card.Title>
 			</Card.Header>
@@ -300,112 +302,46 @@
 					{name}
 					side={playerCurrent.side}
 					on:card={(e) => {
-						playerCurrent.highlight.cards = e.detail;
+						playerCurrent.highlight.primary.cards = e.detail;
 						deploy();
 					}}
 				/>
 			</Card.Content>
 		</Card.Root>
-	</section>
-</section>
 
-<style lang="scss">
-	.side {
-		display: grid;
-		gap: 1rem;
-		grid-template-rows: auto 1fr;
-		align-items: flex-start;
-		align-content: stretch;
-		overflow: hidden;
-
-		&__header {
-			display: grid;
-			grid-template-columns: auto 1fr;
-			gap: 0.5rem;
-			align-items: center;
-			// background-color: #202020;
-			// padding: 1rem;
-		}
-
-		&__faction {
-			aspect-ratio: 1/1;
-			width: 4rem;
-		}
-
-		&__options {
-			display: grid;
-			grid-template-columns: repeat(6, minmax(0, 1fr));
-			gap: 1rem;
-			height: 100%;
-			align-content: flex-start;
-		}
-
-		&__item {
-			&--span {
-				grid-column: 1/-1;
-			}
-		}
-
-		&__deploy {
-			grid-column: 1/-1;
-		}
-	}
-
-	.wins {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: 0.5rem;
-
-		&__item {
-			position: relative;
-			cursor: pointer;
-
-			&__count {
-				border-radius: 0.125rem;
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				justify-content: center;
-				text-align: center;
-				gap: 0.5rem;
-				padding: 0.5rem;
-				background: #121212;
-			}
-
-			input[type="radio"] {
-				opacity: 0;
-
-				&:checked ~ .wins__item__count {
-					background: #fff;
-					color: #000;
-				}
-			}
-
-			input[type="radio"],
-			&:after {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-			}
-
-			&:after {
-				content: "";
-			}
-
-			&:checked:after {
-				background: red;
-			}
-		}
-	}
-
-	label:not(.checkbox),
-	section > div {
-		display: grid;
-		gap: 0.5rem;
-	}
-
-	.id-selection {
-		display: flex;
-		flex-direction: row;
-	}
-</style>
+		<!-- Combo card -->
+		<Card.Root class="col-[1/-1]">
+			<Card.Header>
+				<Card.Title>
+					{$t("secondary") + " " + $t("card").toLowerCase()}
+					<div slot="action" class="switch-group">
+						<Switch
+							id="{name}-display-card"
+							bind:checked={playerCurrent.highlight.secondary
+								.active}
+							on:click={(event) => {
+								playerCurrent.highlight.secondary.active =
+									!playerCurrent.highlight.secondary.active;
+								deploy();
+							}}
+						/>
+						<Label for="{name}-display-card">{$t("display")}</Label>
+					</div>
+				</Card.Title>
+				<Card.Description>
+					{$t("hints.such_as_ice")}
+				</Card.Description>
+			</Card.Header>
+			<Card.Content>
+				<Search
+					{name}
+					side={playerCurrent.side}
+					on:card={(e) => {
+						playerCurrent.highlight.secondary.cards = e.detail;
+						deploy();
+					}}
+				/>
+			</Card.Content>
+		</Card.Root>
+	</Card.Content>
+</Card.Root>

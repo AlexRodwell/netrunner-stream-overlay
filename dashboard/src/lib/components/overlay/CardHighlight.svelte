@@ -3,7 +3,7 @@
 	import Card from "../Card.svelte";
 	import type {
 		PlayerSide as TPlayerSide,
-		Highlight as THighlight,
+		HighlightGroup as THighlightGroup,
 		GameSide as TGameSide,
 	} from "$lib/types";
 	import { find_faction_by_id } from "$lib/utils";
@@ -11,39 +11,58 @@
 	import { globalData } from "$lib/store";
 
 	export let player: TPlayerSide;
-	export let data: THighlight;
+	export let data: THighlightGroup;
 	export let side: TGameSide;
+
+	type TType = "primary" | "secondary";
 
 	$: align = player === "playerOne" ? "left" : "right"; // data.align;
 
 	let display_state: boolean = false;
 
-	let dynamicElements: Array<{
-		code: string;
-		state: "in" | "out";
-		flip?: boolean;
-	}> = [];
+	let dynamicElements: {
+		[key in TType]: Array<{
+			code: string;
+			state: "in" | "out";
+			flip?: boolean;
+		}>;
+	} = {
+		primary: [],
+		secondary: [],
+	};
 	let index: number = 0;
 	let transition: number = 300;
-	let previous: string;
-	let previous_state: boolean = display_state;
+	let previous: {
+		[key in TType]: string;
+	} = {
+		primary: "",
+		secondary: "",
+	};
 
-	const queue = (code: string) => {
+	const queue = (code: string, type: TType = "primary") => {
+		console.log("-----------------------------");
+		console.log(code);
+		console.log(dynamicElements[type].length);
+
 		// If queued code is the same as the previous, exit early (do nothing)
-		if (code === previous) {
+		if (code === previous[type]) {
 			return;
 		}
 
 		// If code is not set or undefined, deactivate highlight, reset previous and animate last card out
-		if (!code || code === "undefined") {
+		if (
+			(!code || code === "undefined") &&
+			dynamicElements[type].length > 0
+		) {
 			display_state = false;
-			previous = "";
-			dynamicElements[dynamicElements.length - 1].state = "out";
+			previous[type] = "";
+			dynamicElements[type][dynamicElements[type].length - 1].state =
+				"out";
 			return;
 		}
 
-		dynamicElements = [
-			...dynamicElements,
+		dynamicElements[type] = [
+			...dynamicElements[type],
 			{
 				code: code,
 				state: "in",
@@ -51,41 +70,51 @@
 			},
 		];
 
-		dynamicElements = dynamicElements.map((obj, index, array) => ({
-			...obj,
-			state: index === array.length - 1 ? "in" : "out",
-		}));
+		dynamicElements[type] = dynamicElements[type].map(
+			(obj, index, array) => ({
+				...obj,
+				state: index === array.length - 1 ? "in" : "out",
+			}),
+		);
 
-		previous = code;
+		previous[type] = code;
 		index++;
 	};
 
-	const display = (state: boolean) => {
-		previous_state = !state;
-
-		if (dynamicElements.length > 0) {
+	const display = (state: boolean, type: TType = "primary") => {
+		if (dynamicElements[type].length > 0) {
 			if (!state) {
 				// Animate out last active card
-				dynamicElements[dynamicElements.length - 1].state = "out";
+				dynamicElements[type][dynamicElements[type].length - 1].state =
+					"out";
 
 				// Clean up {#each} HTML (remove all previous HTML elements, except the last) if dislay is equals false (hidden)
 				setTimeout(() => {
-					dynamicElements = [
-						dynamicElements[dynamicElements.length - 1],
+					dynamicElements[type] = [
+						dynamicElements[type][dynamicElements[type].length - 1],
 					];
 				}, transition);
 			} else {
-				dynamicElements[dynamicElements.length - 1].state = "in";
+				dynamicElements[type][dynamicElements[type].length - 1].state =
+					"in";
 			}
 		}
 	};
 
-	$: data.active, display(data.active);
-	$: data.cards, queue(data.cards[data.cards.length - 1]);
+	$: data.primary.active, display(data.primary.active, "primary");
+	$: data.primary.cards,
+		queue(data.primary.cards[data.primary.cards.length - 1], "primary");
+
+	$: data.secondary.active, display(data.secondary.active, "secondary");
+	$: data.secondary.cards,
+		queue(
+			data.secondary.cards[data.secondary.cards.length - 1],
+			"secondary",
+		);
 </script>
 
 <div class="highlight highlight--{align}" style="--transition: {transition}ms;">
-	{#each dynamicElements as { code, state, flip }}
+	{#each dynamicElements.primary as { code, state, flip }}
 		<div
 			class="highlight__card highlight__card--{state} {flip
 				? 'highlight__card--flip'
@@ -102,23 +131,41 @@
 	{/each}
 </div>
 
+<div
+	class="highlight-secondary highlight-secondary--{align}"
+	style="--transition: {transition}ms;"
+>
+	{#each dynamicElements.secondary as { code, state, flip }}
+		<div
+			class="highlight-secondary__card highlight-secondary__card--{state} {flip
+				? 'highlight-secondary__card--flip'
+				: ''}"
+			data-size={$globalData.card_size}
+			in:fly={{
+				delay: 400,
+				x: align === "left" ? "-100%" : "100%",
+				duration: transition,
+			}}
+		>
+			<Card {code} {side} />
+		</div>
+	{/each}
+</div>
+
 <style lang="scss">
+	// Primary
+
 	.highlight {
-		display: flex;
-		margin-bottom: 210px;
-		transition: var(--transition) ease;
-		position: relative;
-		bottom: 0;
-		transition-delay: var(--transition);
+		@apply flex mb-[210px] [transition:var(--transition)] relative bottom-0 [transition-delay:var(--transition)];
 
 		&--left {
-			left: 0;
+			@apply left-0;
 			place-content: flex-start;
 			place-items: flex-end;
 			margin-left: 50px;
 
 			.highlight__card {
-				left: 0;
+				@apply left-0;
 			}
 
 			.highlight__card--out {
@@ -127,13 +174,13 @@
 		}
 
 		&--right {
-			right: 0;
+			@apply right-0;
 			place-content: flex-end;
 			place-items: flex-end;
 			margin-right: 50px;
 
 			.highlight__card {
-				right: 0;
+				@apply right-0;
 			}
 
 			.highlight__card--out {
@@ -169,6 +216,76 @@
 			&--in {
 				--transform: rotateY(0deg);
 				transform: translateX(0%);
+				opacity: 1;
+			}
+
+			:global(.card) {
+				width: inherit;
+			}
+		}
+	}
+
+	// Secondary
+
+	.highlight-secondary {
+		@apply absolute flex mb-[210px] [transition:var(--transition)] [transition-delay:var(--transition)] w-[260px] bottom-[100px];
+
+		&--left {
+			@apply left-0 origin-bottom-left rotate-3;
+
+			.highlight-secondary__card {
+				@apply left-[300px];
+			}
+
+			.highlight-secondary__card--out {
+				transform: translateX(-90%) scale(0.9);
+				opacity: 0;
+			}
+		}
+
+		&--right {
+			@apply right-0 origin-bottom-right -rotate-3;
+
+			.highlight-secondary__card {
+				@apply right-[300px];
+			}
+
+			.highlight-secondary__card--out {
+				transform: translateX(90%) scale(0.9);
+				opacity: 0;
+			}
+		}
+
+		&__card {
+			flex: 0 0 100%;
+			width: 260px;
+			transition:
+				var(--transition) ease,
+				scale 0ms;
+			z-index: 5;
+			position: absolute;
+			bottom: 0;
+			// --transform: rotateY(-180deg);
+
+			// &[data-size=small] {}
+
+			&[data-size="medium"] {
+				width: 360px;
+			}
+
+			&[data-size="large"] {
+				width: 480px;
+			}
+
+			&--out {
+				// --transform: rotateY(-180deg);
+				transition-delay: calc(var(--transition) / 1.5);
+				z-index: 1;
+			}
+
+			&--in {
+				// --transform: rotateY(0deg);
+				@apply translate-x-0;
 				opacity: 1;
 			}
 
