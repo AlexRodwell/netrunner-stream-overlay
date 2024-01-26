@@ -7,15 +7,6 @@
 	$: player = data.player === "playerOne" ? $playerOneData : $playerTwoData;
 </script>
 
-<main>
+<main class="h-screen flex flex-row items-end">
 	<CardHighlight player={data.player} data={player} side={player.side} />
 </main>
-
-<style lang="scss">
-	main {
-		height: 100vh;
-		display: flex;
-		flex-direction: row;
-		align-items: flex-end;
-	}
-</style>
