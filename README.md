@@ -24,7 +24,7 @@ Originally built for the [Netrunner East Anglia Champs](https://alwaysberunning.
 
 | Improvements                                                                                                        | Status |
 | :------------------------------------------------------------------------------------------------------------------ | -----: |
-| Refactor CSS to stylesheets to better allow for theming/customisation of code                                       |     🚧 |
+| Refactor CSS to stylesheets and/or predefined themes to allow for better customisation/layout                       |     🚧 |
 | Write tests (cypress, playwright or similar) to ensure builds function and pass as expected before version releases |     🚧 |
 | OBS Demo file (with all standard pages for each part of the overlay)                                                |     🚧 |
 
@@ -37,16 +37,16 @@ If you'd like to request a feature, please make an [issue](https://github.com/Al
 ### Development
 
 1. Install [node.js](https://nodejs.org/en)
-2. Download this git repository, either via CLI or Github download (if downloaded as a zip, ensure you extract its contents)
+2. Download this git repository, either via [CLI](https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository) or Github download (if downloaded as a zip, ensure you extract its contents)
 3. Using a CLI, navigate to the downloaded repositry via `cd ./netrunner-stream-overlay`
-4. Run `npm i` in CLI to install the required packages/dependancies (npm comes bundled with node.js)
+4. Run `npm i` in CLI to install the required packages/dependancies (npm is bundled with node.js, which will work, despite the project using [pnpm](https://pnpm.io/))
 5. Create a `.env` file in the `./dashboard` directory of the project (or rename the `.env.example` to just `.env`), this stores the websocket URL, it is currently set to use a locally host websocket server. However, for production use, you will need to update this to use a live URL/domain
-6. Run the websocket server using `npm run websocket`, accessible at [`localhost:8080`](localhost:8080) (the port can be changed in `./websocket.js`)
-7. Run the overlay/dashboard using `npm run overlay`, the localhost URL will be logged to console, navigate to that URL in your browser
+6. Run the websocket server navigating to `./server` and running `npm run websocket`, accessible at [`localhost:8080`](localhost:8080) (the port can be changed in `./websocket.js`)
+7. Run the overlay/dashboard by navigation to `./dashboard` and running `npm run overlay`, the local webserver URL will be logged to console, navigate to that URL in your browser
 
 ### Deployment (production)
 
--   **Static host (overlay and dashboard)**: To setup the overlay and dashboard part of the overlay, you will simply need to run `npm run build`, let SvelteKit generate the files, and then upload the contents of the `./build` directory to your host.
+-   **Static host (overlay and dashboard)**: To setup the overlay and dashboard part of the overlay, you will simply need to run `npm run build`, let SvelteKit generate the files, and then upload the contents of the `./build` directory to your host of choice.
 -   **Websocket server**: You will need a node.js host to run the websocket server. Upload/add the `websocket.js` file and have node run said file via `node ./websocket.js`.
 
 ### Using the overlay

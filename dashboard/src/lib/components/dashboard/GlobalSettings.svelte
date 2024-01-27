@@ -126,7 +126,7 @@
 								id="commentators"
 								bind:value={global.overlay.commentators}
 								type="text"
-								placeholder="Metropole Grid"
+								placeholder="Metropole Grid, Neon Static, etc."
 								class="max-w-xs"
 								on:input={(e) => {
 									dispatch("global");
