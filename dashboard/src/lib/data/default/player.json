@@ -1,21 +1,22 @@
 {
 	"playerOne": {
-		"align": "left",
+		"side": "corp",
 		"player": {
 			"wins": "0",
-			"name": "Player",
-			"pronoun": ""
+			"name": "Player A",
+			"pronoun": null,
+			"country": null
 		},
 		"decks": {
-			"corporation": {
+			"corp": {
 				"active": true,
 				"faction": "jinteki",
-				"id": "419: Amoral Scammer"
+				"id": "A Teia: IP Recovery"
 			},
 			"runner": {
 				"active": false,
 				"faction": "anarch",
-				"id": "Asa Group: Security Through Vigilance"
+				"id": "419: Amoral Scammer"
 			}
 		},
 		"clicks": {
@@ -26,33 +27,43 @@
 			"active": true,
 			"amount": 5
 		},
-		"cards": [],
 		"agendas": {
 			"active": true,
 			"amount": 0
 		},
 		"highlight": {
-			"code": "21063",
-			"active": false
+			"primary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			},
+			"secondary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			}
 		}
 	},
 	"playerTwo": {
-		"align": "right",
+		"side": "runner",
 		"player": {
 			"wins": "0",
-			"name": "Player",
-			"pronoun": ""
+			"name": "Player B",
+			"pronoun": null,
+			"country": null
 		},
 		"decks": {
-			"corporation": {
+			"corp": {
 				"active": false,
 				"faction": "jinteki",
-				"id": "419: Amoral Scammer"
+				"id": "A Teia: IP Recovery"
 			},
 			"runner": {
 				"active": true,
 				"faction": "anarch",
-				"id": "Asa Group: Security Through Vigilance"
+				"id": "419: Amoral Scammer"
 			}
 		},
 		"clicks": {
@@ -63,14 +74,23 @@
 			"active": true,
 			"amount": 5
 		},
-		"cards": [],
 		"agendas": {
 			"active": true,
 			"amount": 0
 		},
 		"highlight": {
-			"code": "21063",
-			"active": false
+			"primary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			},
+			"secondary": {
+				"cards": [],
+				"current": "21063",
+				"previous": null,
+				"active": false
+			}
 		}
 	}
 }

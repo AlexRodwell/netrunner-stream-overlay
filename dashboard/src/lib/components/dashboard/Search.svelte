@@ -1,173 +1,256 @@
-<!-- src/routes/Search.svelte -->
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
-	import type { Card as TCard } from "$lib/types";
-	import CardsData from "$lib/data/cards.json";
+	import { netrunnerDB, playerOneData, playerTwoData } from "$lib/store";
+	import type {
+		Card as TCard,
+		PlayerAttributes as TPlayerAttributes,
+		GameSide as TGameSide,
+		PlayerSide as TPlayerSide,
+	} from "$lib/types";
 	import Card from "../Card.svelte";
-	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
-	import ICON_MEMORY from "$lib/assets/icons/NSG_Mu.svg";
-
-	export let limit: 1 | "uncapped" = 1; // Define how many cards can be selected
+	import Fuse from "fuse.js";
+	import { Input } from "$lib/components/ui/input";
+	import { Label } from "$lib/components/ui/label";
 
 	const dispatch = createEventDispatcher();
 
-	let searchText = "";
-	let results: Array<TCard> = [];
-	let selected: string[] | string = []; // Handle either an array of strings (codes) or a singular code (string)
+	export let side: TGameSide;
+	export let name: TPlayerSide;
+	export let type: "primary" | "secondary";
 
-	function filterItems() {
-		const searchTextLowerCase = searchText.toLowerCase();
+	let previous_side = side;
 
-		results = CardsData.data.filter((item) =>
-			item.stripped_title.toLowerCase().includes(searchTextLowerCase)
-		);
+	// If user swaps side, empty results array
+	$: if (previous_side !== side) {
+		results = [];
 	}
 
-	function cardSelected(code: string) {
-		// Remove card if selected is clicked again
+	$: player = name === "playerOne" ? $playerOneData : $playerTwoData;
+	let searchText: string = "";
+	let results: any = [];
+	let selected: string[] = [];
+
+	function filterItems() {
+		results = new Fuse(
+			// Only return an array of cards for the current users side
+			$netrunnerDB.data.filter((card) => true), // card.attributes.side_id === side
+			{
+				// Filter by title and stripped_title
+				keys: ["attributes.title", "attributes.stripped_title"],
+			},
+		)
+			.search(searchText)
+			.slice(0, 8);
+	}
+
+	function queue(code: string) {
 		if (selected.includes(code)) {
 			selected = [];
-		}
-
-		// Multiple ID's
-		if (limit === "uncapped") {
-			selected = [...selected, code];
-		}
-		// Singular ID
-		else {
+		} else {
 			selected = [code];
 		}
 
-		dispatch("card", selected);
+		if (player.highlight[type].active) {
+			dispatch("card", selected);
+		}
 	}
 </script>
 
-{#if selected.length > 0}
-	<p>
-		Currently selected: {CardsData.data.find(
-			(card) => card.code === selected[0]
-		)?.stripped_title} ({selected[0]})
-	</p>
-{/if}
+<section class="search">
+	<div class="search__selected" data-disabled={!selected}>
+		{#if player.highlight[type].cards && player.highlight[type].cards.at(-1)}
+			<Card code={player.highlight[type].cards.at(-1)} glow={false} />
+		{/if}
+	</div>
+	<div class="search__wrapper">
+		<Input
+			type="text"
+			bind:value={searchText}
+			placeholder="Search..."
+			on:input={filterItems}
+		/>
 
-<input
-	type="text"
-	bind:value={searchText}
-	placeholder="Search..."
-	on:input={filterItems}
-/>
-
-<div class="search">
-	{#if selected.length > 0}
-		<div class="search__active">
-			{#each selected as code}
-				<Card {code} />
+		<div class="search__results">
+			{#each results as { item: card }}
+				<button
+					class="result {selected.includes(
+						card.attributes.latest_printing_id,
+					)
+						? 'result--active'
+						: ''}"
+					on:click={() => queue(card.attributes.latest_printing_id)}
+				>
+					<Card
+						code={card.attributes.latest_printing_id}
+						glow={false}
+					/>
+					<div class="result__title">
+						<p>{card.attributes.stripped_title}</p>
+					</div>
+				</button>
 			{/each}
 		</div>
-	{/if}
-
-	{#each results.slice(0, 6) as item (item.code)}
-		<!-- Use a unique identifier as the key -->
-		<button
-			class="search__item {selected.includes(item.code)
-				? 'search__item--active'
-				: ''}"
-			on:click={() => {
-				cardSelected(item.code);
-			}}
-		>
-			<Card code={item.code} />
-			<div>
-				<strong>{item.stripped_title}</strong>
-
-				{#if item.side_code}
-					<p>
-						<!-- <img src={} /> -->
-						Side: {item.side_code}
-					</p>
-				{/if}
-
-				{#if item.cost}
-					<p>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<img class="icon" src={ICON_CREDIT} />
-						cost: {item.cost}
-					</p>
-				{/if}
-
-				{#if item.memory_cost}
-					<p>
-						<!-- svelte-ignore a11y-missing-attribute -->
-						<img class="icon" src={ICON_MEMORY} />
-						memory_cost: {item.memory_cost}
-					</p>
-				{/if}
-
-				{#if item.deck_limit}
-					<p>
-						<!-- <img src={} /> -->
-						Deck limit: {item.deck_limit}
-					</p>
-				{/if}
-			</div>
-		</button>
-	{/each}
-</div>
+	</div>
+</section>
 
 <style lang="scss">
 	.search {
 		display: grid;
-		gap: 0.5rem;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-columns: 140px 1fr;
+		gap: 1rem;
+		transition: 120ms ease;
+		margin-top: 0.5rem;
 
-		&__item {
+		&__selected {
+			height: 100%;
+			position: relative;
+			// z-index: -1;
+			width: 140px;
+			height: auto;
+			aspect-ratio: 64/89;
+			mask-image: linear-gradient(to right, black 0%, black 100%);
+
+			&--disabled {
+				border: 1px dashed #282828;
+				background: #121212;
+				border-radius: 4%;
+			}
+
+			:global(.card) {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+			}
+		}
+
+		&__wrapper {
 			display: grid;
-			gap: 0.5rem;
-			grid-template-columns: max(60px) 4fr;
-			width: 100%;
-			padding: 0.5rem;
-			border-radius: 2px;
-			border: 1px solid #262626;
-			background-color: #202020;
-			color: #fff;
-			text-align: left;
-
-			&--active {
-				background: red;
-			}
-
-			&:not(&--active):hover {
-				background-color: #282828;
-			}
+			gap: 0.25rem;
+			align-items: flex-start;
 		}
 
-		&__active {
-			width: 180px;
-		}
-
-		img {
-			width: 100%;
-		}
-
-		.icon {
-			width: 1rem;
-			height: 1rem;
-		}
-
-		&__no {
-			grid-column: 1/-1;
-			width: 100%;
+		&__results {
+			// display: grid;
+			// gap: 1rem;
+			// flex-direction: row;
+			// grid-template-columns: repeat(4, minmax(0, 1fr));
 			display: flex;
 			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-			gap: 0.5rem;
+			overflow-x: auto;
+			overflow-y: hidden;
+			scrollbar-width: thin;
+
+			& :global(.search__results__item) {
+				flex-direction: column;
+			}
+
+			& :global(.search__results__item > div:first-of-type) {
+				width: 100%;
+			}
+
+			&__active {
+				width: 180px;
+			}
+
+			img {
+				width: 100%;
+			}
+
+			.icon {
+				width: 1rem;
+				height: 1rem;
+			}
+
+			&__no {
+				grid-column: 1/-1;
+				width: 100%;
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			:global(.loading) {
+				width: 1.5rem;
+				height: 1.5rem;
+				border-width: 0.125rem;
+			}
+		}
+	}
+
+	.result {
+		border: unset;
+		background: unset;
+		padding: unset;
+		position: relative;
+		align-items: flex-end;
+		padding-bottom: unset;
+		border-radius: 2px;
+		color: #fff;
+		text-align: left;
+		flex: 0 0 180px;
+		transition: 120ms ease;
+		box-shadow: 0 0 1rem rgba(0, 0, 0, 0.75);
+		overflow: hidden;
+		z-index: 1;
+
+		&:not(:first-of-type) {
+			margin-left: -2rem;
+
+			&:hover {
+				// margin-left: 0.5rem;
+			}
 		}
 
-		:global(.loading) {
-			width: 1.5rem;
-			height: 1.5rem;
-			border-width: 0.125rem;
+		// &:hover {
+		// 	flex: 0 0 240px;
+		// }
+
+		&:hover + & {
+			margin-left: 0.5rem;
+		}
+
+		&__title {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			padding: 4rem 3rem 1rem 1rem;
+			z-index: 1;
+			background: rgb(0, 0, 0);
+			background: linear-gradient(
+				0deg,
+				rgba(0, 0, 0, 0.9) 30%,
+				rgba(0, 0, 0, 0) 100%
+			);
+			font-size: 1rem;
+			font-weight: bold;
+		}
+
+		&__cost {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 0.25rem;
+
+			img {
+				width: 1.25rem;
+				height: 1.25rem;
+			}
+		}
+
+		&--active:after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			height: 100%;
+			background: green;
+			opacity: 0.35;
 		}
 	}
 </style>

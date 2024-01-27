@@ -1,20 +1,22 @@
-<main>
-	<a class="button" href="/dashboard">Dashboard</a>
-	<a class="button" href="/overlay">Overlay</a>
-	<a class="button" href="/overlay/timer">Timer</a>
-	<a class="button" href="/overlay/player/one">Player One</a>
-	<a class="button" href="/overlay/player/two">Player Two</a>
-</main>
+<script lang="ts">
+	import { Button } from "$lib/components/ui/button";
+</script>
 
-<style lang="scss">
-	main {
-		width: 100vw;
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 1rem;
-		background-color: #121212;
-	}
-</style>
+<main class="w-screen h-screen flex flex-col justify-center items-center gap-4">
+	<div class="grid grid-cols-4 gap-4">
+		<Button variant="outline" href="/dashboard">Dashboard</Button>
+		<Button variant="outline" href="/overlay">Overlay</Button>
+		<Button variant="outline" href="/overlay/commentators"
+			>Commentators</Button
+		>
+		<Button variant="outline" href="/overlay/timer">Timer</Button>
+		<Button variant="outline" href="/overlay/player/one">Player One</Button>
+		<Button variant="outline" href="/overlay/player/two">Player Two</Button>
+		<Button variant="outline" href="/overlay/card/one"
+			>Player One Card</Button
+		>
+		<Button variant="outline" href="/overlay/card/two"
+			>Player Two Card</Button
+		>
+	</div>
+</main>

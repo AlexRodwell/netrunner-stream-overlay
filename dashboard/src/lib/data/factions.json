@@ -1,27 +1,57 @@
 [
 	{
-		"side": "corporation",
-		"code": "haas-bioroid",
+		"side": "neutral-corp",
+		"code": "neutral_corp",
+		"name": "Neutral Corp",
+		"logo": "/factions/NSG_HB.svg"
+	},
+	{
+		"side": "corp",
+		"code": "haas_bioroid",
 		"name": "Haas-Bioroid",
 		"logo": "/factions/NSG_HB.svg"
 	},
 	{
-		"side": "corporation",
+		"side": "corp",
 		"code": "jinteki",
 		"name": "Jinteki",
 		"logo": "/factions/NSG_JINTEKI.svg"
 	},
 	{
-		"side": "corporation",
+		"side": "corp",
 		"code": "nbn",
 		"name": "NBN",
 		"logo": "/factions/NSG_NBN.svg"
 	},
 	{
-		"side": "corporation",
-		"code": "weyland-consortium",
+		"side": "corp",
+		"code": "weyland_consortium",
 		"name": "Weyland Consortium",
 		"logo": "/factions/NSG_WEYLAND.svg"
+	},
+	{
+		"side": "corp",
+		"code": "adam",
+		"name": "Adam",
+		"logo": "/factions/NSG_ADAM.svg"
+	},
+	{
+		"side": "corp",
+		"code": "apex",
+		"name": "Apex",
+		"logo": "/factions/NSG_APEX.svg"
+	},
+	{
+		"side": "corp",
+		"code": "sunny-lebeau",
+		"name": "Sunny Lebeau",
+		"logo": "/factions/NSG_SUNNY.svg"
+	},
+	{
+		"side": "neutral-runner",
+		"code": "neutral_runner",
+		"name": "Neutral Runner",
+		"logo": "/factions/NSG_LOGO.png"
 	},
 	{
 		"side": "runner",
@@ -40,5 +70,11 @@
 		"code": "shaper",
 		"name": "Shaper",
 		"logo": "/factions/NSG_SHAPER.svg"
+	},
+	{
+		"side": "default",
+		"code": "default",
+		"name": "NSG",
+		"logo": "/factions/NSG_LOGO.png"
 	}
 ]

@@ -1,27 +1,26 @@
 <script lang="ts">
-	import { globalData, playerData } from "$lib/store";
-	import type { Side } from "$lib/types";
+	import { globalData, playerOneData, playerTwoData } from "$lib/store";
+	import type { PlayerSide as TPlayerSide } from "$lib/types";
 	import ICON_CLICK from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDA from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Wins from "./Wins.svelte";
 	import Counter from "./Counter.svelte";
-	import { find_faction_by_id } from "$lib/utils";
+	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
 
-	export let player: Side;
+	export let player: TPlayerSide;
 
 	$: global = $globalData;
-	$: data = $playerData[player];
-	$: align = data.align;
-	$: id = data.decks.corporation.active
-		? data.decks.corporation.id
-		: data.decks.runner.id;
+	$: data = player === "playerOne" ? $playerOneData : $playerTwoData;
+	$: align = player === "playerOne" ? "left" : "right"; // data.align;
+	$: id = data.decks.corp.active ? data.decks.corp.id : data.decks.runner.id;
 	$: faction = find_faction_by_id(id);
+	$: country = get_flag_by_iso_code(data.player.country);
 </script>
 
 <section
 	class="side side--{align}"
-	style="--opacity: {global.overlay.opacity ?? '0.8'}"
+	style="--opacity: {`0.${global.overlay.opacity}` ?? '0.8'}"
 >
 	{#if global.faction && faction?.logo}
 		<div class="side__faction">
@@ -37,27 +36,31 @@
 				</p>
 			{/if}
 
-			{#if data.player?.wins}
+			{#if global.wins}
 				<div class="side__text side__text--{align}">
 					<Wins count={data.player.wins} {align} />
 				</div>
 			{/if}
 		</div>
 
-		{#if id || data.player.pronoun}
+		{#if (data.player.pronoun && global.pronoun) || (id && global.id)}
 			<p class="side__text side__text--{align}" {align}>
-				{#if data.player.pronoun}
+				{#if global.pronoun && data.player.pronoun}
 					<span>{data.player.pronoun}</span>
 				{/if}
-				{#if data.player.pronoun}
+
+				{#if data.player.pronoun && global.pronoun && id && global.id}
 					<span> &nbsp; &mdash; &nbsp; </span>
 				{/if}
-				<span
-					>{id.includes(":")
-						? id.replace(/.*:/, "")
-						: id.split(":")[0]}</span
-				>
+
+				{#if global.id && id}
+					<span>{id.includes(":") ? id.split(":")[0] : id}</span>
+				{/if}
 			</p>
+		{/if}
+
+		{#if global.country && country}
+			{country.icon} {country.name}
 		{/if}
 	</div>
 
@@ -66,7 +69,7 @@
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={ICON_CLICK} />
-				<Counter count={data.clicks.amount} />
+				<Counter count={data.clicks.amount} {align} />
 			</div>
 		{/if}
 
@@ -74,7 +77,16 @@
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={ICON_CREDIT} />
-				<Counter count={data.credits.amount} />
+				<Counter count={data.credits.amount} {align} />
+			</div>
+		{/if}
+
+		{#if global?.threat_level}
+			<div class="side__item" {align}>
+				<!-- svelte-ignore a11y-missing-attribute -->
+				<!-- <img class="side__icon" src={ICON_AGENDA} /> -->
+				Threat
+				<Counter count={global.agendas_count} {align} />
 			</div>
 		{/if}
 
@@ -82,7 +94,7 @@
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="side__icon" src={ICON_AGENDA} />
-				<Counter count={data.agendas.amount} />
+				<Counter count={data.agendas.amount} {align} />
 			</div>
 		{/if}
 	</div>
@@ -99,7 +111,8 @@
 		align-items: center;
 		justify-content: flex-start;
 		background: rgba(255, 255, 255, 0.5);
-		min-width: 700px;
+		max-width: 50vw;
+		width: var(--width);
 		height: $height;
 		margin-bottom: calc(2 * $faction);
 		outline-offset: 5px;
@@ -111,7 +124,10 @@
 		&--left {
 			left: 0;
 			grid-template-columns: auto 1fr auto;
-			padding: 0px calc(2 * $faction);
+			padding: {
+				left: calc(2 * $faction);
+				right: calc(4 * $faction);
+			}
 			background: linear-gradient(
 				90deg,
 				rgba(0, 0, 0, var(--opacity)) 0%,
@@ -135,7 +151,10 @@
 			flex-direction: row-reverse;
 			right: 0;
 			grid-template-columns: auto 1fr auto;
-			padding: 0px calc(2 * $faction);
+			padding: {
+				left: calc(4 * $faction);
+				right: calc(2 * $faction);
+			}
 			background: linear-gradient(
 				90deg,
 				rgba(0, 0, 0, 0) 0%,
@@ -158,7 +177,7 @@
 		&__stats {
 			display: flex;
 			align-items: center;
-			gap: calc($faction / 2);
+			// gap: calc($faction / 2);
 		}
 
 		&__faction {
@@ -202,10 +221,10 @@
 
 		&__item {
 			display: flex;
-			gap: 5px;
+			gap: 10px;
 			font-size: 42px;
-			flex-direction: row;
-			justify-content: flex-row;
+			// flex-direction: row;
+			// justify-content: flex-row;
 			align-items: center;
 			border-radius: 4px;
 			padding: 8px;
@@ -216,20 +235,5 @@
 			height: 36px;
 			filter: drop-shadow(2px 2px #000);
 		}
-	}
-
-	[align] {
-		display: flex;
-		align-items: center;
-	}
-
-	[align="left"] {
-		flex-direction: row;
-		justify-content: left;
-	}
-
-	[align="right"] {
-		flex-direction: row-reverse;
-		justify-content: right;
 	}
 </style>

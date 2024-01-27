@@ -23,7 +23,7 @@
 		clearInterval(intervalId);
 	});
 
-	function formatTime(seconds) {
+	function formatTime(seconds: number | string) {
 		const minutes = Math.floor(seconds / 60);
 		const remainingSeconds = seconds % 60;
 		const formattedMinutes = minutes < 10 ? minutes : minutes;
@@ -38,46 +38,19 @@
 
 	$: {
 		if (count > 0 && action !== "clear") {
-			console.log("1");
 			clearInterval(intervalId);
 			display = true;
 			startCountdown(count);
 		} else {
-			console.log("2");
 			display = false;
 		}
 	}
 </script>
 
 {#if display}
-	<section class="timer">
+	<section
+		class="w-screen h-screen p-4 flex place-items-center justify-center text-center text-[38px] text-[#fff] relative"
+	>
 		{formatTime(current_count)}
 	</section>
 {/if}
-
-<style lang="scss">
-	.timer {
-		width: 300px;
-		height: 150px;
-		padding: 1rem;
-		display: flex;
-		place-items: center;
-		justify-content: center;
-		text-align: center;
-		font-size: 38px;
-		color: #fff;
-		position: relative;
-
-		&__background {
-			width: 100%;
-			height: 100%;
-			object-fit: contain;
-			position: absolute;
-			z-index: -1;
-		}
-	}
-
-	:global(body) {
-		color: #000;
-	}
-</style>

@@ -1,0 +1,31 @@
+{
+	"id": "Identity",
+	"identity": "Identity",
+	"name": "Name",
+	"country": "Country",
+	"pronoun": "Pronoun",
+	"pronouns": "Pronouns",
+	"faction": "Faction",
+	"clicks": "Clicks",
+	"credits": "Credits",
+	"agendas": "Agendas",
+	"threat_level": "Threat level",
+	"wins": "Wins",
+	"automatic": "Automatic",
+	"instant": "Instant",
+	"global_settings": "Global settings",
+	"primary": "Primary",
+	"secondary": "Secondary",
+	"card": "Card",
+	"display": "Display",
+	"hints": {
+		"such_as_ice": "Such as ice"
+	},
+	"player": "Player",
+	"player_name": "Player name",
+	"left": "Left",
+	"right": "Right",
+	"corporation": "Corporation",
+	"runner": "Runner",
+	"select_an_identity": "Select an identity"
+}
