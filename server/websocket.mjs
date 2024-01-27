@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import PLACEHOLDER_DATA from "../dashboard/src/lib/data/default/player.json";
+import PLACEHOLDER_DATA from "../dashboard/src/lib/data/default/player.json" assert { type: "json" };
 
 const wss = new WebSocketServer({ port: 8080 });
 
