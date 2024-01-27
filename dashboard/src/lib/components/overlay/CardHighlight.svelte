@@ -31,7 +31,7 @@
 		secondary: [],
 	};
 	let index: number = 0;
-	let transition: number = 600;
+	let transition: number = 400;
 	let previous: {
 		[key in TType]: string;
 	} = {
@@ -185,13 +185,13 @@
 		}
 
 		&__card {
+			--transform: rotateY(-180deg);
 			flex: 0 0 100%;
 			width: 280px;
-			transition: var(--transition) ease;
+			transition: var(--transition) ease-in-out;
 			z-index: 5;
 			position: absolute;
 			bottom: 0;
-			--transform: rotateY(-180deg);
 
 			// &[data-size=small] {}
 
