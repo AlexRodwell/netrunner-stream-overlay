@@ -152,6 +152,8 @@
 		/>
 	</Actions>
 	<Actions>
+		<Connection />
+
 		{#if $deploy.type === "manual"}
 			<Button
 				variant="default"
@@ -176,8 +178,6 @@
 				}}>Deploy</Button
 			>
 		{/if}
-
-		<Connection />
 	</Actions>
 </header>
 
