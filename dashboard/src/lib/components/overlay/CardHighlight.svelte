@@ -228,13 +228,13 @@
 	// Secondary
 
 	.highlight-secondary {
-		@apply absolute flex mb-[210px] [transition:var(--transition)] [transition-delay:var(--transition)] w-[260px] bottom-[100px];
+		@apply absolute flex mb-[210px] [transition:var(--transition)] [transition-delay:var(--transition)] w-[260px] bottom-[70px];
 
 		&--left {
 			@apply left-0 origin-bottom-left rotate-3;
 
 			.highlight-secondary__card {
-				@apply left-[300px];
+				@apply left-[370px];
 			}
 
 			.highlight-secondary__card--out {
@@ -247,7 +247,7 @@
 			@apply right-0 origin-bottom-right -rotate-3;
 
 			.highlight-secondary__card {
-				@apply right-[300px];
+				@apply right-[370px];
 			}
 
 			.highlight-secondary__card--out {
@@ -258,7 +258,7 @@
 
 		&__card {
 			flex: 0 0 100%;
-			width: 260px;
+			width: 300px;
 			transition:
 				var(--transition) ease,
 				scale 0ms;
@@ -266,16 +266,6 @@
 			position: absolute;
 			bottom: 0;
 			// --transform: rotateY(-180deg);
-
-			// &[data-size=small] {}
-
-			&[data-size="medium"] {
-				width: 360px;
-			}
-
-			&[data-size="large"] {
-				width: 480px;
-			}
 
 			&--out {
 				// --transform: rotateY(-180deg);
