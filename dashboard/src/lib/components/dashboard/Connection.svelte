@@ -7,27 +7,12 @@
 </script>
 
 {#if PUBLIC_WEBSOCKET_CONNECTION.toLowerCase() === "true"}
-	<p class="connection connection--{connection ? 'active' : 'inactive'}">
+	<p class="flex flex-row gap-2 items-center">
 		{#if connection}
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="24"
-				height="24"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="3"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				class="lucide lucide-check"
-				><polyline points="20 6 9 17 4 12" /></svg
-			>
 			Connected to websocket
 		{:else}
-			<Loading />
-			Connection lost, attempting to reconnect
+			<Loading size={1.5} />
+			Connecting to websocket
 		{/if}
 	</p>
-{:else}
-	<p class="connection connection--active">Using localStorage</p>
 {/if}
