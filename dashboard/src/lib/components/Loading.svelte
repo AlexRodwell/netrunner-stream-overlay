@@ -1,13 +1,13 @@
 <script lang="ts">
 	export let fill: "white" | "black" = "white";
-	export let size: string = "4rem";
+	export let size: number = 4;
 </script>
 
 <div
-	class="loading"
+	class="loading {$$props['class']}"
 	style="--fill: {fill === 'white'
 		? 'rgb(255,255,255)'
-		: 'rgb(0,0,0)'}; --size: {size}"
+		: 'rgb(0,0,0)'}; --size: {size}rem"
 />
 
 <style lang="scss">
