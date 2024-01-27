@@ -100,20 +100,18 @@
 
 					<CardNew.Root>
 						<CardNew.Header class="switch-group justify-between">
-							<span>Opacity ({global.overlay.opacity}%)</span>
+							<Label for="opacity">
+								{global.overlay.opacity}% opacity</Label
+							>
 							<Slider
+								id="opacity"
 								value={[global.overlay.opacity]}
 								max={100}
 								step={1}
-								on:input={(e) => {
-									console.log(e);
-									global.overlay.opacity =
-										parseInt(e.detail[0]) / 100;
-									dispatch("global");
-								}}
 								onValueChange={(event) => {
 									// https://www.bits-ui.com/docs/components/slider#component-api
 									global.overlay.opacity = event[0];
+									dispatch("global");
 								}}
 							/>
 						</CardNew.Header>
