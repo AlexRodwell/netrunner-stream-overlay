@@ -103,7 +103,7 @@
 	};
 
 	const deploy_data = () => {
-		console.clear();
+		// console.clear();
 
 		["global", "playerOne", "playerTwo", "timer"].forEach((type) => {
 			// Return if hold_ value does not exist in localStorage
