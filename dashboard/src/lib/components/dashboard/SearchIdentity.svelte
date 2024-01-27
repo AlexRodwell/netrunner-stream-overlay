@@ -8,6 +8,7 @@
 	import { netrunnerDB } from "$lib/store";
 	import type { GameSide as TGameSide, Card as TCard } from "$lib/types";
 	import { find_faction_by_id, slugify } from "$lib/utils";
+	import { t } from "$lib/translations";
 
 	export let player: TPlayerSide;
 	export let side: TGameSide;
@@ -26,7 +27,7 @@
 	$: selected =
 		identities.find(
 			(f: any) => slugify(f.attributes.stripped_title) === slugify(value),
-		)?.attributes.title ?? "Select an identity";
+		)?.attributes.title ?? $t("select_an_identity");
 
 	// We want to refocus the trigger button when the user selects
 	// an item from the list so users can continue navigating the

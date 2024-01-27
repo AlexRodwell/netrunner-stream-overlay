@@ -20,5 +20,12 @@
 	"display": "Display",
 	"hints": {
 		"such_as_ice": "Such as ice"
-	}
+	},
+	"player": "Player",
+	"player_name": "Player name",
+	"left": "Left",
+	"right": "Right",
+	"corporation": "Corporation",
+	"runner": "Runner",
+	"select_an_identity": "Select an identity"
 }

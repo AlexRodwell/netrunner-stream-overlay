@@ -107,8 +107,8 @@
 			<div>
 				<span
 					>{name === "playerOne"
-						? "Player One (left)"
-						: "Player Two (right)"}</span
+						? `${$t("player")} One (${$t("left")})`
+						: `${$t("player")} Two (${$t("right")})`}</span
 				>
 				<h2>
 					{#if playerCurrent?.player?.name}
@@ -116,6 +116,7 @@
 					{:else}
 						{name}
 					{/if}
+
 					{#if faction?.name && faction?.side}
 						&mdash;
 						<span>
@@ -135,13 +136,13 @@
 						src={faction?.logo}
 						class="min-w-6 w-6 min-h-6 h-6"
 					/>
-					Identity
+					{$t("identity")}
 				</Card.Title>
 			</Card.Header>
 			<Card.Content>
 				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label data-uid="side-corp">
-					<span>Corporation ID </span>
+					<span>{$t("corporation")} ID</span>
 
 					<div
 						class="id-selection grid grid-cols-[auto,1fr] gap-2 items-center"
@@ -169,7 +170,7 @@
 				</label>
 				<!-- svelte-ignore a11y-label-has-associated-control -->
 				<label data-uid="side-runner">
-					<span>Runner ID</span>
+					<span>{$t("runner")} ID</span>
 					<div
 						class="id-selection grid grid-cols-[auto,1fr] gap-2 items-center"
 					>
@@ -199,12 +200,12 @@
 
 		<Card.Root class="col-[auto/span_3]">
 			<Card.Header>
-				<Card.Title>Player</Card.Title>
+				<Card.Title>{$t("player")}</Card.Title>
 			</Card.Header>
 			<Card.Content>
 				<!-- Name -->
 				<Label data-uid="name" class="side__item" for="player_name"
-					>Player name</Label
+					>{$t("player_name")}</Label
 				>
 				<Input
 					id="player_name"
@@ -214,7 +215,7 @@
 				/>
 
 				<Label data-uid="pronouns" class="side__item" for="pronouns"
-					>Pronouns</Label
+					>{$t("pronouns")}</Label
 				>
 				<Input
 					id="pronouns"
@@ -226,7 +227,7 @@
 
 				<!-- Wins -->
 				<Label data-uid="wins" data-disabled={!global.wins}>
-					<span>Wins</span>
+					<span>{$t("wins")}</span>
 				</Label>
 				<div class="wins">
 					{#each [0, 1, 2] as item}
@@ -241,11 +242,13 @@
 				</div>
 
 				<!-- Country -->
-				<Label data-uid="country" for="player_country">Country</Label>
+				<Label data-uid="country" for="player_country"
+					>{$t("country")}</Label
+				>
 				<Country
 					on:country={(event) => {
-						console.log(event);
-						playerCurrent.player.country = event.detail.name;
+						console.log("on:country", event.detail);
+						playerCurrent.player.country = event.detail;
 						deploy();
 					}}
 				/>
@@ -262,7 +265,7 @@
 							src={icon}
 							class="min-w-6 w-6 min-h-6 h-6"
 						/>
-						{name}
+						{$t(name.toLowerCase())}
 					</Card.Title>
 				</Card.Header>
 				<Card.Content>
