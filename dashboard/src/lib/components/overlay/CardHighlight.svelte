@@ -31,7 +31,7 @@
 		secondary: [],
 	};
 	let index: number = 0;
-	let transition: number = 300;
+	let transition: number = 600;
 	let previous: {
 		[key in TType]: string;
 	} = {
@@ -117,7 +117,7 @@
 				: ''}"
 			data-size={$globalData.card_size}
 			in:fly={{
-				delay: 400,
+				delay: 600,
 				x: align === "left" ? "-100%" : "100%",
 				duration: transition,
 			}}
