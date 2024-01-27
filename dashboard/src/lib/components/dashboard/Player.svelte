@@ -247,7 +247,6 @@
 				>
 				<Country
 					on:country={(event) => {
-						console.log("on:country", event.detail);
 						playerCurrent.player.country = event.detail;
 						deploy();
 					}}
