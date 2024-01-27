@@ -40,10 +40,6 @@
 	};
 
 	const queue = (code: string, type: TType = "primary") => {
-		console.log("-----------------------------");
-		console.log(code);
-		console.log(dynamicElements[type].length);
-
 		// If queued code is the same as the previous, exit early (do nothing)
 		if (code === previous[type]) {
 			return;
