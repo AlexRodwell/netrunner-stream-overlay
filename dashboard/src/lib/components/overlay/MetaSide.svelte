@@ -18,8 +18,6 @@
 	$: country = get_flag_by_iso_code(data.player.country);
 </script>
 
-{global.overlay.opacity}
-
 <section
 	class="side side--{align}"
 	style="--opacity: {`0.${global.overlay.opacity}` ?? '0.8'}"
