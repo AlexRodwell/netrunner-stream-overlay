@@ -229,14 +229,18 @@
 				<Label data-uid="wins" data-disabled={!global.wins}>
 					<span>{$t("wins")}</span>
 				</Label>
-				<div class="wins">
-					{#each [0, 1, 2] as item}
+				<div class="grid grid-cols-3">
+					{#each [0, 1, 2] as value}
 						<Input
+							class="w-full bg-red-500"
 							type="radio"
+							{value}
 							name="wins_{name}"
-							bind:group={playerCurrent.player.wins}
-							on:change={deploy}
-							value={item}
+							on:input={(event) => {
+								console.log(event.target.value);
+								playerCurrent.player.wins = event.target.value;
+								deploy();
+							}}
 						/>
 					{/each}
 				</div>
