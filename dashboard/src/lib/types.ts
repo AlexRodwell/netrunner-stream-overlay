@@ -197,3 +197,35 @@ export type Faction = {
 };
 
 export type WebSocketFunction = Function;
+
+export interface Translation {
+	id: string;
+	identity: string;
+	name: string;
+	country: string;
+	pronoun: string;
+	pronouns: string;
+	faction: string;
+	clicks: string;
+	credits: string;
+	agendas: string;
+	wins: string;
+	automatic: string;
+	instant: string;
+	global_settings: string;
+	primary: string;
+	secondary: string;
+	card: string;
+	display: string;
+	hints: {
+		such_as: string;
+	};
+	ice: string;
+	player: string;
+	player_name: string;
+	left: string;
+	right: string;
+	corporation: string;
+	runner: string;
+	select_an_identity: string;
+}

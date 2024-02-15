@@ -18,8 +18,9 @@
 	"card": "Card",
 	"display": "Display",
 	"hints": {
-		"such_as_ice": "Such as ice"
+		"such_as": "Such as"
 	},
+	"ice": "Ice",
 	"player": "Player",
 	"player_name": "Player name",
 	"left": "Left",
