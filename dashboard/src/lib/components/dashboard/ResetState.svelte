@@ -10,7 +10,7 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
-		<ListRestart size={16} />
+		<ListRestart size={16} class="mr-1" />
 		Reset game state
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-[425px]">

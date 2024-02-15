@@ -35,7 +35,7 @@
 
 <Dialog.Root>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
-		<Timer size={16} slot="icon" />
+		<Timer size={16} slot="icon" class="mr-1" />
 		Timer
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-[425px]">

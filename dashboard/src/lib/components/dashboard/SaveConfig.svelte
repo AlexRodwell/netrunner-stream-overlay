@@ -50,7 +50,7 @@
 
 <Dialog.Root bind:open closeOnOutsideClick={false}>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
-		<FileJson2 size={16} />
+		<FileJson2 size={16} class="mr-1" />
 		Save/import config
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-[425px]">

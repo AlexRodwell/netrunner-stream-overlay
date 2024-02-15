@@ -12,6 +12,6 @@
 		dispatch("flip");
 	}}
 >
-	<FlipHorizontal2 size={16} />
+	<FlipHorizontal2 size={16} class="mr-1" />
 	Flip players
 </Button>

@@ -10,7 +10,7 @@
 
 <Dialog.Root>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
-		<Eye size={16} />
+		<Eye size={16} class="mr-1" />
 		{button}
 	</Dialog.Trigger>
 	<Dialog.Content class="min-w-[calc(1920px+3rem)] min-h-[calc(1080px+3rem)]">

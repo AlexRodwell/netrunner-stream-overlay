@@ -35,7 +35,7 @@
 
 <Dialog.Root>
 	<Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
-		<Settings size={16} />
+		<Settings size={16} class="mr-1" />
 		{$t("global_settings")}
 	</Dialog.Trigger>
 	<Dialog.Content class="min-w-[fit-content]">
