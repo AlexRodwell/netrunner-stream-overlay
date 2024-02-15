@@ -69,7 +69,7 @@
 						</CardNew.Root>
 					</Column>
 
-					{#each Object.keys(global).filter((key) => !["deploy", "websocket", "overlay", "agendas_count", "card_size"].includes(key)) as name}
+					{#each Object.keys(global).filter((key) => !["deploy", "websocket", "overlay", "card_size"].includes(key)) as name}
 						<CardNew.Root>
 							<CardNew.Header
 								class="switch-group justify-between"
