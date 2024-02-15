@@ -12,11 +12,5 @@
 		<Button variant="outline" href="/overlay/timer">Timer</Button>
 		<Button variant="outline" href="/overlay/player/one">Player One</Button>
 		<Button variant="outline" href="/overlay/player/two">Player Two</Button>
-		<Button variant="outline" href="/overlay/card/one"
-			>Player One Card</Button
-		>
-		<Button variant="outline" href="/overlay/card/two"
-			>Player Two Card</Button
-		>
 	</div>
 </main>
