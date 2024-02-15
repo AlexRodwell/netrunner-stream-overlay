@@ -12,7 +12,7 @@
 	import ICON_CREDITS from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDAS from "$lib/assets/icons/NSG_AGENDA.svg";
 	import Counter from "./Counter.svelte";
-	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
+	import { find_faction_by_id } from "$lib/utils";
 	import SearchIdentity from "$components/dashboard/SearchIdentity.svelte";
 	import Country from "$components/dashboard/Country.svelte";
 	import { Checkbox } from "$lib/components/ui/checkbox";
@@ -21,7 +21,7 @@
 	import { Switch } from "$lib/components/ui/switch";
 	import * as Card from "$lib/components/ui/card";
 	import { t } from "$lib/translations";
-	import { Description } from "$components/ui/alert";
+	import { Button } from "$lib/components/ui/button";
 
 	// Properties
 	export let name: TPlayerSide;
@@ -229,19 +229,23 @@
 				<Label data-uid="wins" data-disabled={!global.wins}>
 					<span>{$t("wins")}</span>
 				</Label>
-				<div class="grid grid-cols-3">
+				<div class="grid grid-cols-3 gap-4">
 					{#each [0, 1, 2] as value}
-						<Input
-							class="w-full bg-red-500"
-							type="radio"
+						<Button
+							class="w-full text-center"
+							variant={playerCurrent.player.wins === value
+								? "primary"
+								: "outline"}
+							align="center"
 							{value}
 							name="wins_{name}"
-							on:input={(event) => {
-								console.log(event.target.value);
-								playerCurrent.player.wins = event.target.value;
+							on:click={(event) => {
+								playerCurrent.player.wins = value;
 								deploy();
 							}}
-						/>
+						>
+							{value}
+						</Button>
 					{/each}
 				</div>
 
@@ -336,7 +340,8 @@
 					</div>
 				</Card.Title>
 				<Card.Description>
-					{$t("hints.such_as_ice")}
+					{$t("hints.such_as")}
+					{$t("ice").toLowerCase()}
 				</Card.Description>
 			</Card.Header>
 			<Card.Content>
