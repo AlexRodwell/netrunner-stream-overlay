@@ -81,15 +81,6 @@
 			</div>
 		{/if}
 
-		{#if global?.threat_level}
-			<div class="side__item" {align}>
-				<!-- svelte-ignore a11y-missing-attribute -->
-				<!-- <img class="side__icon" src={ICON_AGENDA} /> -->
-				Threat
-				<Counter count={global.agendas_count} {align} />
-			</div>
-		{/if}
-
 		{#if global?.agendas}
 			<div class="side__item" {align}>
 				<!-- svelte-ignore a11y-missing-attribute -->
