@@ -15,8 +15,6 @@
 	"clicks": false,
 	"credits": false,
 	"agendas": true,
-	"agendas_count": 0,
-	"threat_level": false,
 	"wins": true,
 	"card_size": "small"
 }

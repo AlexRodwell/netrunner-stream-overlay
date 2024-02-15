@@ -139,8 +139,6 @@ export type GlobalData = {
 	clicks: boolean;
 	credits: boolean;
 	agendas: boolean;
-	agendas_count: number;
-	threat_level: boolean;
 	card_size: "small" | "medium" | "large";
 };
 
