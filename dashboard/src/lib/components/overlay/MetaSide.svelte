@@ -29,7 +29,11 @@
 	{/if}
 
 	<div class="side__player">
-		<div class="side__upper" {align}>
+		<div
+			class="flex flex-row gap-4 items-center {align === 'right'
+				? 'flex-row-reverse'
+				: ''}"
+		>
 			{#if global.name && data.player?.name}
 				<p class="side__name side__text side__text--{align}">
 					{data.player.name}
@@ -185,17 +189,6 @@
 				top: 50%;
 				transform: translateY(-50%);
 			}
-		}
-
-		&__upper {
-			display: flex;
-			flex-direction: row;
-			gap: 10px;
-			align-items: center;
-		}
-
-		&__player {
-			// padding: 0.75rem;
 		}
 
 		&__text {
