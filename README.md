@@ -56,9 +56,6 @@ Inside OBS or a similar broadcast software, simply add a 'browser' source with t
 
 -   **Combined overlay:** accessible at `/overlay`
 -   **Timer:** Accessible at `/overlay/timer`
--   **Player:** For more refined control/placement of the play data
-    -   **One:** Accessible at `/overlay/player/one`
-    -   **Two:** Accessible at `/overlay/player/two`
 
 ## Credits
 

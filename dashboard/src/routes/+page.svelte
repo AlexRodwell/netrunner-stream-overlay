@@ -10,7 +10,5 @@
 			>Commentators</Button
 		>
 		<Button variant="outline" href="/overlay/timer">Timer</Button>
-		<Button variant="outline" href="/overlay/player/one">Player One</Button>
-		<Button variant="outline" href="/overlay/player/two">Player Two</Button>
 	</div>
 </main>
