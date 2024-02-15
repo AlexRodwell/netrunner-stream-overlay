@@ -3,10 +3,10 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev --port 419",
+		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"overlay": "vite dev --port 419",
+		"overlay": "vite dev",
 		"test:integration": "playwright test",
 		"test:ui": "npx playwright test --ui"
 	},
