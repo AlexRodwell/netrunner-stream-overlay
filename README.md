@@ -41,6 +41,7 @@ If you'd like to request a feature, please make an [issue](https://github.com/Al
 3. Using a CLI, navigate to the downloaded repositry via `cd ./netrunner-stream-overlay`
 4. Run `npm i` in CLI to install the required packages/dependancies (npm is bundled with node.js, which will work, despite the project using [pnpm](https://pnpm.io/))
 5. Create a `.env` file in the `./dashboard` directory of the project (or rename the `.env.example` to just `.env`), this stores the websocket URL/state.
+    1. If you intend to use the overlay via OBS or another streaming tool, you use websocket, set `PUBLIC_WEBSOCKET_CONNECTION` to `TRUE` in your `.env` file, and in another CLI instance, navigate to `./server`, run `npm i`, then run `node ./websocket.mjs`
 6. Run the overlay/dashboard by navigation to `./dashboard` and running `npm run overlay`, the local webserver URL will be logged to console, navigate to that URL in your browser
 
 ### Deployment (production)
