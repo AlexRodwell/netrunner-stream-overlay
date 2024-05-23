@@ -28,8 +28,7 @@
 </script>
 
 <section
-	class="{theme.meta
-		.wrapper} flex flex-row items-center justify-start max-w-[50vw] w-[var(--width)] h-[100px] mb-[60px] outline-offset-[5px] text-[#fff] [text-shadow:2px_2px_black] bottom-[0] absolute grid-cols-[auto_1fr_auto] {align ===
+	class="{theme.meta.wrapper} flex flex-row items-center justify-start max-w-[50vw] w-[var(--width)] h-[100px] mb-[60px] outline-offset-[5px] text-[#fff] [text-shadow:2px_2px_black] bottom-[0] absolute grid-cols-[auto_1fr_auto] {align ===
 	'left'
 		? left
 		: right}"
