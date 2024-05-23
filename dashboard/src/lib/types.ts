@@ -129,6 +129,7 @@ export type GlobalData = {
 	overlay: {
 		opacity: number;
 		commentators?: string;
+		layout: "ttb" | "btt";
 	};
 	country: boolean;
 	wins: boolean;
@@ -228,4 +229,13 @@ export interface Translation {
 	corporation: string;
 	runner: string;
 	select_an_identity: string;
+}
+
+export interface Theme {
+	[key: string]: ThemeClasses;
+}
+
+export interface ThemeClasses {
+	title: string;
+	meta: string;
 }
