@@ -70,7 +70,7 @@
 			on:input={filterItems}
 		/>
 
-		<div class="search__results">
+		<div class="grid grid-cols-5 gap-4">
 			{#each results as { item: card }}
 				<button
 					class="result {selected.includes(
