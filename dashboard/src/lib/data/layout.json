@@ -1,0 +1,13 @@
+{
+	"ttb": {
+		"title": "Top to bottom",
+		"meta": "bg-red-blue"
+	},
+	"btt": {
+		"title": "Bottom to top",
+		"meta": {
+			"wrapper": "bg-orange-500",
+			"agendas": "bg-green-500"
+		}
+	}
+}

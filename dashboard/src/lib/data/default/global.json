@@ -5,7 +5,8 @@
 	},
 	"overlay": {
 		"opacity": 0.8,
-		"commentators": null
+		"commentators": null,
+		"layout": "ttb"
 	},
 	"country": false,
 	"name": true,
