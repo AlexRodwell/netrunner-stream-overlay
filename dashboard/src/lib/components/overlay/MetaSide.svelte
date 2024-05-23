@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { globalData, playerOneData, playerTwoData } from "$lib/store";
-	import type { PlayerSide as TPlayerSide } from "$lib/types";
+	import type {
+		PlayerSide as TPlayerSide,
+		ThemeClasses as TThemeClasses,
+	} from "$lib/types";
 	import ICON_CLICK from "$lib/assets/icons/NSG_CLICK.svg";
 	import ICON_CREDIT from "$lib/assets/icons/NSG_CREDIT.svg";
 	import ICON_AGENDA from "$lib/assets/icons/NSG_AGENDA.svg";
@@ -9,6 +12,7 @@
 	import { find_faction_by_id, get_flag_by_iso_code } from "$lib/utils";
 
 	export let player: TPlayerSide;
+	export let theme: TThemeClasses;
 
 	$: global = $globalData;
 	$: data = player === "playerOne" ? $playerOneData : $playerTwoData;
@@ -18,13 +22,14 @@
 	$: country = get_flag_by_iso_code(data.player.country);
 
 	let left =
-		"left-0 pl-[60px] pr-[120px] bg-[linear-gradient(_90deg,_rgba(0,0,0,var(--opacity))0%_rgba(0,0,0,0)_100%)]";
+		"left-0 pl-[60px] pr-[120px] bg-[linear-gradient(90deg,rgba(0,0,0,var(--opacity))_0%,rgba(0,0,0,0)_100%)]";
 	let right =
-		"right-0 pl-[120px] pr-[60px] flex-row-reverse bg-[linear-gradient(90deg,rgba(0,0,0,0)0%,rgba(0,0,0,var(--opacity))_100%)]";
+		"right-0 pl-[120px] pr-[60px] flex-row-reverse bg-[linear-gradient(-90deg,rgba(0,0,0,var(--opacity))_0%,rgba(0,0,0,0)_100%)]";
 </script>
 
 <section
-	class="flex flex-row items-center justify-start max-w-[50vw] w-[var(--width)] h-[100px] mb-[60px] outline-offset-[5px] text-[#fff] [text-shadow:2px_2px_black] bottom-[0] absolute grid-cols-[auto_1fr_auto] {align ===
+	class="{theme.meta
+		.wrapper} flex flex-row items-center justify-start max-w-[50vw] w-[var(--width)] h-[100px] mb-[60px] outline-offset-[5px] text-[#fff] [text-shadow:2px_2px_black] bottom-[0] absolute grid-cols-[auto_1fr_auto] {align ===
 	'left'
 		? left
 		: right}"
@@ -106,7 +111,7 @@
 		{/if}
 
 		{#if global?.agendas}
-			<div class="item">
+			<div class="item {theme.meta.agendas}">
 				<!-- svelte-ignore a11y-missing-attribute -->
 				<img class="icon" src={ICON_AGENDA} />
 				<Counter count={data.agendas.amount} {align} />
@@ -115,7 +120,7 @@
 	</div>
 </section>
 
-<style lang="scss">
+<style lang="postcss">
 	.item {
 		@apply flex gap-2 text-4xl items-center p-2;
 	}
