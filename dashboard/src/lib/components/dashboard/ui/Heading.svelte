@@ -27,7 +27,7 @@
 	<slot name="toggle" />
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	.title {
 		@apply flex flex-row justify-start items-center gap-1 flex-grow col-[1/-1];
 	}

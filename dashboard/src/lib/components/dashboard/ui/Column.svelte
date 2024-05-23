@@ -10,11 +10,10 @@
 	<slot />
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	.column {
 		display: grid;
 		gap: 1rem;
-		// align-content: flex-start;
 		grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
 		grid-column: var(--span);
 	}

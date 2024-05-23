@@ -93,7 +93,7 @@
 	</div>
 </section>
 
-<style lang="scss">
+<!-- <style lang="scss">
 	.search {
 		display: grid;
 		grid-template-columns: 140px 1fr;
@@ -253,4 +253,4 @@
 			opacity: 0.35;
 		}
 	}
-</style>
+</style> -->

@@ -181,7 +181,7 @@
 	</Actions>
 </header>
 
-<style lang="scss">
+<style lang="postcss">
 	header {
 		position: sticky;
 		top: 0;

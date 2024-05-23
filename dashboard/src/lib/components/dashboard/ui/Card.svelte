@@ -16,7 +16,7 @@
 	<slot />
 </section>
 
-<style lang="scss">
+<!-- <style lang="scss">
 	.card {
 		display: grid;
 		gap: 0.5rem;
@@ -56,4 +56,4 @@
 			);
 		}
 	}
-</style>
+</style> -->

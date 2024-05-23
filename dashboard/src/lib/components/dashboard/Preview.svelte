@@ -23,7 +23,7 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<style lang="scss">
+<style lang="postcss">
 	button {
 		grid-column: 1/-1;
 	}

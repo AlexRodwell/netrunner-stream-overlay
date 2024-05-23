@@ -2,7 +2,7 @@
 	<slot />
 </figure>
 
-<style lang="scss">
+<style lang="postcss">
 	figure {
 		display: flex;
 		flex-direction: row;

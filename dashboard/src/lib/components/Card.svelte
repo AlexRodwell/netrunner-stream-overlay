@@ -37,7 +37,7 @@
 	{/if}
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	.face {
 		@apply absolute h-full w-full text-center [backface-visibility:hidden] overflow-hidden rounded-[4%];
 	}

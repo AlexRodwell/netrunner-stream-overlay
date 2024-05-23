@@ -28,7 +28,7 @@
 	</div>
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	.number {
 		@apply absolute flex font-normal items-center w-full h-full text-center;
 	}
