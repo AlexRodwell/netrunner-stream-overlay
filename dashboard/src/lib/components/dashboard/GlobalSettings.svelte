@@ -69,6 +69,35 @@
 						</CardNew.Root>
 					</Column>
 
+					<Column span="1/-1">
+						<CardNew.Root>
+							<CardNew.Header
+								class="switch-group justify-between"
+							>
+								<Label for="card_size">Layout</Label>
+							</CardNew.Header>
+							<CardNew.Content>
+								<Select.Root
+									onSelectedChange={(event) => {
+										global.overlay.layout = event.value;
+										dispatch("global");
+									}}
+								>
+									<Select.Trigger class="w-[180px]">
+										<Select.Value placeholder="Size" />
+									</Select.Trigger>
+									<Select.Content>
+										{#each ["ttb", "btt"] as layout}
+											<Select.Item value={layout}
+												>{layout}</Select.Item
+											>
+										{/each}
+									</Select.Content>
+								</Select.Root>
+							</CardNew.Content>
+						</CardNew.Root>
+					</Column>
+
 					{#each Object.keys(global).filter((key) => !["deploy", "websocket", "overlay", "card_size"].includes(key)) as name}
 						<CardNew.Root>
 							<CardNew.Header
