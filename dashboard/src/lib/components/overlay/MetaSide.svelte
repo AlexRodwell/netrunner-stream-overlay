@@ -22,13 +22,13 @@
 	$: country = get_flag_by_iso_code(data.player.country);
 
 	let left =
-		"left-0 pl-[60px] pr-[120px] bg-[linear-gradient(90deg,rgba(0,0,0,var(--opacity))_0%,rgba(0,0,0,0)_100%)]";
+		"left-0 pl-[var(--padding)] pr-[120px] bg-[linear-gradient(90deg,rgba(0,0,0,var(--opacity))_0%,rgba(0,0,0,0)_100%)]";
 	let right =
-		"right-0 pl-[120px] pr-[60px] flex-row-reverse bg-[linear-gradient(-90deg,rgba(0,0,0,var(--opacity))_0%,rgba(0,0,0,0)_100%)]";
+		"right-0 pl-[120px] pr-[var(--padding)] flex-row-reverse bg-[linear-gradient(-90deg,rgba(0,0,0,var(--opacity))_0%,rgba(0,0,0,0)_100%)]";
 </script>
 
 <section
-	class="{theme.meta.wrapper} flex flex-row items-center justify-start max-w-[50vw] w-[var(--width)] h-[100px] mb-[60px] outline-offset-[5px] text-[#fff] [text-shadow:2px_2px_black] bottom-[0] absolute grid-cols-[auto_1fr_auto] {align ===
+	class="{theme.meta.wrapper} flex flex-row items-center justify-start max-w-[50vw] w-[var(--width)] h-[100px] mb-[var(--padding)] outline-offset-[5px] text-[#fff] [text-shadow:2px_2px_black] bottom-[0] absolute grid-cols-[auto_1fr_auto] {align ===
 	'left'
 		? left
 		: right}"
@@ -50,8 +50,8 @@
 
 	<div
 		class={align === "left"
-			? "ml-[60px] mr-[120px]"
-			: "ml-[120px] mr-[60px]"}
+			? "ml-[calc(var(--padding)/2)] mr-[var(--padding)]"
+			: "ml-[var(--padding)] mr-[calc(var(--padding)/2)]"}
 	>
 		<div
 			class="flex flex-row gap-4 items-center {align === 'right'
