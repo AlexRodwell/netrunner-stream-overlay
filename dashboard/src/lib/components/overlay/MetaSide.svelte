@@ -37,7 +37,7 @@
 		: '1' ?? '0.8'}"
 >
 	{#if global.faction && faction?.logo}
-		<div class="aspect-square w-[100px] h-[100px] relative">
+		<div class="aspect-square w-[120px] h-[120px] relative">
 			<img
 				class="w-[calc(100%+100px)] h-[calc(100%+100px)] absolute object-center top-2/4 -translate-y-1/2 {align ===
 				'left'
