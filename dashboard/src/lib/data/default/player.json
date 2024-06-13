@@ -33,16 +33,16 @@
 		},
 		"highlight": {
 			"primary": {
-				"cards": [],
-				"current": "21063",
-				"previous": null,
-				"active": false
+				"active": false,
+				"previous": "",
+				"current": "",
+				"pending": ""
 			},
 			"secondary": {
-				"cards": [],
-				"current": "21063",
-				"previous": null,
-				"active": false
+				"active": false,
+				"previous": "",
+				"current": "",
+				"pending": ""
 			}
 		}
 	},
@@ -80,16 +80,16 @@
 		},
 		"highlight": {
 			"primary": {
-				"cards": [],
-				"current": "21063",
-				"previous": null,
-				"active": false
+				"active": false,
+				"previous": "",
+				"current": "",
+				"pending": ""
 			},
 			"secondary": {
-				"cards": [],
-				"current": "21063",
-				"previous": null,
-				"active": false
+				"active": false,
+				"previous": "",
+				"current": "",
+				"pending": ""
 			}
 		}
 	}
