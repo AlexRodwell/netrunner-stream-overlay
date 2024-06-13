@@ -22,6 +22,7 @@
 	"primary": "Primary",
 	"secondary": "Secondary",
 	"card": "Card",
+	"cards": "Cards",
 	"display": "Display",
 	"hints": {
 		"such_as": "Such as"
@@ -33,5 +34,6 @@
 	"right": "Right",
 	"corporation": "Corporation",
 	"runner": "Runner",
-	"select_an_identity": "Select an identity"
+	"select_an_identity": "Select an identity",
+	"overlay_details": "Player details"
 }

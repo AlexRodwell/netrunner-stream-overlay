@@ -11,6 +11,7 @@
 	import layout from "$lib/data/layout.json";
 	import { default as Side } from "$components/overlay/MetaSide.svelte";
 	import type { ThemeClasses as TThemeClasses } from "$lib/types";
+	import Wrapper from "$components/overlay/Wrapper.svelte";
 
 	const theme: TThemeClasses = layout[$globalData.overlay.layout];
 
@@ -23,7 +24,7 @@
 </script>
 
 {#if $netrunnerDB && $playerOneData && $playerTwoData}
-	<main class="wrapper" style="--padding: 2.5vw;">
+	<Wrapper>
 		<Commentators />
 		<CardHighlight
 			player="playerOne"
@@ -41,7 +42,7 @@
 			<Side player="playerOne" {theme} />
 			<Side player="playerTwo" {theme} />
 		</section>
-	</main>
+	</Wrapper>
 {:else}
 	<main
 		class="wrapper flex place-content-center place-items-center flex-col gap-4"
@@ -50,9 +51,3 @@
 		<p>Awaiting data...</p>
 	</main>
 {/if}
-
-<style lang="postcss">
-	.wrapper {
-		@apply grid grid-cols-2 grid-rows-[1fr_auto] w-screen h-screen overflow-hidden relative;
-	}
-</style>
