@@ -7,27 +7,30 @@
 	export let code: string;
 	export let side: GameSide | string | false = false;
 	export let glow: boolean = true;
+	export let flip: boolean = false;
 
 	$: back = side === "corp" ? BACK_CORPORATION : BACK_RUNNER;
 
-	$: url = `https://card-images.netrunnerdb.com/v1/large/{code}.jpg`.replace(
-		"{code}",
-		code,
-	);
+	$: url = code ? `https://card-images.netrunnerdb.com/v1/large/{code}.jpg`.replace("{code}", code) : false;
 </script>
 
 <div
-	class="aspect-[64/89] [transform-style:preserve-3d] flex transition-[calc(var(--transition)*1.5)] ease-linear delay-[var(--transition-delay,0ms)] [transform:var(--transform)] {glow
+	class="aspect-[64/89] [transform-style:preserve-3d] flex transition-transform [transform:var(--transform)] {glow
 		? 'card--glow'
 		: ''} {$$props['class']}"
+	style="transform: {flip ? 'rotateY(-180deg)' : 'rotateY(0deg)' }; transition-duration: 480ms; transition-delay: var(--transition-delay, 0ms);"
 >
 	<div
 		class="face {glow
 			? '[filter:drop-shadow(0px_0px_20px_rgba(255,255,255,0.3))]'
 			: ''}"
 	>
-		<!-- svelte-ignore a11y-missing-attribute -->
-		<img class="image" src={url} />
+		{#if url}
+			<!-- svelte-ignore a11y-missing-attribute -->
+			<img class="image" src={url} />
+		{:else}
+			<div class="image bg-white/5"></div>
+		{/if}
 	</div>
 	{#if side}
 		<div class="face [transform:rotateY(180deg)]">
