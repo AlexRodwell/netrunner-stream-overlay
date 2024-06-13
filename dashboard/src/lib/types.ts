@@ -149,17 +149,11 @@ export type TimerData = {
 	prev: Date;
 };
 
-export type HighlightGroup = {
-	primary: Highlight;
-	secondary: Highlight;
-};
-
 export type Highlight = {
-	cards: string[];
+	active: boolean;
 	current?: string;
 	previous?: string;
-	active: boolean;
-	test: string[];
+	pending?: string;
 };
 
 export type PlayerAttributes = {
