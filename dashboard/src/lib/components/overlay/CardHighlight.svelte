@@ -3,7 +3,9 @@
 	import type { Highlight as THighlight, PlayerSide as TPlayerSide, GameSide as TGameSide } from "$lib/types";
 
 	export let player: TPlayerSide;
-	export let data: THighlightGroup;
+	export let data: {
+		[key in 'primary' | 'secondary']: THighlight;
+	};
 	export let side: TGameSide;
 	export let width: number = 12;
 
