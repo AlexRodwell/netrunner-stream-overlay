@@ -23,7 +23,7 @@
 </script>
 
 {#if $netrunnerDB && $playerOneData && $playerTwoData}
-	<main class="wrapper">
+	<main class="wrapper" style="--padding: 2.5vw;">
 		<Commentators />
 		<CardHighlight
 			player="playerOne"
