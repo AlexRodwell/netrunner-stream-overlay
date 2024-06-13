@@ -69,7 +69,7 @@
 						</CardNew.Root>
 					</Column>
 
-					<Column span="1/-1">
+					<!-- <Column span="1/-1">
 						<CardNew.Root>
 							<CardNew.Header
 								class="switch-group justify-between"
@@ -96,7 +96,7 @@
 								</Select.Root>
 							</CardNew.Content>
 						</CardNew.Root>
-					</Column>
+					</Column> -->
 
 					{#each Object.keys(global).filter((key) => !["deploy", "websocket", "overlay", "card_size"].includes(key)) as name}
 						<CardNew.Root>
