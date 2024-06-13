@@ -1,9 +1,6 @@
 <script lang="ts">
-	import { DateRangeField } from "bits-ui";
 	import Card from "../Card.svelte";
-	import { animate } from "motion"
-	import type { Highlight as THighlight, PlayerSide as TPlayerSide, HighlightGroup as THighlightGroup, GameSide as TGameSide } from "$lib/types";
-	import { dev } from '$app/environment';
+	import type { Highlight as THighlight, PlayerSide as TPlayerSide, GameSide as TGameSide } from "$lib/types";
 
 	export let player: TPlayerSide;
 	export let data: THighlightGroup;
