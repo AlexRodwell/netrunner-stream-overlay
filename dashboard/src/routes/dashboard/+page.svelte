@@ -19,7 +19,6 @@
 	} from "$lib/types";
 	import Player from "$components/dashboard/Player.svelte";
 	import Header from "$components/dashboard/Header.svelte";
-	import * as Card from "$lib/components/ui/card";
 
 	let socket: WebSocket;
 	let global: TGlobalData = $globalData;
