@@ -1,4 +1,10 @@
 {
+	"initialising": "Initialising",
+	"dashboard": "Dashboard",
+	"overlay_aio": "Overlay (all-in-one)",
+	"overlay": "Overlay",
+	"commentators": "Commentators",
+	"timer": "Timer",
 	"id": "Identity",
 	"identity": "Identity",
 	"name": "Name",

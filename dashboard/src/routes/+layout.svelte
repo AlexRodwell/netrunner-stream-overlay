@@ -14,6 +14,7 @@
 	import Loading from "$components/Loading.svelte";
 	import { page } from "$app/stores";
 	import { fetch_cards } from "$lib/utils";
+	import { t } from "$lib/translations";
 
 	let socket: WebSocket;
 	let storage_keys: string[] = ["global", "playerOne", "playerTwo", "timer"];
@@ -162,7 +163,7 @@
 			class="w-[100vw] h-[100vh] flex flex-col justify-center items-center text-center gap-2"
 		>
 			<Loading fill="white" size="2rem"></Loading>
-			<h2>Initialising</h2>
+			<h2>{$t("initialising")}</h2>
 		</div>
 	{/if}
 {:then}
