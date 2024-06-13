@@ -164,7 +164,7 @@
 						</CardNew.Content>
 					</CardNew.Root>
 
-					<CardNew.Root>
+					<!-- <CardNew.Root>
 						<CardNew.Header class="switch-group justify-between">
 							<Label for="card_size">Card size</Label>
 						</CardNew.Header>
@@ -187,7 +187,8 @@
 								</Select.Content>
 							</Select.Root>
 						</CardNew.Content>
-					</CardNew.Root>
+					</CardNew.Root> -->
+					
 				</Column>
 			</Card>
 		</div>
